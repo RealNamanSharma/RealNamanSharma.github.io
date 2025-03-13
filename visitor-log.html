@@ -1,1 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Visitor Log</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            margin: 0;
+            padding: 40px;
+            min-height: 100vh;
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #FFD700 0%, #FF69B4 50%, #00CED1 100%);
+            color: white;
+            text-align: center;
+        }
 
+        h1 {
+            font-size: 48px;
+            font-weight: 700;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+            margin-bottom: 40px;
+        }
+
+        table {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+            padding: 20px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        th, td {
+            padding: 10px;
+            text-align: left;
+            font-size: 16px;
+            font-weight: 400;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+        }
+
+        th {
+            font-weight: 700;
+            font-size: 18px;
+        }
+
+        .back-button {
+            display: inline-block;
+            margin-top: 40px;
+            padding: 15px 30px;
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            border-radius: 25px;
+            font-size: 18px;
+            font-weight: 700;
+            color: white;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(5px);
+        }
+
+        .back-button:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: scale(1.05);
+            cursor: pointer;
+        }
+
+        @media (max-width: 768px) {
+            h1 { font-size: 36px; }
+            table { font-size: 14px; }
+            .back-button { padding: 12px 25px; font-size: 16px; }
+        }
+
+        @media (max-width: 480px) {
+            h1 { font-size: 24px; }
+            table { font-size: 12px; }
+            .back-button { padding: 10px 20px; font-size: 14px; }
+        }
+    </style>
+</head>
+<body>
+    <h1>Visitor Log</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>Timestamp</th>
+                <th>Visits</th>
+                <th>Device Info</th>
+            </tr>
+        </thead>
+        <tbody id="logTable"></tbody>
+    </table>
+    <a href="index.html" class="back-button">Back to Portfolio</a>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const log = JSON.parse(localStorage.getItem('visitorLog')) || [];
+            const tbody = document.getElementById('logTable');
+
+            log.forEach(entry => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${entry.timestamp}</td>
+                    <td>${entry.visits}</td>
+                    <td>${entry.deviceInfo}</td>
+                `;
+                tbody.appendChild(row);
+            });
+        });
+    </script>
+</body>
+</html>
