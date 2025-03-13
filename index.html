@@ -15,7 +15,6 @@
             color: white;
         }
 
-        /* Loading Screen Styles */
         #loading-screen {
             position: fixed;
             top: 0;
@@ -35,7 +34,7 @@
             position: absolute;
             top: 50%;
             animation: drive 1s ease-in-out infinite;
-            filter: drop-shadow(5px 5px 10px rgba(0, 0, 0, 0.5));
+            filter: drop-shadow(5px 5px 10px rgba(0,0,0,0.5));
         }
 
         @keyframes drive {
@@ -43,7 +42,6 @@
             100% { transform: translateX(100vw) translateY(-50%); }
         }
 
-        /* Main Content Styles */
         .container {
             opacity: 0;
             transition: opacity 0.5s ease-in;
@@ -135,7 +133,6 @@
             100% { opacity: 1; transform: translateY(0); }
         }
 
-        /* Responsive Design */
         @media (max-width: 768px) {
             .name { font-size: 60px; }
             .project-card { margin: 0 10px; }
@@ -150,7 +147,6 @@
     </style>
 </head>
 <body>
-    <!-- Loading Screen -->
     <div id="loading-screen">
         <svg class="car" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 60">
             <path d="M10 40 Q20 30 30 30 Q40 30 50 40 L100 40 Q110 40 110 45 L110 50 Q110 55 100 55 L10 55 Q0 55 0 50 L0 45 Q0 40 10 40 Z" fill="#ff4500"/>
@@ -161,7 +157,6 @@
         </svg>
     </div>
 
-    <!-- Main Content -->
     <div class="container">
         <div class="name">Naman Sharma</div>
         <div class="projects">
@@ -199,13 +194,12 @@
             </a>
         </div>
         <a href="chess-game.html" class="chess-button">Play Chess Game</a>
+        <a href="snake-game.html" class="chess-button">Play Snake Game</a>
         <a href="visitor-log.html" class="log-button">View Visitor Log</a>
     </div>
 
-    <!-- JavaScript for Loading and Visitor Tracking -->
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            // Handle loading screen
             const loadPromise = new Promise(resolve => window.addEventListener('load', resolve));
             const timerPromise = new Promise(resolve => setTimeout(resolve, 2000));
             Promise.all([loadPromise, timerPromise]).then(() => {
@@ -213,7 +207,6 @@
                 document.querySelector('.container').style.opacity = '1';
             });
 
-            // Capture visitor data
             const deviceInfo = {
                 browser: navigator.userAgent,
                 screen: `${screen.width}x${screen.height}`,
@@ -231,7 +224,6 @@
                 deviceInfo: JSON.stringify(deviceInfo)
             };
 
-            // Store visitor data in localStorage
             let log = JSON.parse(localStorage.getItem('visitorLog')) || [];
             log.push(visitorData);
             localStorage.setItem('visitorLog', JSON.stringify(log));
