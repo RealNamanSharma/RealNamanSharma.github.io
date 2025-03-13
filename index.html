@@ -3,16 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Naman's Beautiful Page</title>
+    <title>Naman's Portfolio</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;600&display=swap" rel="stylesheet">
     <style>
         body {
             margin: 0;
             padding: 0;
-            height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-family: 'Arial', sans-serif;
+            min-height: 100vh;
+            font-family: 'Poppins', sans-serif;
             background: linear-gradient(
                 135deg,
                 #ff6b6b 0%,
@@ -20,54 +18,114 @@
                 #45b7d1 100%
             );
             animation: gradientAnimation 15s ease infinite;
+            color: white;
+        }
+
+        .container {
+            padding: 40px;
+            text-align: center;
         }
 
         .name {
-            font-size: 120px;
-            color: white;
+            font-size: 80px;
+            font-weight: 600;
             text-shadow: 3px 3px 10px rgba(0, 0, 0, 0.3);
-            letter-spacing: 5px;
+            margin-bottom: 40px;
             animation: fadeIn 2s ease-in-out;
         }
 
+        .projects {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .project-card {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 20px;
+            border-radius: 15px;
+            backdrop-filter: blur(5px);
+            transition: transform 0.3s ease;
+        }
+
+        .project-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .project-title {
+            font-size: 24px;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+        .project-desc {
+            font-size: 16px;
+            font-weight: 300;
+            opacity: 0.9;
+        }
+
         @keyframes gradientAnimation {
-            0% {
-                background-position: 0% 50%;
-            }
-            50% {
-                background-position: 100% 50%;
-            }
-            100% {
-                background-position: 0% 50%;
-            }
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
         }
 
         @keyframes fadeIn {
-            0% {
-                opacity: 0;
-                transform: translateY(-50px);
-            }
-            100% {
-                opacity: 1;
-                transform: translateY(0);
-            }
+            0% { opacity: 0; transform: translateY(-50px); }
+            100% { opacity: 1; transform: translateY(0); }
         }
 
         /* Responsive Design */
         @media (max-width: 768px) {
-            .name {
-                font-size: 80px;
-            }
+            .name { font-size: 60px; }
+            .project-card { margin: 0 10px; }
         }
 
         @media (max-width: 480px) {
-            .name {
-                font-size: 50px;
-            }
+            .name { font-size: 40px; }
+            .container { padding: 20px; }
         }
     </style>
 </head>
 <body>
-    <div class="name">Naman</div>
+    <div class="container">
+        <div class="name">Naman</div>
+        <div class="projects">
+            <div class="project-card">
+                <div class="project-title">Chess-Game</div>
+                <div class="project-desc">A classic chess game implementation</div>
+            </div>
+            <div class="project-card">
+                <div class="project-title">Discord-Bot</div>
+                <div class="project-desc">A custom Discord bot with various features</div>
+            </div>
+            <div class="project-card">
+                <div class="project-title">Portfolio</div>
+                <div class="project-desc">Personal portfolio website</div>
+            </div>
+            <div class="project-card">
+                <div class="project-title">RealNamanSharma</div>
+                <div class="project-desc">GitHub profile configuration</div>
+            </div>
+            <div class="project-card">
+                <div class="project-title">Snake-Game</div>
+                <div class="project-desc">Classic Snake game implementation</div>
+            </div>
+            <div class="project-card">
+                <div class="project-title">Spotify-clone</div>
+                <div class="project-desc">Spotify-inspired music player clone</div>
+            </div>
+            <div class="project-card">
+                <div class="project-title">Text-Editor</div>
+                <div class="project-desc">Simple text editing application</div>
+            </div>
+            <div class="project-card">
+                <div class="project-title">Twitter-clone</div>
+                <div class="project-desc">Twitter-like social media platform clone</div>
+            </div>
+        </div>
+    </div>
 </body>
 </html>
