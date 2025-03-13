@@ -35,7 +35,7 @@
             position: absolute;
             top: 50%;
             animation: drive 1s ease-in-out infinite;
-            filter: drop-shadow(5px 5px 10px rgba(0,0,0,0.5));
+            filter: drop-shadow(5px 5px 10px rgba(0, 0, 0, 0.5));
         }
 
         @keyframes drive {
@@ -108,9 +108,10 @@
             color: inherit;
         }
 
-        .chess-button {
+        .chess-button, .log-button {
             display: inline-block;
-            margin-top: 40px;
+            margin-top: 20px;
+            margin-right: 10px;
             padding: 15px 30px;
             background: rgba(255, 255, 255, 0.2);
             border: none;
@@ -123,7 +124,7 @@
             backdrop-filter: blur(5px);
         }
 
-        .chess-button:hover {
+        .chess-button:hover, .log-button:hover {
             background: rgba(255, 255, 255, 0.3);
             transform: scale(1.05);
             cursor: pointer;
@@ -138,13 +139,13 @@
         @media (max-width: 768px) {
             .name { font-size: 60px; }
             .project-card { margin: 0 10px; }
-            .chess-button { padding: 12px 25px; font-size: 16px; }
+            .chess-button, .log-button { padding: 12px 25px; font-size: 16px; }
         }
 
         @media (max-width: 480px) {
             .name { font-size: 40px; }
             .container { padding: 20px; }
-            .chess-button { padding: 10px 20px; font-size: 14px; }
+            .chess-button, .log-button { padding: 10px 20px; font-size: 14px; }
         }
     </style>
 </head>
@@ -198,18 +199,42 @@
             </a>
         </div>
         <a href="chess-game.html" class="chess-button">Play Chess Game</a>
+        <a href="visitor-log.html" class="log-button">View Visitor Log</a>
     </div>
 
-    <!-- JavaScript to Handle Loading with Minimum 2-Second Delay -->
+    <!-- JavaScript for Loading and Visitor Tracking -->
     <script>
         document.addEventListener('DOMContentLoaded', function() {
+            // Handle loading screen
             const loadPromise = new Promise(resolve => window.addEventListener('load', resolve));
             const timerPromise = new Promise(resolve => setTimeout(resolve, 2000));
-
             Promise.all([loadPromise, timerPromise]).then(() => {
                 document.getElementById('loading-screen').style.display = 'none';
                 document.querySelector('.container').style.opacity = '1';
             });
+
+            // Capture visitor data
+            const deviceInfo = {
+                browser: navigator.userAgent,
+                screen: `${screen.width}x${screen.height}`,
+                language: navigator.language,
+                platform: navigator.platform
+            };
+
+            let visits = localStorage.getItem('visits') || 0;
+            visits = parseInt(visits) + 1;
+            localStorage.setItem('visits', visits);
+
+            const visitorData = {
+                timestamp: new Date().toISOString(),
+                visits: visits,
+                deviceInfo: JSON.stringify(deviceInfo)
+            };
+
+            // Store visitor data in localStorage
+            let log = JSON.parse(localStorage.getItem('visitorLog')) || [];
+            log.push(visitorData);
+            localStorage.setItem('visitorLog', JSON.stringify(log));
         });
     </script>
 </body>
