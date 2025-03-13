@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Naman's Chess Game</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/chess.js/0.10.2/chess.min.js"></script>
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #ff6b6b 0%, #4ecdc4 50%, #45b7d1 100%);
+            color: white;
+        }
+
+        .chessboard {
+            width: 400px;
+            height: 400px;
+            display: grid;
+            grid-template-columns: repeat(8, 1fr);
+            grid-template-rows: repeat(8, 1fr);
+            border: 2px solid #fff;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .square {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 30px;
+            cursor: pointer;
+        }
+
+        .white {
+            background-color: #f0d9b5;
+            color: #000;
+        }
+
+        .black {
+            background-color: #b58863;
+            color: #000;
+        }
+
+        .selected {
+            background-color: #ffff99 !important;
+        }
+
+        .possible {
+            background-color: #99ff99 !important;
+        }
+
+        #status {
+            margin-top: 20px;
+            font-size: 20px;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+        }
+
+        #reset {
+            margin-top: 20px;
+            padding: 10px 20px;
+            font-size: 16px;
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            border-radius: 20px;
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        #reset:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: scale(1.05);
+        }
+    </style>
+</head>
+<body>
+    <h1>Naman's Chess Game</h1>
+    <div id="board" class="chessboard"></div>
+    <div id="status">White's turn</div>
+    <button id="reset">Reset Game</button>
+
+    <script>
+        const chess = new Chess();
+        const board = document.getElementById('board');
+        let selectedSquare = null;
+
+        // Piece symbols
+        const pieces = {
+            'p': '♟', 'n': '♞', 'b': '♝', 'r': '♜', 'q': '♛', 'k': '♚',
+            'P': '♙', 'N': '♘', 'B': '♗', 'R': '♖', 'Q': '♕', 'K': '♔'
+        };
+
+        function createBoard() {
+            board.innerHTML = '';
+            const fen = chess.fen().split(' ')[0];
+            const rows = fen.split('/');
+
+            for (let i = 0; i < 8; i++) {
+                let row = rows[7 - i]; // Flip to display white at bottom
+                let col = 0;
+                for (let char of row) {
+                    if (/\d/.test(char)) {
+                        for (let j = 0; j < parseInt(char); j++) {
+                            createSquare(i, col++);
+                        }
+                    } else {
+                        createSquare(i, col++, char);
+                    }
+                }
+            }
+        }
+
+        function createSquare(row, col, piece = null) {
+            const square = document.createElement('div');
+            square.className = 'square ' + ((row + col) % 2 === 0 ? 'white' : 'black');
+            square.dataset.pos = `${String.fromCharCode(97 + col)}${8 - row}`;
+            if (piece) square.textContent = pieces[piece];
+            square.addEventListener('click', handleSquareClick);
+            board.appendChild(square);
+        }
+
+        function handleSquareClick(e) {
+            const square = e.target;
+            const pos = square.dataset.pos;
+
+            if (selectedSquare) {
+                const from = selectedSquare.dataset.pos;
+                const move = {
+                    from: from,
+                    to: pos,
+                    promotion: 'q' // Auto-promote to queen
+                };
+
+                if (chess.move(move)) {
+                    updateBoard();
+                    if (!chess.game_over()) {
+                        setTimeout(computerMove, 500); // Computer moves after 0.5s
+                    }
+                }
+                clearSelection();
+            } else if (chess.turn() === 'w' && chess.get(pos)) {
+                const moves = chess.moves({ square: pos, verbose: true });
+                if (moves.length > 0) {
+                    selectedSquare = square;
+                    square.classList.add('selected');
+                    showPossibleMoves(moves);
+                }
+            }
+        }
+
+        function showPossibleMoves(moves) {
+            moves.forEach(move => {
+                document.querySelector(`[data-pos="${move.to}"]`).classList.add('possible');
+            });
+        }
+
+        function clearSelection() {
+            document.querySelectorAll('.square').forEach(sq => {
+                sq.classList.remove('selected', 'possible');
+            });
+            selectedSquare = null;
+        }
+
+        function computerMove() {
+            const moves = chess.moves({ verbose: true });
+            if (moves.length > 0) {
+                const randomMove = moves[Math.floor(Math.random() * moves.length)];
+                chess.move(randomMove);
+                updateBoard();
+            }
+        }
+
+        function updateBoard() {
+            createBoard();
+            let status = '';
+            if (chess.in_checkmate()) {
+                status = `Checkmate! ${chess.turn() === 'w' ? 'Black' : 'White'} wins!`;
+            } else if (chess.in_draw()) {
+                status = 'Draw!';
+            } else if (chess.in_check()) {
+                status = `${chess.turn() === 'w' ? 'White' : 'Black'} is in check`;
+            } else {
+                status = `${chess.turn() === 'w' ? 'White' : 'Black'}'s turn`;
+            }
+            document.getElementById('status').textContent = status;
+        }
+
+        document.getElementById('reset').addEventListener('click', () => {
+            chess.reset();
+            clearSelection();
+            updateBoard();
+        });
+
+        // Initial board setup
+        createBoard();
+    </script>
+</body>
+</html>
