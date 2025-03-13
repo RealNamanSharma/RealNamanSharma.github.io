@@ -81,7 +81,7 @@
 <body>
     <h1>Naman's Chess Game</h1>
     <div id="board" class="chessboard"></div>
-    <div id="status">White's turn</div>
+    <div id="status">White's turn (Your move)</div>
     <button id="reset">Reset Game</button>
 
     <script>
@@ -128,6 +128,9 @@
             const square = e.target;
             const pos = square.dataset.pos;
 
+            // Only allow moves when it's White's turn (user's turn)
+            if (chess.turn() !== 'w') return;
+
             if (selectedSquare) {
                 const from = selectedSquare.dataset.pos;
                 const move = {
@@ -143,12 +146,16 @@
                     }
                 }
                 clearSelection();
-            } else if (chess.turn() === 'w' && chess.get(pos)) {
-                const moves = chess.moves({ square: pos, verbose: true });
-                if (moves.length > 0) {
-                    selectedSquare = square;
-                    square.classList.add('selected');
-                    showPossibleMoves(moves);
+            } else {
+                const piece = chess.get(pos);
+                // Only allow selecting white pieces (uppercase in FEN notation)
+                if (piece && piece.color === 'w') {
+                    const moves = chess.moves({ square: pos, verbose: true });
+                    if (moves.length > 0) {
+                        selectedSquare = square;
+                        square.classList.add('selected');
+                        showPossibleMoves(moves);
+                    }
                 }
             }
         }
@@ -167,11 +174,13 @@
         }
 
         function computerMove() {
-            const moves = chess.moves({ verbose: true });
-            if (moves.length > 0) {
-                const randomMove = moves[Math.floor(Math.random() * moves.length)];
-                chess.move(randomMove);
-                updateBoard();
+            if (chess.turn() === 'b') {
+                const moves = chess.moves({ verbose: true });
+                if (moves.length > 0) {
+                    const randomMove = moves[Math.floor(Math.random() * moves.length)];
+                    chess.move(randomMove);
+                    updateBoard();
+                }
             }
         }
 
@@ -185,7 +194,7 @@
             } else if (chess.in_check()) {
                 status = `${chess.turn() === 'w' ? 'White' : 'Black'} is in check`;
             } else {
-                status = `${chess.turn() === 'w' ? 'White' : 'Black'}'s turn`;
+                status = `${chess.turn() === 'w' ? "White's turn (Your move)" : "Black's turn (Computer thinking...)"}`;
             }
             document.getElementById('status').textContent = status;
         }
