@@ -51,7 +51,7 @@
             text-decoration: none;
             color: white;
         }
-
+        
         .project-card:hover {
             transform: translateY(-5px);
         }
@@ -73,6 +73,27 @@
             color: inherit;
         }
 
+        .chess-button {
+            display: inline-block;
+            margin-top: 40px;
+            padding: 15px 30px;
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            border-radius: 25px;
+            font-size: 18px;
+            font-weight: 600;
+            color: white;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(5px);
+        }
+
+        .chess-button:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: scale(1.05);
+            cursor: pointer;
+        }
+
         @keyframes gradientAnimation {
             0% { background-position: 0% 50%; }
             50% { background-position: 100% 50%; }
@@ -88,11 +109,13 @@
         @media (max-width: 768px) {
             .name { font-size: 60px; }
             .project-card { margin: 0 10px; }
+            .chess-button { padding: 12px 25px; font-size: 16px; }
         }
 
         @media (max-width: 480px) {
             .name { font-size: 40px; }
             .container { padding: 20px; }
+            .chess-button { padding: 10px 20px; font-size: 14px; }
         }
     </style>
 </head>
@@ -133,6 +156,7 @@
                 <div class="project-desc">Twitter-like social media platform clone</div>
             </a>
         </div>
+        <a href="chess-game.html" class="chess-button">Play Chess Game</a>
     </div>
 </body>
 </html>
