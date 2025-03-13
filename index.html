@@ -4,34 +4,66 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Naman's Portfolio</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet">
     <style>
         body {
             margin: 0;
             padding: 0;
             min-height: 100vh;
             font-family: 'Poppins', sans-serif;
-            background: linear-gradient(
-                135deg,
-                #ff6b6b 0%,
-                #4ecdc4 50%,
-                #45b7d1 100%
-            );
-            animation: gradientAnimation 15s ease infinite;
+            background: linear-gradient(135deg, #FFD700 0%, #FF69B4 50%, #00CED1 100%);
             color: white;
         }
 
+        /* Loading Screen Styles */
+        #loading-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: linear-gradient(135deg, #FFD700 0%, #FF69B4 50%, #00CED1 100%);
+            z-index: 9999;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .car {
+            width: 15vw;
+            height: auto;
+            position: absolute;
+            top: 50%;
+            animation: drive 1s ease-in-out infinite;
+            filter: drop-shadow(5px 5px 10px rgba(0,0,0,0.5));
+        }
+
+        @keyframes drive {
+            0% { transform: translateX(-100vw) translateY(-50%); }
+            100% { transform: translateX(100vw) translateY(-50%); }
+        }
+
+        /* Main Content Styles */
         .container {
+            opacity: 0;
+            transition: opacity 0.5s ease-in;
             padding: 40px;
             text-align: center;
         }
 
         .name {
             font-size: 80px;
-            font-weight: 600;
-            text-shadow: 3px 3px 10px rgba(0, 0, 0, 0.3);
+            font-weight: 700;
+            text-transform: uppercase;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+            background-color: rgba(255, 255, 255, 0.3);
+            backdrop-filter: blur(10px);
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
             margin-bottom: 40px;
             animation: fadeIn 2s ease-in-out;
+            display: inline-block;
         }
 
         .projects {
@@ -46,7 +78,7 @@
             background: rgba(255, 255, 255, 0.1);
             padding: 20px;
             border-radius: 15px;
-            backdrop-filter: blur(5px);
+            backdrop-filter: blur(10px);
             transition: transform 0.3s ease;
             text-decoration: none;
             color: white;
@@ -58,14 +90,17 @@
 
         .project-title {
             font-size: 24px;
-            font-weight: 600;
+            font-weight: 700;
             margin-bottom: 10px;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+            letter-spacing: 0.5px;
         }
 
         .project-desc {
             font-size: 16px;
-            font-weight: 300;
+            font-weight: 400;
             opacity: 0.9;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
         }
 
         a {
@@ -81,7 +116,7 @@
             border: none;
             border-radius: 25px;
             font-size: 18px;
-            font-weight: 600;
+            font-weight: 700;
             color: white;
             text-decoration: none;
             transition: all 0.3s ease;
@@ -92,12 +127,6 @@
             background: rgba(255, 255, 255, 0.3);
             transform: scale(1.05);
             cursor: pointer;
-        }
-
-        @keyframes gradientAnimation {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
         }
 
         @keyframes fadeIn {
@@ -120,8 +149,20 @@
     </style>
 </head>
 <body>
+    <!-- Loading Screen -->
+    <div id="loading-screen">
+        <svg class="car" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 60">
+            <path d="M10 40 Q20 30 30 30 Q40 30 50 40 L100 40 Q110 40 110 45 L110 50 Q110 55 100 55 L10 55 Q0 55 0 50 L0 45 Q0 40 10 40 Z" fill="#ff4500"/>
+            <circle cx="30" cy="55" r="10" fill="#333"/>
+            <circle cx="90" cy="55" r="10" fill="#333"/>
+            <path d="M40 35 L50 25 L70 25 L80 35" fill="#fff" opacity="0.8"/>
+            <path d="M20 40 L100 40" stroke="#000" stroke-width="2"/>
+        </svg>
+    </div>
+
+    <!-- Main Content -->
     <div class="container">
-        <div class="name">Naman</div>
+        <div class="name">Naman Sharma</div>
         <div class="projects">
             <a href="https://github.com/RealNamanSharma/Chess-Game" class="project-card">
                 <div class="project-title">Chess-Game</div>
@@ -158,5 +199,18 @@
         </div>
         <a href="chess-game.html" class="chess-button">Play Chess Game</a>
     </div>
+
+    <!-- JavaScript to Handle Loading with Minimum 2-Second Delay -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const loadPromise = new Promise(resolve => window.addEventListener('load', resolve));
+            const timerPromise = new Promise(resolve => setTimeout(resolve, 2000));
+
+            Promise.all([loadPromise, timerPromise]).then(() => {
+                document.getElementById('loading-screen').style.display = 'none';
+                document.querySelector('.container').style.opacity = '1';
+            });
+        });
+    </script>
 </body>
 </html>
