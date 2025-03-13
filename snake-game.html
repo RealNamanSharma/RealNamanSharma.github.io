@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Naman's Snake Game</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #FFD700 0%, #FF69B4 50%, #00CED1 100%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: white;
+        }
+
+        canvas {
+            border: 2px solid rgba(255, 255, 255, 0.5);
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .score {
+            font-size: 36px;
+            font-weight: 700;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+            background-color: rgba(255, 255, 255, 0.3);
+            backdrop-filter: blur(10px);
+            padding: 10px 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            display: inline-block;
+        }
+
+        .controls {
+            margin-top: 20px;
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .control-btn {
+            padding: 15px 25px;
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            border-radius: 15px;
+            font-size: 18px;
+            font-weight: 700;
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(5px);
+        }
+
+        .control-btn:hover, .control-btn:active {
+            background: rgba(255, 255, 255, 0.3);
+            transform: scale(1.05);
+        }
+
+        @media (max-width: 480px) {
+            .score { font-size: 24px; }
+            .control-btn { padding: 10px 20px; font-size: 14px; }
+            canvas { width: 300px; height: 300px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="score">Score: <span id="score">0</span></div>
+    <canvas id="gameCanvas" width="400" height="400"></canvas>
+    <div class="controls">
+        <button class="control-btn" ontouchstart="changeDirection('up')" onmousedown="changeDirection('up')">Up</button>
+        <button class="control-btn" ontouchstart="changeDirection('left')" onmousedown="changeDirection('left')">Left</button>
+        <button class="control-btn" ontouchstart="changeDirection('right')" onmousedown="changeDirection('right')">Right</button>
+        <button class="control-btn" ontouchstart="changeDirection('down')" onmousedown="changeDirection('down')">Down</button>
+        <button class="control-btn" onclick="resetGame()">Reset</button>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('gameCanvas');
+        const ctx = canvas.getContext('2d');
+        const scoreElement = document.getElementById('score');
+
+        const gridSize = 20;
+        const tileCount = canvas.width / gridSize;
+        let snake = [{ x: 10, y: 10 }];
+        let food = { x: 15, y: 15 };
+        let dx = 0;
+        let dy = 0;
+        let score = 0;
+        let gameLoop;
+
+        function drawGame() {
+            // Move snake
+            const head = { x: snake[0].x + dx, y: snake[0].y + dy };
+            snake.unshift(head);
+
+            // Check if snake eats food
+            if (head.x === food.x && head.y === food.y) {
+                score += 10;
+                scoreElement.textContent = score;
+                generateFood();
+            } else {
+                snake.pop();
+            }
+
+            // Check collision with walls or self
+            if (head.x < 0 || head.x >= tileCount || head.y < 0 || head.y >= tileCount || snakeCollision(head)) {
+                clearInterval(gameLoop);
+                alert(`Game Over! Score: ${score}`);
+                return;
+            }
+
+            // Draw background
+            ctx.fillStyle = 'rgba(0, 0, 0, 0.1)';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            // Draw snake
+            ctx.fillStyle = '#32CD32';
+            snake.forEach(segment => {
+                ctx.fillRect(segment.x * gridSize, segment.y * gridSize, gridSize - 2, gridSize - 2);
+            });
+
+            // Draw food
+            ctx.fillStyle = '#FF4500';
+            ctx.fillRect(food.x * gridSize, food.y * gridSize, gridSize - 2, gridSize - 2);
+        }
+
+        function snakeCollision(head) {
+            return snake.slice(1).some(segment => segment.x === head.x && segment.y === head.y);
+        }
+
+        function generateFood() {
+            food.x = Math.floor(Math.random() * tileCount);
+            food.y = Math.floor(Math.random() * tileCount);
+            if (snake.some(segment => segment.x === food.x && segment.y === food.y)) {
+                generateFood();
+            }
+        }
+
+        function changeDirection(dir) {
+            switch (dir) {
+                case 'up': if (dy === 0) { dx = 0; dy = -1; } break;
+                case 'down': if (dy === 0) { dx = 0; dy = 1; } break;
+                case 'left': if (dx === 0) { dx = -1; dy = 0; } break;
+                case 'right': if (dx === 0) { dx = 1; dy = 0; } break;
+            }
+            if (!gameLoop) startGame();
+        }
+
+        function startGame() {
+            gameLoop = setInterval(drawGame, 100);
+        }
+
+        function resetGame() {
+            clearInterval(gameLoop);
+            snake = [{ x: 10, y: 10 }];
+            food = { x: 15, y: 15 };
+            dx = 0;
+            dy = 0;
+            score = 0;
+            scoreElement.textContent = score;
+            gameLoop = null;
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+        }
+
+        // Keyboard controls for desktop
+        document.addEventListener('keydown', (e) => {
+            switch (e.key) {
+                case 'ArrowUp': changeDirection('up'); break;
+                case 'ArrowDown': changeDirection('down'); break;
+                case 'ArrowLeft': changeDirection('left'); break;
+                case 'ArrowRight': changeDirection('right'); break;
+            }
+        });
+    </script>
+</body>
+</html>
