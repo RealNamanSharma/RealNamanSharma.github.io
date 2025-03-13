@@ -1,12 +1,73 @@
 <!DOCTYPE html>
-<html>
-
+<html lang="en">
 <head>
-    <title>First Web Page</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Naman's Beautiful Page</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(
+                135deg,
+                #ff6b6b 0%,
+                #4ecdc4 50%,
+                #45b7d1 100%
+            );
+            animation: gradientAnimation 15s ease infinite;
+        }
+
+        .name {
+            font-size: 120px;
+            color: white;
+            text-shadow: 3px 3px 10px rgba(0, 0, 0, 0.3);
+            letter-spacing: 5px;
+            animation: fadeIn 2s ease-in-out;
+        }
+
+        @keyframes gradientAnimation {
+            0% {
+                background-position: 0% 50%;
+            }
+            50% {
+                background-position: 100% 50%;
+            }
+            100% {
+                background-position: 0% 50%;
+            }
+        }
+
+        @keyframes fadeIn {
+            0% {
+                opacity: 0;
+                transform: translateY(-50px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .name {
+                font-size: 80px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .name {
+                font-size: 50px;
+            }
+        }
+    </style>
 </head>
-
 <body>
-    Hello World!
+    <div class="name">Naman</div>
 </body>
-
 </html>
