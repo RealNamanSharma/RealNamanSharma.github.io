@@ -89,20 +89,55 @@
       text-align: center;
     }
 
- .name {
-    font-size: 80px;
-    font-weight: 700;
-    text-transform: uppercase;
-    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
-    background-color: rgba(255, 255, 255, 0.3);
-    backdrop-filter: blur(10px);
-    padding: 20px;
-    border-radius: 10px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    margin-bottom: 40px;
-    animation: fadeIn 2s ease-in-out;
-    display: inline-block;
+.name {
+  position: relative;
+  font-size: 80px;
+  font-weight: 700;
+  text-transform: uppercase;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+  background-color: rgba(255, 255, 255, 0.3);
+  backdrop-filter: blur(10px);
+  padding: 20px 40px;
+  border-radius: 10px;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+  margin: 100px auto 40px auto;
+  display: inline-block;
+  animation: dropDown 1s cubic-bezier(0.23, 1, 0.32, 1.2) forwards;
+
+  transform: translateY(-200px);
+  opacity: 0;
 }
+
+/* Hanging ropes */
+.name::before,
+.name::after {
+  content: "";
+  position: absolute;
+  width: 2px;
+  height: 100px;
+  background: #fff;
+  top: -100px;
+}
+
+.name::before {
+  left: 20px;
+}
+
+.name::after {
+  right: 20px;
+}
+
+@keyframes dropDown {
+  0% {
+    transform: translateY(-200px);
+    opacity: 0;
+  }
+  100% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
 
 
     
