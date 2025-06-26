@@ -73,7 +73,7 @@
       height: auto;
       position: absolute;
       top: 50%;
-      animation: drive 1s ease-in-out infinite;
+      animation: drive 3s ease-in-out infinite;
       filter: drop-shadow(5px 5px 10px rgba(0, 0, 0, 0.5));
     }
 
@@ -89,58 +89,51 @@
       text-align: center;
     }
 
-.name {
-  position: relative;
-  font-size: 80px;
-  font-weight: 700;
-  text-transform: uppercase;
-  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
-  background-color: rgba(255, 255, 255, 0.3);
-  backdrop-filter: blur(10px);
-  padding: 20px 40px;
-  border-radius: 10px;
-  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
-  margin: 100px auto 40px auto;
-  display: inline-block;
-  animation: dropDown 1s cubic-bezier(0.23, 1, 0.32, 1.2) forwards;
+    .name {
+      position: relative;
+      font-size: 80px;
+      font-weight: 700;
+      text-transform: uppercase;
+      text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+      background-color: rgba(255, 255, 255, 0.3);
+      backdrop-filter: blur(10px);
+      padding: 20px 40px;
+      border-radius: 10px;
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+      margin: 100px auto 40px auto;
+      display: inline-block;
+      transform-origin: top center;
+      animation: dropDown 1s ease-out forwards, swing 2s 1s infinite alternate ease-in-out;
+      opacity: 0;
+    }
 
-  transform: translateY(-200px);
-  opacity: 0;
-}
+    .name::before,
+    .name::after {
+      content: "";
+      position: absolute;
+      width: 2px;
+      height: 100px;
+      background: white;
+      top: -100px;
+    }
 
-/* Hanging ropes */
-.name::before,
-.name::after {
-  content: "";
-  position: absolute;
-  width: 2px;
-  height: 100px;
-  background: #fff;
-  top: -100px;
-}
+    .name::before {
+      left: 20px;
+    }
 
-.name::before {
-  left: 20px;
-}
+    .name::after {
+      right: 20px;
+    }
 
-.name::after {
-  right: 20px;
-}
+    @keyframes dropDown {
+      0% { transform: translateY(-200px); opacity: 0; }
+      100% { transform: translateY(0); opacity: 1; }
+    }
 
-@keyframes dropDown {
-  0% {
-    transform: translateY(-200px);
-    opacity: 0;
-  }
-  100% {
-    transform: translateY(0);
-    opacity: 1;
-  }
-}
-
-
-
-    
+    @keyframes swing {
+      0% { transform: rotate(-2deg); }
+      100% { transform: rotate(2deg); }
+    }
 
     .projects {
       display: grid;
@@ -206,11 +199,6 @@
       cursor: pointer;
     }
 
-    @keyframes fadeIn {
-      0% { opacity: 0; transform: translateY(-50px); }
-      100% { opacity: 1; transform: translateY(0); }
-    }
-
     @media (max-width: 768px) {
       .name { font-size: 60px; }
       .project-card { margin: 0 10px; }
@@ -225,9 +213,10 @@
   </style>
 </head>
 <body>
-  <!-- Dark mode toggle button -->
+  <!-- Dark mode toggle -->
   <button id="theme-toggle" aria-label="Toggle Dark Mode">🌙</button>
 
+  <!-- Loading screen with car -->
   <div id="loading-screen">
     <svg class="car" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 60">
       <path d="M10 40 Q20 30 30 30 Q40 30 50 40 L100 40 Q110 40 110 45 L110 50 Q110 55 100 55 L10 55 Q0 55 0 50 L0 45 Q0 40 10 40 Z" fill="#ff4500"/>
@@ -238,6 +227,7 @@
     </svg>
   </div>
 
+  <!-- Main content -->
   <div class="container">
     <div class="name">Naman Sharma</div>
     <div class="projects">
@@ -279,8 +269,8 @@
     <a href="visitor-log.html" class="log-button">View Visitor Log</a>
   </div>
 
+  <!-- JS -->
   <script>
-    // Loading screen + fade-in
     document.addEventListener('DOMContentLoaded', function () {
       const loadPromise = new Promise(resolve => window.addEventListener('load', resolve));
       const timerPromise = new Promise(resolve => setTimeout(resolve, 2000));
@@ -289,7 +279,7 @@
         document.querySelector('.container').style.opacity = '1';
       });
 
-      // Visitor logging
+      // Visitor log
       const deviceInfo = {
         browser: navigator.userAgent,
         screen: `${screen.width}x${screen.height}`,
@@ -311,7 +301,7 @@
       log.push(visitorData);
       localStorage.setItem('visitorLog', JSON.stringify(log));
 
-      // Dark mode setup
+      // Dark mode toggle
       const toggleBtn = document.getElementById('theme-toggle');
       const body = document.body;
 
