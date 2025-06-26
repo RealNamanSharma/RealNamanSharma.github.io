@@ -1,233 +1,302 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Naman's Portfolio</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet">
-    <style>
-        body {
-            margin: 0;
-            padding: 0;
-            min-height: 100vh;
-            font-family: 'Poppins', sans-serif;
-            background: linear-gradient(135deg, #FFD700 0%, #FF69B4 50%, #00CED1 100%);
-            color: white;
-        }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Naman's Portfolio</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg-gradient-light: linear-gradient(135deg, #FFD700 0%, #FF69B4 50%, #00CED1 100%);
+      --bg-gradient-dark: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+      --text-color-light: white;
+      --text-color-dark: #f0f0f0;
+      --card-bg-light: rgba(255, 255, 255, 0.1);
+      --card-bg-dark: rgba(255, 255, 255, 0.05);
+    }
 
-        #loading-screen {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-            background: linear-gradient(135deg, #FFD700 0%, #FF69B4 50%, #00CED1 100%);
-            z-index: 9999;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
+    body {
+      margin: 0;
+      padding: 0;
+      min-height: 100vh;
+      font-family: 'Poppins', sans-serif;
+      background: var(--bg-gradient-light);
+      color: var(--text-color-light);
+      transition: background 0.5s ease, color 0.5s ease;
+    }
 
-        .car {
-            width: 15vw;
-            height: auto;
-            position: absolute;
-            top: 50%;
-            animation: drive 1s ease-in-out infinite;
-            filter: drop-shadow(5px 5px 10px rgba(0,0,0,0.5));
-        }
+    .dark-mode {
+      background: var(--bg-gradient-dark);
+      color: var(--text-color-dark);
+    }
 
-        @keyframes drive {
-            0% { transform: translateX(-100vw) translateY(-50%); }
-            100% { transform: translateX(100vw) translateY(-50%); }
-        }
+    .dark-mode .project-card {
+      background: var(--card-bg-dark);
+    }
 
-        .container {
-            opacity: 0;
-            transition: opacity 0.5s ease-in;
-            padding: 40px;
-            text-align: center;
-        }
+    #theme-toggle {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      background: rgba(255, 255, 255, 0.2);
+      border: none;
+      border-radius: 50%;
+      padding: 10px 15px;
+      font-size: 20px;
+      color: white;
+      cursor: pointer;
+      backdrop-filter: blur(5px);
+      transition: background 0.3s ease, transform 0.3s ease;
+      z-index: 10000;
+    }
 
-        .name {
-            font-size: 80px;
-            font-weight: 700;
-            text-transform: uppercase;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
-            background-color: rgba(255, 255, 255, 0.3);
-            backdrop-filter: blur(10px);
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            margin-bottom: 40px;
-            animation: fadeIn 2s ease-in-out;
-            display: inline-block;
-        }
+    #theme-toggle:hover {
+      background: rgba(255, 255, 255, 0.3);
+      transform: scale(1.1);
+    }
 
-        .projects {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 20px;
-            max-width: 1200px;
-            margin: 0 auto;
-        }
+    #loading-screen {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: var(--bg-gradient-light);
+      z-index: 9999;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
 
-        .project-card {
-            background: rgba(255, 255, 255, 0.1);
-            padding: 20px;
-            border-radius: 15px;
-            backdrop-filter: blur(10px);
-            transition: transform 0.3s ease;
-            text-decoration: none;
-            color: white;
-        }
+    .car {
+      width: 15vw;
+      height: auto;
+      position: absolute;
+      top: 50%;
+      animation: drive 1s ease-in-out infinite;
+      filter: drop-shadow(5px 5px 10px rgba(0, 0, 0, 0.5));
+    }
 
-        .project-card:hover {
-            transform: translateY(-5px);
-        }
+    @keyframes drive {
+      0% { transform: translateX(-100vw) translateY(-50%); }
+      100% { transform: translateX(100vw) translateY(-50%); }
+    }
 
-        .project-title {
-            font-size: 24px;
-            font-weight: 700;
-            margin-bottom: 10px;
-            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
-            letter-spacing: 0.5px;
-        }
+    .container {
+      opacity: 0;
+      transition: opacity 0.5s ease-in;
+      padding: 40px;
+      text-align: center;
+    }
 
-        .project-desc {
-            font-size: 16px;
-            font-weight: 400;
-            opacity: 0.9;
-            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
-        }
+    .name {
+      font-size: 80px;
+      font-weight: 700;
+      text-transform: uppercase;
+      text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+      background-color: rgba(255, 255, 255, 0.3);
+      backdrop-filter: blur(10px);
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      margin-bottom: 40px;
+      animation: fadeIn 2s ease-in-out;
+      display: inline-block;
+    }
 
-        a {
-            text-decoration: none;
-            color: inherit;
-        }
+    .projects {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 20px;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
 
-        .chess-button, .log-button {
-            display: inline-block;
-            margin-top: 20px;
-            margin-right: 10px;
-            padding: 15px 30px;
-            background: rgba(255, 255, 255, 0.2);
-            border: none;
-            border-radius: 25px;
-            font-size: 18px;
-            font-weight: 700;
-            color: white;
-            text-decoration: none;
-            transition: all 0.3s ease;
-            backdrop-filter: blur(5px);
-        }
+    .project-card {
+      background: var(--card-bg-light);
+      padding: 20px;
+      border-radius: 15px;
+      backdrop-filter: blur(10px);
+      transition: transform 0.3s ease;
+      text-decoration: none;
+      color: inherit;
+    }
 
-        .chess-button:hover, .log-button:hover {
-            background: rgba(255, 255, 255, 0.3);
-            transform: scale(1.05);
-            cursor: pointer;
-        }
+    .project-card:hover {
+      transform: translateY(-5px);
+    }
 
-        @keyframes fadeIn {
-            0% { opacity: 0; transform: translateY(-50px); }
-            100% { opacity: 1; transform: translateY(0); }
-        }
+    .project-title {
+      font-size: 24px;
+      font-weight: 700;
+      margin-bottom: 10px;
+      text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+      letter-spacing: 0.5px;
+    }
 
-        @media (max-width: 768px) {
-            .name { font-size: 60px; }
-            .project-card { margin: 0 10px; }
-            .chess-button, .log-button { padding: 12px 25px; font-size: 16px; }
-        }
+    .project-desc {
+      font-size: 16px;
+      font-weight: 400;
+      opacity: 0.9;
+      text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+    }
 
-        @media (max-width: 480px) {
-            .name { font-size: 40px; }
-            .container { padding: 20px; }
-            .chess-button, .log-button { padding: 10px 20px; font-size: 14px; }
-        }
-    </style>
+    a {
+      text-decoration: none;
+      color: inherit;
+    }
+
+    .chess-button, .log-button {
+      display: inline-block;
+      margin-top: 20px;
+      margin-right: 10px;
+      padding: 15px 30px;
+      background: rgba(255, 255, 255, 0.2);
+      border: none;
+      border-radius: 25px;
+      font-size: 18px;
+      font-weight: 700;
+      color: white;
+      text-decoration: none;
+      transition: all 0.3s ease;
+      backdrop-filter: blur(5px);
+    }
+
+    .chess-button:hover, .log-button:hover {
+      background: rgba(255, 255, 255, 0.3);
+      transform: scale(1.05);
+      cursor: pointer;
+    }
+
+    @keyframes fadeIn {
+      0% { opacity: 0; transform: translateY(-50px); }
+      100% { opacity: 1; transform: translateY(0); }
+    }
+
+    @media (max-width: 768px) {
+      .name { font-size: 60px; }
+      .project-card { margin: 0 10px; }
+      .chess-button, .log-button { padding: 12px 25px; font-size: 16px; }
+    }
+
+    @media (max-width: 480px) {
+      .name { font-size: 40px; }
+      .container { padding: 20px; }
+      .chess-button, .log-button { padding: 10px 20px; font-size: 14px; }
+    }
+  </style>
 </head>
 <body>
-    <div id="loading-screen">
-        <svg class="car" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 60">
-            <path d="M10 40 Q20 30 30 30 Q40 30 50 40 L100 40 Q110 40 110 45 L110 50 Q110 55 100 55 L10 55 Q0 55 0 50 L0 45 Q0 40 10 40 Z" fill="#ff4500"/>
-            <circle cx="30" cy="55" r="10" fill="#333"/>
-            <circle cx="90" cy="55" r="10" fill="#333"/>
-            <path d="M40 35 L50 25 L70 25 L80 35" fill="#fff" opacity="0.8"/>
-            <path d="M20 40 L100 40" stroke="#000" stroke-width="2"/>
-        </svg>
+  <!-- Dark mode toggle button -->
+  <button id="theme-toggle" aria-label="Toggle Dark Mode">🌙</button>
+
+  <div id="loading-screen">
+    <svg class="car" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 60">
+      <path d="M10 40 Q20 30 30 30 Q40 30 50 40 L100 40 Q110 40 110 45 L110 50 Q110 55 100 55 L10 55 Q0 55 0 50 L0 45 Q0 40 10 40 Z" fill="#ff4500"/>
+      <circle cx="30" cy="55" r="10" fill="#333"/>
+      <circle cx="90" cy="55" r="10" fill="#333"/>
+      <path d="M40 35 L50 25 L70 25 L80 35" fill="#fff" opacity="0.8"/>
+      <path d="M20 40 L100 40" stroke="#000" stroke-width="2"/>
+    </svg>
+  </div>
+
+  <div class="container">
+    <div class="name">Naman Sharma</div>
+    <div class="projects">
+      <a href="https://github.com/RealNamanSharma/Chess-Game" class="project-card">
+        <div class="project-title">Chess-Game</div>
+        <div class="project-desc">A classic chess game implementation</div>
+      </a>
+      <a href="https://github.com/RealNamanSharma/Discord-Bot" class="project-card">
+        <div class="project-title">Discord-Bot</div>
+        <div class="project-desc">A custom Discord bot with various features</div>
+      </a>
+      <a href="https://github.com/RealNamanSharma/Portfolio" class="project-card">
+        <div class="project-title">Portfolio</div>
+        <div class="project-desc">Personal portfolio website</div>
+      </a>
+      <a href="https://github.com/RealNamanSharma/RealNamanSharma" class="project-card">
+        <div class="project-title">RealNamanSharma</div>
+        <div class="project-desc">GitHub profile configuration</div>
+      </a>
+      <a href="https://github.com/RealNamanSharma/Snake-Game" class="project-card">
+        <div class="project-title">Snake-Game</div>
+        <div class="project-desc">Classic Snake game implementation</div>
+      </a>
+      <a href="https://github.com/RealNamanSharma/Spotify-clone" class="project-card">
+        <div class="project-title">Spotify-clone</div>
+        <div class="project-desc">Spotify-inspired music player clone</div>
+      </a>
+      <a href="https://github.com/RealNamanSharma/Text-Editor" class="project-card">
+        <div class="project-title">Text-Editor</div>
+        <div class="project-desc">Simple text editing application</div>
+      </a>
+      <a href="https://github.com/RealNamanSharma/Twitter-clone" class="project-card">
+        <div class="project-title">Twitter-clone</div>
+        <div class="project-desc">Twitter-like social media platform clone</div>
+      </a>
     </div>
+    <a href="chess-game.html" class="chess-button">Play Chess Game</a>
+    <a href="snake-game.html" class="chess-button">Play Snake Game</a>
+    <a href="visitor-log.html" class="log-button">View Visitor Log</a>
+  </div>
 
-    <div class="container">
-        <div class="name">Naman Sharma</div>
-        <div class="projects">
-            <a href="https://github.com/RealNamanSharma/Chess-Game" class="project-card">
-                <div class="project-title">Chess-Game</div>
-                <div class="project-desc">A classic chess game implementation</div>
-            </a>
-            <a href="https://github.com/RealNamanSharma/Discord-Bot" class="project-card">
-                <div class="project-title">Discord-Bot</div>
-                <div class="project-desc">A custom Discord bot with various features</div>
-            </a>
-            <a href="https://github.com/RealNamanSharma/Portfolio" class="project-card">
-                <div class="project-title">Portfolio</div>
-                <div class="project-desc">Personal portfolio website</div>
-            </a>
-            <a href="https://github.com/RealNamanSharma/RealNamanSharma" class="project-card">
-                <div class="project-title">RealNamanSharma</div>
-                <div class="project-desc">GitHub profile configuration</div>
-            </a>
-            <a href="https://github.com/RealNamanSharma/Snake-Game" class="project-card">
-                <div class="project-title">Snake-Game</div>
-                <div class="project-desc">Classic Snake game implementation</div>
-            </a>
-            <a href="https://github.com/RealNamanSharma/Spotify-clone" class="project-card">
-                <div class="project-title">Spotify-clone</div>
-                <div class="project-desc">Spotify-inspired music player clone</div>
-            </a>
-            <a href="https://github.com/RealNamanSharma/Text-Editor" class="project-card">
-                <div class="project-title">Text-Editor</div>
-                <div class="project-desc">Simple text editing application</div>
-            </a>
-            <a href="https://github.com/RealNamanSharma/Twitter-clone" class="project-card">
-                <div class="project-title">Twitter-clone</div>
-                <div class="project-desc">Twitter-like social media platform clone</div>
-            </a>
-        </div>
-        <a href="chess-game.html" class="chess-button">Play Chess Game</a>
-        <a href="snake-game.html" class="chess-button">Play Snake Game</a>
-        <a href="visitor-log.html" class="log-button">View Visitor Log</a>
-    </div>
+  <script>
+    // Loading screen + fade-in
+    document.addEventListener('DOMContentLoaded', function () {
+      const loadPromise = new Promise(resolve => window.addEventListener('load', resolve));
+      const timerPromise = new Promise(resolve => setTimeout(resolve, 2000));
+      Promise.all([loadPromise, timerPromise]).then(() => {
+        document.getElementById('loading-screen').style.display = 'none';
+        document.querySelector('.container').style.opacity = '1';
+      });
 
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const loadPromise = new Promise(resolve => window.addEventListener('load', resolve));
-            const timerPromise = new Promise(resolve => setTimeout(resolve, 2000));
-            Promise.all([loadPromise, timerPromise]).then(() => {
-                document.getElementById('loading-screen').style.display = 'none';
-                document.querySelector('.container').style.opacity = '1';
-            });
+      // Visitor logging
+      const deviceInfo = {
+        browser: navigator.userAgent,
+        screen: `${screen.width}x${screen.height}`,
+        language: navigator.language,
+        platform: navigator.platform
+      };
 
-            const deviceInfo = {
-                browser: navigator.userAgent,
-                screen: `${screen.width}x${screen.height}`,
-                language: navigator.language,
-                platform: navigator.platform
-            };
+      let visits = localStorage.getItem('visits') || 0;
+      visits = parseInt(visits) + 1;
+      localStorage.setItem('visits', visits);
 
-            let visits = localStorage.getItem('visits') || 0;
-            visits = parseInt(visits) + 1;
-            localStorage.setItem('visits', visits);
+      const visitorData = {
+        timestamp: new Date().toISOString(),
+        visits: visits,
+        deviceInfo: JSON.stringify(deviceInfo)
+      };
 
-            const visitorData = {
-                timestamp: new Date().toISOString(),
-                visits: visits,
-                deviceInfo: JSON.stringify(deviceInfo)
-            };
+      let log = JSON.parse(localStorage.getItem('visitorLog')) || [];
+      log.push(visitorData);
+      localStorage.setItem('visitorLog', JSON.stringify(log));
 
-            let log = JSON.parse(localStorage.getItem('visitorLog')) || [];
-            log.push(visitorData);
-            localStorage.setItem('visitorLog', JSON.stringify(log));
-        });
-    </script>
+      // Dark mode setup
+      const toggleBtn = document.getElementById('theme-toggle');
+      const body = document.body;
+
+      function setTheme(mode) {
+        if (mode === 'dark') {
+          body.classList.add('dark-mode');
+          toggleBtn.textContent = '☀️';
+          localStorage.setItem('theme', 'dark');
+        } else {
+          body.classList.remove('dark-mode');
+          toggleBtn.textContent = '🌙';
+          localStorage.setItem('theme', 'light');
+        }
+      }
+
+      toggleBtn.addEventListener('click', () => {
+        const isDark = body.classList.contains('dark-mode');
+        setTheme(isDark ? 'light' : 'dark');
+      });
+
+      const savedTheme = localStorage.getItem('theme') || 'light';
+      setTheme(savedTheme);
+    });
+  </script>
 </body>
 </html>
