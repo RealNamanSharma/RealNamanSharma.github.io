@@ -1,474 +1,806 @@
-// JEE 2026 Tracker App
-class JEETracker {
-    constructor() {
-        this.jeeExamDate = new Date('2026-04-05');
-        this.defaultTarget = 50;
-        this.motivationalQuotes = [
-            "Success is not final, failure is not fatal: it is the courage to continue that counts.",
-            "The expert in anything was once a beginner.",
-            "Don't watch the clock; do what it does. Keep going.",
-            "Believe you can and you're halfway there.",
-            "The future belongs to those who believe in the beauty of their dreams."
-        ];
-        
-        // Sample progress data
-        this.progressData = [
-            {date: "2025-08-16", questions: 45, target: 50},
-            {date: "2025-08-17", questions: 52, target: 50},
-            {date: "2025-08-18", questions: 38, target: 50},
-            {date: "2025-08-19", questions: 61, target: 50},
-            {date: "2025-08-20", questions: 48, target: 50},
-            {date: "2025-08-21", questions: 55, target: 50},
-            {date: "2025-08-22", questions: 42, target: 50}
-        ];
-        
-        this.todoList = [
-            {id: 1, text: "Complete Organic Chemistry Chapter 1", completed: false, priority: "high"},
-            {id: 2, text: "Practice 20 Physics numericals", completed: true, priority: "medium"},
-            {id: 3, text: "Review Mathematics formulae", completed: false, priority: "low"}
-        ];
-        
-        this.chart = null;
-        this.init();
+// Enhanced JEE 2026 Tracker with Google Authentication and Perfect Alignment
+const CONFIG = {
+    examDates: {
+        jeeMain1: new Date('2026-01-20T09:00:00'),
+        jeeMain2: new Date('2026-04-01T09:00:00'),
+        jeeAdvanced: new Date('2026-05-18T09:00:00')
+    },
+    defaultSettings: {
+        dailyTarget: 50,
+        weeklyTarget: 350
+    },
+    subjects: ['Physics', 'Chemistry', 'Mathematics'],
+    motivationalQuotes: [
+        "Success is not final, failure is not fatal: it is the courage to continue that counts.",
+        "The expert in anything was once a beginner.",
+        "Don't watch the clock; do what it does. Keep going.",
+        "Believe you can and you're halfway there.",
+        "The future belongs to those who believe in the beauty of their dreams."
+    ],
+    firebase: {
+        apiKey: "AIzaSyDTIqOQxIAoxXbrv-CTBjQncDyy_EcHjWA",
+        authDomain: "jee-tracker-5e1e3.firebaseapp.com",
+        projectId: "jee-tracker-5e1e3"
     }
+};
 
-    init() {
-        this.createParticles();
-        this.updateCountdown();
-        this.updateCurrentDate();
-        this.setupEventListeners();
-        this.updateProgressDisplay();
-        this.renderTodoList();
-        this.updateAnalytics();
-        this.updateMotivationalQuote();
-        this.updateTimelineProgress();
-        
-        // Set up intervals
-        setInterval(() => this.updateCountdown(), 1000);
-        setInterval(() => this.updateMotivationalQuote(), 30000); // Change quote every 30 seconds
-    }
+// Application state
+let appState = {
+    user: null,
+    currentSection: 'dashboard',
+    progressData: [],
+    settings: { ...CONFIG.defaultSettings },
+    currentMonth: new Date(),
+    charts: {},
+    isAuthenticated: false
+};
 
-    createParticles() {
-        const particlesContainer = document.getElementById('particles');
-        const particleCount = 50;
-        
-        for (let i = 0; i < particleCount; i++) {
-            const particle = document.createElement('div');
-            particle.className = 'particle';
-            particle.style.left = Math.random() * 100 + '%';
-            particle.style.top = Math.random() * 100 + '%';
-            particle.style.animationDelay = Math.random() * 6 + 's';
-            particle.style.animationDuration = (Math.random() * 3 + 3) + 's';
-            particlesContainer.appendChild(particle);
+// Initialize Firebase (demo configuration)
+const initializeFirebase = () => {
+    if (typeof firebase !== 'undefined') {
+        try {
+            firebase.initializeApp(CONFIG.firebase);
+            console.log('Firebase initialized (demo mode)');
+        } catch (error) {
+            console.log('Firebase demo mode - using local storage');
         }
     }
+};
 
-    updateCountdown() {
-        const now = new Date();
-        const timeLeft = this.jeeExamDate - now;
-        
-        if (timeLeft > 0) {
-            const days = Math.floor(timeLeft / (1000 * 60 * 60 * 24));
-            const hours = Math.floor((timeLeft % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-            const minutes = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
-            const seconds = Math.floor((timeLeft % (1000 * 60)) / 1000);
-            
-            document.getElementById('days').textContent = days;
-            document.getElementById('hours').textContent = hours;
-            document.getElementById('minutes').textContent = minutes;
-            document.getElementById('seconds').textContent = seconds;
+// Authentication functions
+const initAuth = () => {
+    // Check if user is already signed in (using localStorage for demo)
+    const savedUser = localStorage.getItem('jee-tracker-user');
+    if (savedUser) {
+        appState.user = JSON.parse(savedUser);
+        appState.isAuthenticated = true;
+        showMainApp();
+    } else {
+        showAuthScreen();
+    }
+};
+
+const showAuthScreen = () => {
+    document.getElementById('authScreen').style.display = 'flex';
+    document.getElementById('mainApp').classList.add('hidden');
+};
+
+const showMainApp = () => {
+    document.getElementById('authScreen').style.display = 'none';
+    document.getElementById('mainApp').classList.remove('hidden');
+    
+    if (appState.user) {
+        const avatar = document.getElementById('userAvatar');
+        if (avatar && appState.user.photoURL) {
+            avatar.src = appState.user.photoURL;
         }
     }
+    
+    // Initialize the main app
+    loadAppState();
+    updateDashboard();
+    startCountdowns();
+    renderCalendar();
+};
 
-    updateCurrentDate() {
-        const now = new Date();
-        const options = { 
-            weekday: 'long', 
-            year: 'numeric', 
-            month: 'long', 
-            day: 'numeric' 
+const handleGoogleSignIn = async () => {
+    try {
+        // Demo implementation - replace with actual Google Sign-In
+        const demoUser = {
+            uid: 'demo-user-' + Date.now(),
+            email: 'demo@example.com',
+            displayName: 'Demo User',
+            photoURL: 'https://via.placeholder.com/32x32/64ffda/000000?text=DU'
         };
-        document.getElementById('currentDate').textContent = now.toLocaleDateString('en-US', options);
+        
+        appState.user = demoUser;
+        appState.isAuthenticated = true;
+        localStorage.setItem('jee-tracker-user', JSON.stringify(demoUser));
+        
+        showMainApp();
+        showSuccessMessage('Successfully signed in!');
+    } catch (error) {
+        console.error('Sign-in error:', error);
+        showErrorMessage('Sign-in failed. Please try again.');
     }
+};
 
-    setupEventListeners() {
-        // Daily target input
-        const dailyTargetInput = document.getElementById('dailyTarget');
-        dailyTargetInput.addEventListener('input', () => {
-            this.updateProgressDisplay();
-        });
+const handleSignOut = () => {
+    appState.user = null;
+    appState.isAuthenticated = false;
+    localStorage.removeItem('jee-tracker-user');
+    showAuthScreen();
+};
 
-        // Questions today input
-        const questionsTodayInput = document.getElementById('questionsToday');
-        questionsTodayInput.addEventListener('input', () => {
-            this.updateProgressDisplay();
-        });
-
-        // Save progress button
-        document.getElementById('saveProgress').addEventListener('click', () => {
-            this.saveProgress();
-        });
-
-        // Todo list functionality
-        document.getElementById('addTodo').addEventListener('click', () => {
-            this.addTodo();
-        });
-
-        document.getElementById('todoInput').addEventListener('keypress', (e) => {
-            if (e.key === 'Enter') {
-                this.addTodo();
-            }
-        });
-    }
-
-    updateProgressDisplay() {
-        const questionsToday = parseInt(document.getElementById('questionsToday').value) || 0;
-        const dailyTarget = parseInt(document.getElementById('dailyTarget').value) || this.defaultTarget;
-        
-        const progressPercentage = Math.min((questionsToday / dailyTarget) * 100, 100);
-        
-        document.getElementById('progressText').textContent = `${questionsToday} / ${dailyTarget}`;
-        document.getElementById('progressFill').style.width = progressPercentage + '%';
-    }
-
-    saveProgress() {
-        const questionsToday = parseInt(document.getElementById('questionsToday').value) || 0;
-        const dailyTarget = parseInt(document.getElementById('dailyTarget').value) || this.defaultTarget;
-        const today = new Date().toISOString().split('T')[0];
-        
-        // Update or add today's progress
-        const existingIndex = this.progressData.findIndex(entry => entry.date === today);
-        if (existingIndex !== -1) {
-            this.progressData[existingIndex] = {date: today, questions: questionsToday, target: dailyTarget};
-        } else {
-            this.progressData.push({date: today, questions: questionsToday, target: dailyTarget});
-        }
-        
-        // Keep only last 7 days
-        this.progressData = this.progressData.slice(-7);
-        
-        this.updateAnalytics();
-        this.showSuccessMessage();
-    }
-
-    showSuccessMessage() {
-        const button = document.getElementById('saveProgress');
-        const originalText = button.textContent;
-        button.textContent = 'Progress Saved! ✓';
-        button.style.background = 'var(--color-success)';
-        
-        setTimeout(() => {
-            button.textContent = originalText;
-            button.style.background = '';
-        }, 2000);
-    }
-
-    addTodo() {
-        const todoInput = document.getElementById('todoInput');
-        const todoPriority = document.getElementById('todoPriority');
-        const text = todoInput.value.trim();
-        
-        if (text) {
-            const newTodo = {
-                id: Date.now(),
-                text: text,
-                completed: false,
-                priority: todoPriority.value
+// Utility functions
+const utils = {
+    formatDate: (date) => date.toISOString().split('T')[0],
+    parseDate: (dateString) => new Date(dateString + 'T00:00:00'),
+    getToday: () => utils.formatDate(new Date()),
+    debounce: (func, wait) => {
+        let timeout;
+        return function executedFunction(...args) {
+            const later = () => {
+                clearTimeout(timeout);
+                func(...args);
             };
-            
-            this.todoList.unshift(newTodo);
-            todoInput.value = '';
-            this.renderTodoList();
+            clearTimeout(timeout);
+            timeout = setTimeout(later, wait);
+        };
+    }
+};
+
+// Local storage management with user-specific data
+const storage = {
+    save: (key, data) => {
+        if (!appState.user) return;
+        try {
+            const userKey = `jee-tracker-${appState.user.uid}-${key}`;
+            localStorage.setItem(userKey, JSON.stringify(data));
+        } catch (error) {
+            console.error('Failed to save data:', error);
+        }
+    },
+    
+    load: (key, defaultValue = null) => {
+        if (!appState.user) return defaultValue;
+        try {
+            const userKey = `jee-tracker-${appState.user.uid}-${key}`;
+            const data = localStorage.getItem(userKey);
+            return data ? JSON.parse(data) : defaultValue;
+        } catch (error) {
+            console.error('Failed to load data:', error);
+            return defaultValue;
         }
     }
+};
 
-    renderTodoList() {
-        const todoListContainer = document.getElementById('todoList');
-        todoListContainer.innerHTML = '';
-        
-        this.todoList.forEach(todo => {
-            const todoItem = document.createElement('div');
-            todoItem.className = 'todo-item';
-            todoItem.innerHTML = `
-                <input type="checkbox" class="todo-checkbox" ${todo.completed ? 'checked' : ''} 
-                       onchange="jeeTracker.toggleTodo(${todo.id})">
-                <span class="todo-text ${todo.completed ? 'completed' : ''}">${todo.text}</span>
-                <span class="todo-priority ${todo.priority}">${todo.priority}</span>
-                <button class="todo-delete" onclick="jeeTracker.deleteTodo(${todo.id})">Delete</button>
-            `;
-            todoListContainer.appendChild(todoItem);
+// Load and save app state
+const loadAppState = () => {
+    appState.progressData = storage.load('progressData', []);
+    appState.settings = { ...CONFIG.defaultSettings, ...storage.load('settings', {}) };
+    
+    // Load sample data if none exists
+    if (appState.progressData.length === 0) {
+        loadSampleData();
+    }
+    
+    // Set form values
+    const dailyTargetInput = document.getElementById('dailyTarget');
+    const questionDateInput = document.getElementById('questionDate');
+    
+    if (dailyTargetInput) dailyTargetInput.value = appState.settings.dailyTarget;
+    if (questionDateInput) questionDateInput.value = utils.getToday();
+};
+
+const saveAppState = () => {
+    storage.save('progressData', appState.progressData);
+    storage.save('settings', appState.settings);
+};
+
+const loadSampleData = () => {
+    const sampleData = [
+        {"date": "2025-08-16", "questions": 45, "target": 50, "subjects": {"Physics": 15, "Chemistry": 20, "Mathematics": 10}},
+        {"date": "2025-08-17", "questions": 52, "target": 50, "subjects": {"Physics": 18, "Chemistry": 16, "Mathematics": 18}},
+        {"date": "2025-08-18", "questions": 38, "target": 50, "subjects": {"Physics": 12, "Chemistry": 14, "Mathematics": 12}},
+        {"date": "2025-08-19", "questions": 61, "target": 50, "subjects": {"Physics": 20, "Chemistry": 21, "Mathematics": 20}},
+        {"date": "2025-08-20", "questions": 48, "target": 50, "subjects": {"Physics": 16, "Chemistry": 16, "Mathematics": 16}},
+        {"date": "2025-08-21", "questions": 55, "target": 50, "subjects": {"Physics": 18, "Chemistry": 19, "Mathematics": 18}},
+        {"date": "2025-08-22", "questions": 42, "target": 50, "subjects": {"Physics": 14, "Chemistry": 14, "Mathematics": 14}}
+    ];
+    appState.progressData = sampleData;
+};
+
+// Event listeners setup
+const setupEventListeners = () => {
+    // Authentication
+    const googleSignInBtn = document.getElementById('googleSignIn');
+    const logoutBtn = document.getElementById('logoutBtn');
+    
+    if (googleSignInBtn) googleSignInBtn.addEventListener('click', handleGoogleSignIn);
+    if (logoutBtn) logoutBtn.addEventListener('click', handleSignOut);
+    
+    // Navigation
+    document.querySelectorAll('.nav-link').forEach(link => {
+        link.addEventListener('click', (e) => {
+            e.preventDefault();
+            const section = link.getAttribute('href').substring(1);
+            showSection(section);
+        });
+    });
+    
+    // Progress tracking
+    const saveProgressBtn = document.getElementById('saveProgress');
+    const dailyTargetInput = document.getElementById('dailyTarget');
+    
+    if (saveProgressBtn) saveProgressBtn.addEventListener('click', saveProgress);
+    if (dailyTargetInput) dailyTargetInput.addEventListener('change', updateDailyTarget);
+    
+    // Auto-calculate total when subject inputs change
+    ['physicsCount', 'chemistryCount', 'mathCount'].forEach(id => {
+        const element = document.getElementById(id);
+        if (element) {
+            element.addEventListener('input', calculateTotal);
+        }
+    });
+    
+    // Calendar navigation
+    const prevBtn = document.getElementById('prevMonth');
+    const nextBtn = document.getElementById('nextMonth');
+    if (prevBtn) prevBtn.addEventListener('click', () => changeMonth(-1));
+    if (nextBtn) nextBtn.addEventListener('click', () => changeMonth(1));
+    
+    // Modal
+    const closeModalBtn = document.getElementById('closeModal');
+    const saveModalBtn = document.getElementById('saveModalProgress');
+    if (closeModalBtn) closeModalBtn.addEventListener('click', closeModal);
+    if (saveModalBtn) saveModalBtn.addEventListener('click', saveModalProgress);
+    
+    // Close modal when clicking outside
+    const dayModal = document.getElementById('dayModal');
+    if (dayModal) {
+        dayModal.addEventListener('click', (e) => {
+            if (e.target.id === 'dayModal') closeModal();
         });
     }
+};
 
-    toggleTodo(id) {
-        const todo = this.todoList.find(t => t.id === id);
-        if (todo) {
-            todo.completed = !todo.completed;
-            this.renderTodoList();
+// Navigation
+const showSection = (sectionName) => {
+    // Update navigation active state
+    document.querySelectorAll('.nav-link').forEach(link => {
+        link.classList.remove('active');
+        if (link.getAttribute('href') === `#${sectionName}`) {
+            link.classList.add('active');
+        }
+    });
+    
+    // Hide all sections and show target
+    document.querySelectorAll('.section').forEach(section => {
+        section.classList.remove('active');
+    });
+    
+    const targetSection = document.getElementById(sectionName);
+    if (targetSection) {
+        targetSection.classList.add('active');
+        appState.currentSection = sectionName;
+        
+        // Initialize section-specific functionality
+        if (sectionName === 'analytics') {
+            setTimeout(() => initializeCharts(), 100);
         }
     }
+};
 
-    deleteTodo(id) {
-        this.todoList = this.todoList.filter(t => t.id !== id);
-        this.renderTodoList();
-    }
-
-    updateAnalytics() {
-        this.updateStats();
-        this.updateChart();
-        this.updateCircularProgress();
-        this.updateAchievements();
-    }
-
-    updateStats() {
-        const weeklyTotal = this.progressData.reduce((sum, entry) => sum + entry.questions, 0);
-        const averageDaily = Math.round(weeklyTotal / this.progressData.length) || 0;
-        const bestDay = Math.max(...this.progressData.map(entry => entry.questions), 0);
-        const currentStreak = this.calculateStreak();
+// Enhanced countdown timers with perfect positioning
+const startCountdowns = () => {
+    const updateCountdowns = () => {
+        const examMapping = {
+            'jeeMain1': 'main1',
+            'jeeMain2': 'main2', 
+            'jeeAdvanced': 'advanced'
+        };
         
-        document.getElementById('weeklyTotal').textContent = weeklyTotal;
-        document.getElementById('averageDaily').textContent = averageDaily;
-        document.getElementById('bestDay').textContent = bestDay;
-        document.getElementById('currentStreak').textContent = currentStreak;
-    }
-
-    calculateStreak() {
-        let streak = 0;
-        for (let i = this.progressData.length - 1; i >= 0; i--) {
-            if (this.progressData[i].questions >= this.progressData[i].target) {
-                streak++;
-            } else {
-                break;
-            }
-        }
-        return streak;
-    }
-
-    updateChart() {
-        const ctx = document.getElementById('progressChart').getContext('2d');
-        
-        if (this.chart) {
-            this.chart.destroy();
-        }
-        
-        const labels = this.progressData.map(entry => {
-            const date = new Date(entry.date);
-            return date.toLocaleDateString('en-US', {month: 'short', day: 'numeric'});
+        Object.keys(CONFIG.examDates).forEach(exam => {
+            const examKey = examMapping[exam];
+            updateCountdown(examKey, CONFIG.examDates[exam]);
         });
+    };
+    
+    updateCountdowns();
+    setInterval(updateCountdowns, 1000);
+};
+
+const updateCountdown = (exam, targetDate) => {
+    const now = new Date().getTime();
+    const distance = targetDate.getTime() - now;
+    
+    const daysEl = document.getElementById(`days-${exam}`);
+    const hoursEl = document.getElementById(`hours-${exam}`);
+    const minutesEl = document.getElementById(`minutes-${exam}`);
+    
+    if (!daysEl || !hoursEl || !minutesEl) return;
+    
+    if (distance < 0) {
+        daysEl.textContent = '000';
+        hoursEl.textContent = '00';
+        minutesEl.textContent = '00';
+        return;
+    }
+    
+    const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+    const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+    const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+    
+    daysEl.textContent = String(days).padStart(3, '0');
+    hoursEl.textContent = String(hours).padStart(2, '0');
+    minutesEl.textContent = String(minutes).padStart(2, '0');
+};
+
+// Progress tracking with enhanced features
+const calculateTotal = () => {
+    const physicsInput = document.getElementById('physicsCount');
+    const chemistryInput = document.getElementById('chemistryCount');
+    const mathInput = document.getElementById('mathCount');
+    
+    if (physicsInput && chemistryInput && mathInput) {
+        const physics = parseInt(physicsInput.value) || 0;
+        const chemistry = parseInt(chemistryInput.value) || 0;
+        const math = parseInt(mathInput.value) || 0;
         
-        const questionsData = this.progressData.map(entry => entry.questions);
-        const targetData = this.progressData.map(entry => entry.target);
+        // Update individual progress bars
+        updateSubjectProgress('physics', physics);
+        updateSubjectProgress('chemistry', chemistry);
+        updateSubjectProgress('math', math);
+    }
+};
+
+const updateSubjectProgress = (subject, count) => {
+    const maxQuestions = 30; // Max questions per subject for visualization
+    const percentage = Math.min((count / maxQuestions) * 100, 100);
+    
+    const progressBar = document.getElementById(`${subject}Progress`);
+    const countDisplay = document.getElementById(`${subject}Today`);
+    
+    if (progressBar) {
+        progressBar.style.width = percentage + '%';
+    }
+    if (countDisplay) {
+        countDisplay.textContent = count;
+    }
+};
+
+const saveProgress = () => {
+    const dateInput = document.getElementById('questionDate');
+    const targetInput = document.getElementById('dailyTarget');
+    const physicsInput = document.getElementById('physicsCount');
+    const chemistryInput = document.getElementById('chemistryCount');
+    const mathInput = document.getElementById('mathCount');
+    
+    if (!dateInput || !targetInput) return;
+    
+    const date = dateInput.value;
+    const target = parseInt(targetInput.value) || 50;
+    const physics = parseInt(physicsInput?.value) || 0;
+    const chemistry = parseInt(chemistryInput?.value) || 0;
+    const math = parseInt(mathInput?.value) || 0;
+    const questions = physics + chemistry + math;
+    
+    if (!date) {
+        showErrorMessage('Please select a date');
+        return;
+    }
+    
+    const subjects = {
+        Physics: physics,
+        Chemistry: chemistry,
+        Mathematics: math
+    };
+    
+    // Find existing entry or create new
+    const existingIndex = appState.progressData.findIndex(entry => entry.date === date);
+    const progressEntry = { date, questions, target, subjects };
+    
+    if (existingIndex >= 0) {
+        appState.progressData[existingIndex] = progressEntry;
+    } else {
+        appState.progressData.push(progressEntry);
+    }
+    
+    // Sort by date
+    appState.progressData.sort((a, b) => new Date(a.date) - new Date(b.date));
+    
+    saveAppState();
+    updateDashboard();
+    renderCalendar();
+    
+    // Clear form
+    if (physicsInput) physicsInput.value = '';
+    if (chemistryInput) chemistryInput.value = '';
+    if (mathInput) mathInput.value = '';
+    
+    showSuccessMessage('Progress saved successfully!');
+};
+
+const updateDailyTarget = () => {
+    const targetInput = document.getElementById('dailyTarget');
+    if (targetInput) {
+        const newTarget = parseInt(targetInput.value) || 50;
+        appState.settings.dailyTarget = newTarget;
+        saveAppState();
+        updateTodayProgress();
+    }
+};
+
+// FIXED: Perfect circular progress alignment
+const updateTodayProgress = () => {
+    const today = utils.getToday();
+    const todayEntry = appState.progressData.find(entry => entry.date === today);
+    const target = appState.settings.dailyTarget;
+    
+    const questionsToday = todayEntry ? todayEntry.questions : 0;
+    const progress = Math.min(Math.round((questionsToday / target) * 100), 100);
+    
+    // Update stats
+    const todayQuestionsEl = document.getElementById('todayQuestions');
+    const todayTargetEl = document.getElementById('todayTarget');
+    
+    if (todayQuestionsEl) todayQuestionsEl.textContent = questionsToday;
+    if (todayTargetEl) todayTargetEl.textContent = target;
+    
+    // FIXED: Update circular progress with perfect center alignment
+    const circle = document.getElementById('progressCircle');
+    const percentageEl = document.getElementById('progressPercentage');
+    
+    if (circle && percentageEl) {
+        const circumference = 2 * Math.PI * 54; // radius = 54
+        const offset = circumference - (progress / 100) * circumference;
         
-        this.chart = new Chart(ctx, {
-            type: 'line',
-            data: {
-                labels: labels,
-                datasets: [{
-                    label: 'Questions Solved',
-                    data: questionsData,
-                    borderColor: '#32b8c6',
-                    backgroundColor: 'rgba(50, 184, 198, 0.2)',
-                    fill: true,
-                    tension: 0.4,
-                    pointBackgroundColor: '#32b8c6',
-                    pointBorderColor: '#ffffff',
-                    pointRadius: 6,
-                    pointHoverRadius: 8
-                }, {
-                    label: 'Daily Target',
-                    data: targetData,
-                    borderColor: '#e6819f',
-                    backgroundColor: 'transparent',
-                    borderDash: [5, 5],
-                    tension: 0,
-                    pointRadius: 4
-                }]
+        circle.style.strokeDasharray = `${circumference} ${circumference}`;
+        circle.style.strokeDashoffset = offset;
+        
+        // Perfect center alignment for percentage text
+        percentageEl.textContent = progress + '%';
+    }
+    
+    // Update subject progress if today's data exists
+    if (todayEntry) {
+        updateSubjectProgress('physics', todayEntry.subjects.Physics || 0);
+        updateSubjectProgress('chemistry', todayEntry.subjects.Chemistry || 0);
+        updateSubjectProgress('math', todayEntry.subjects.Mathematics || 0);
+    }
+};
+
+// Dashboard statistics update
+const updateDashboardStats = () => {
+    const totalQuestions = appState.progressData.reduce((sum, entry) => sum + entry.questions, 0);
+    const avgQuestions = appState.progressData.length ? Math.round(totalQuestions / appState.progressData.length) : 0;
+    const bestDay = appState.progressData.reduce((max, entry) => Math.max(max, entry.questions), 0);
+    const currentStreak = calculateStreak();
+    
+    const totalEl = document.getElementById('totalQuestions');
+    const avgEl = document.getElementById('avgQuestions');
+    const bestEl = document.getElementById('bestDay');
+    const streakEl = document.getElementById('currentStreak');
+    
+    if (totalEl) totalEl.textContent = totalQuestions;
+    if (avgEl) avgEl.textContent = avgQuestions;
+    if (bestEl) bestEl.textContent = bestDay;
+    if (streakEl) streakEl.textContent = currentStreak;
+};
+
+const calculateStreak = () => {
+    if (appState.progressData.length === 0) return 0;
+    
+    const sortedData = [...appState.progressData].sort((a, b) => new Date(b.date) - new Date(a.date));
+    let streak = 0;
+    let currentDate = new Date();
+    
+    for (const entry of sortedData) {
+        const entryDate = utils.parseDate(entry.date);
+        const daysDiff = Math.floor((currentDate - entryDate) / (1000 * 60 * 60 * 24));
+        
+        if (daysDiff === streak && entry.questions >= entry.target) {
+            streak++;
+            currentDate = entryDate;
+        } else {
+            break;
+        }
+    }
+    
+    return streak;
+};
+
+const updateDashboard = () => {
+    updateDashboardStats();
+    updateTodayProgress();
+};
+
+// Charts initialization
+const initializeCharts = () => {
+    if (appState.progressData.length === 0) return;
+    
+    createProgressChart();
+    createSubjectChart();
+};
+
+const createProgressChart = () => {
+    const ctx = document.getElementById('progressChart');
+    if (!ctx) return;
+    
+    if (appState.charts.progress) {
+        appState.charts.progress.destroy();
+    }
+    
+    const last14Days = appState.progressData.slice(-14);
+    
+    appState.charts.progress = new Chart(ctx.getContext('2d'), {
+        type: 'line',
+        data: {
+            labels: last14Days.map(entry => entry.date),
+            datasets: [{
+                label: 'Questions Solved',
+                data: last14Days.map(entry => entry.questions),
+                borderColor: '#1FB8CD',
+                backgroundColor: 'rgba(31, 184, 205, 0.1)',
+                fill: true,
+                tension: 0.4
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    labels: { color: 'white' }
+                }
             },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: {
-                    legend: {
-                        labels: {
-                            color: '#f5f5f5'
-                        }
-                    }
+            scales: {
+                x: {
+                    ticks: { color: 'rgba(255, 255, 255, 0.7)' },
+                    grid: { color: 'rgba(255, 255, 255, 0.1)' }
                 },
-                scales: {
-                    x: {
-                        ticks: {
-                            color: '#a7a9a9'
-                        },
-                        grid: {
-                            color: 'rgba(255, 255, 255, 0.1)'
-                        }
-                    },
-                    y: {
-                        ticks: {
-                            color: '#a7a9a9'
-                        },
-                        grid: {
-                            color: 'rgba(255, 255, 255, 0.1)'
-                        }
-                    }
+                y: {
+                    ticks: { color: 'rgba(255, 255, 255, 0.7)' },
+                    grid: { color: 'rgba(255, 255, 255, 0.1)' }
                 }
             }
-        });
-    }
-
-    updateCircularProgress() {
-        const weeklyTotal = this.progressData.reduce((sum, entry) => sum + entry.questions, 0);
-        const weeklyTarget = this.progressData.reduce((sum, entry) => sum + entry.target, 0);
-        const percentage = weeklyTarget > 0 ? Math.min((weeklyTotal / weeklyTarget) * 100, 100) : 0;
-        
-        const circle = document.getElementById('progressCircle');
-        const circumference = 2 * Math.PI * 90; // radius is 90
-        const strokeDashoffset = circumference - (percentage / 100) * circumference;
-        
-        circle.style.strokeDashoffset = strokeDashoffset;
-        document.getElementById('weeklyPercentage').textContent = Math.round(percentage) + '%';
-    }
-
-    updateAchievements() {
-        const achievementBadges = document.getElementById('achievementBadges');
-        achievementBadges.innerHTML = '';
-        
-        const weeklyTotal = this.progressData.reduce((sum, entry) => sum + entry.questions, 0);
-        const streak = this.calculateStreak();
-        const bestDay = Math.max(...this.progressData.map(entry => entry.questions), 0);
-        
-        const achievements = [];
-        
-        if (weeklyTotal >= 350) achievements.push('Week Warrior');
-        if (streak >= 3) achievements.push(`${streak} Day Streak`);
-        if (bestDay >= 100) achievements.push('Century Club');
-        if (weeklyTotal >= 250) achievements.push('Consistent Performer');
-        
-        if (achievements.length === 0) {
-            achievements.push('Getting Started');
         }
-        
-        achievements.forEach(achievement => {
-            const badge = document.createElement('div');
-            badge.className = 'achievement-badge';
-            badge.textContent = achievement;
-            achievementBadges.appendChild(badge);
+    });
+};
+
+const createSubjectChart = () => {
+    const ctx = document.getElementById('subjectChart');
+    if (!ctx) return;
+    
+    if (appState.charts.subject) {
+        appState.charts.subject.destroy();
+    }
+    
+    const subjectTotals = appState.progressData.reduce((acc, entry) => {
+        Object.keys(entry.subjects).forEach(subject => {
+            acc[subject] = (acc[subject] || 0) + entry.subjects[subject];
         });
-    }
-
-    updateMotivationalQuote() {
-        const quoteElement = document.getElementById('dailyQuote');
-        const randomQuote = this.motivationalQuotes[Math.floor(Math.random() * this.motivationalQuotes.length)];
-        
-        quoteElement.style.opacity = '0';
-        setTimeout(() => {
-            quoteElement.textContent = randomQuote;
-            quoteElement.style.opacity = '1';
-        }, 300);
-    }
-
-    updateTimelineProgress() {
-        const startDate = new Date('2024-04-06'); // One year before JEE 2026
-        const now = new Date();
-        const totalDuration = this.jeeExamDate - startDate;
-        const elapsedDuration = now - startDate;
-        const progressPercentage = Math.min((elapsedDuration / totalDuration) * 100, 100);
-        
-        document.getElementById('timelineFill').style.width = progressPercentage + '%';
-        document.getElementById('timelinePercentage').textContent = Math.round(progressPercentage) + '%';
-    }
-}
-
-// Initialize the app when DOM is loaded
-document.addEventListener('DOMContentLoaded', () => {
-    window.jeeTracker = new JEETracker();
-});
-
-// Add some utility functions for better UX
-document.addEventListener('DOMContentLoaded', () => {
-    // Add smooth scrolling for any internal links
-    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-        anchor.addEventListener('click', function (e) {
-            e.preventDefault();
-            const target = document.querySelector(this.getAttribute('href'));
-            if (target) {
-                target.scrollIntoView({
-                    behavior: 'smooth'
-                });
+        return acc;
+    }, {});
+    
+    appState.charts.subject = new Chart(ctx.getContext('2d'), {
+        type: 'doughnut',
+        data: {
+            labels: Object.keys(subjectTotals),
+            datasets: [{
+                data: Object.values(subjectTotals),
+                backgroundColor: ['#1FB8CD', '#FFC185', '#B4413C']
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    labels: { color: 'white' }
+                }
             }
-        });
-    });
-
-    // Add focus states for better accessibility
-    const inputs = document.querySelectorAll('.form-control');
-    inputs.forEach(input => {
-        input.addEventListener('focus', () => {
-            input.parentElement.classList.add('focused');
-        });
-        input.addEventListener('blur', () => {
-            input.parentElement.classList.remove('focused');
-        });
-    });
-
-    // Add ripple effect to buttons
-    const buttons = document.querySelectorAll('.btn');
-    buttons.forEach(button => {
-        button.addEventListener('click', function(e) {
-            const ripple = document.createElement('span');
-            const rect = this.getBoundingClientRect();
-            const size = Math.max(rect.width, rect.height);
-            const x = e.clientX - rect.left - size / 2;
-            const y = e.clientY - rect.top - size / 2;
-            
-            ripple.style.width = ripple.style.height = size + 'px';
-            ripple.style.left = x + 'px';
-            ripple.style.top = y + 'px';
-            ripple.classList.add('ripple');
-            
-            this.appendChild(ripple);
-            
-            setTimeout(() => {
-                ripple.remove();
-            }, 600);
-        });
-    });
-});
-
-// Add CSS for ripple effect
-const style = document.createElement('style');
-style.textContent = `
-    .btn {
-        position: relative;
-        overflow: hidden;
-    }
-    
-    .ripple {
-        position: absolute;
-        border-radius: 50%;
-        background: rgba(255, 255, 255, 0.3);
-        transform: scale(0);
-        animation: ripple-animation 0.6s linear;
-        pointer-events: none;
-    }
-    
-    @keyframes ripple-animation {
-        to {
-            transform: scale(4);
-            opacity: 0;
         }
+    });
+};
+
+// Calendar functionality
+const renderCalendar = () => {
+    const calendarGrid = document.getElementById('calendarGrid');
+    const monthYear = document.getElementById('currentMonth');
+    
+    if (!calendarGrid || !monthYear) return;
+    
+    const year = appState.currentMonth.getFullYear();
+    const month = appState.currentMonth.getMonth();
+    
+    monthYear.textContent = `${appState.currentMonth.toLocaleString('default', { month: 'long' })} ${year}`;
+    
+    calendarGrid.innerHTML = '';
+    
+    // Add day headers
+    const dayHeaders = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+    dayHeaders.forEach(day => {
+        const dayHeader = document.createElement('div');
+        dayHeader.style.cssText = `
+            padding: 8px;
+            text-align: center;
+            font-weight: 600;
+            color: rgba(255, 255, 255, 0.8);
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 4px;
+            font-size: 12px;
+        `;
+        dayHeader.textContent = day;
+        calendarGrid.appendChild(dayHeader);
+    });
+    
+    const firstDay = new Date(year, month, 1);
+    const lastDay = new Date(year, month + 1, 0);
+    const daysInMonth = lastDay.getDate();
+    const startingDayOfWeek = firstDay.getDay();
+    
+    // Add empty cells
+    for (let i = 0; i < startingDayOfWeek; i++) {
+        const emptyDay = document.createElement('div');
+        calendarGrid.appendChild(emptyDay);
     }
     
-    .focused {
-        transform: translateY(-2px);
-        transition: transform 0.2s ease;
+    // Add days
+    for (let day = 1; day <= daysInMonth; day++) {
+        const dayElement = document.createElement('div');
+        const dayDate = utils.formatDate(new Date(year, month, day));
+        const progressEntry = appState.progressData.find(entry => entry.date === dayDate);
+        const today = utils.getToday();
+        
+        dayElement.className = 'calendar-day';
+        dayElement.textContent = day;
+        dayElement.dataset.date = dayDate;
+        
+        if (progressEntry) {
+            const questions = progressEntry.questions;
+            if (questions === 0) {
+                dayElement.classList.add('no-data');
+            } else if (questions <= 20) {
+                dayElement.classList.add('low');
+            } else if (questions <= 40) {
+                dayElement.classList.add('medium');
+            } else {
+                dayElement.classList.add('high');
+            }
+        } else {
+            dayElement.classList.add('no-data');
+        }
+        
+        if (dayDate === today) {
+            dayElement.classList.add('today');
+        }
+        
+        dayElement.addEventListener('click', () => openDayModal(dayDate));
+        calendarGrid.appendChild(dayElement);
+    }
+};
+
+const changeMonth = (direction) => {
+    appState.currentMonth.setMonth(appState.currentMonth.getMonth() + direction);
+    renderCalendar();
+};
+
+const openDayModal = (date) => {
+    const modal = document.getElementById('dayModal');
+    if (!modal) return;
+    
+    const entry = appState.progressData.find(item => item.date === date);
+    
+    document.getElementById('modalDate').textContent = new Date(date + 'T00:00:00').toLocaleDateString();
+    
+    const modalQuestions = document.getElementById('modalQuestions');
+    const modalPhysics = document.getElementById('modalPhysics');
+    const modalChemistry = document.getElementById('modalChemistry');
+    const modalMath = document.getElementById('modalMath');
+    
+    if (entry) {
+        if (modalQuestions) modalQuestions.value = entry.questions;
+        if (modalPhysics) modalPhysics.value = entry.subjects.Physics || 0;
+        if (modalChemistry) modalChemistry.value = entry.subjects.Chemistry || 0;
+        if (modalMath) modalMath.value = entry.subjects.Mathematics || 0;
+    } else {
+        if (modalQuestions) modalQuestions.value = '';
+        if (modalPhysics) modalPhysics.value = '';
+        if (modalChemistry) modalChemistry.value = '';
+        if (modalMath) modalMath.value = '';
     }
     
-    .todo-text {
-        transition: all 0.3s ease;
+    modal.dataset.date = date;
+    modal.classList.remove('hidden');
+};
+
+const closeModal = () => {
+    const modal = document.getElementById('dayModal');
+    if (modal) modal.classList.add('hidden');
+};
+
+const saveModalProgress = () => {
+    const modal = document.getElementById('dayModal');
+    if (!modal) return;
+    
+    const date = modal.dataset.date;
+    const physics = parseInt(document.getElementById('modalPhysics')?.value) || 0;
+    const chemistry = parseInt(document.getElementById('modalChemistry')?.value) || 0;
+    const math = parseInt(document.getElementById('modalMath')?.value) || 0;
+    const questions = physics + chemistry + math;
+    
+    const subjects = { Physics: physics, Chemistry: chemistry, Mathematics: math };
+    const existingIndex = appState.progressData.findIndex(entry => entry.date === date);
+    const progressEntry = {
+        date,
+        questions,
+        target: appState.settings.dailyTarget,
+        subjects
+    };
+    
+    if (existingIndex >= 0) {
+        appState.progressData[existingIndex] = progressEntry;
+    } else {
+        appState.progressData.push(progressEntry);
     }
     
-    .motivational-quote {
-        transition: opacity 0.3s ease;
-    }
-`;
-document.head.appendChild(style);
+    appState.progressData.sort((a, b) => new Date(a.date) - new Date(b.date));
+    
+    saveAppState();
+    updateDashboard();
+    renderCalendar();
+    closeModal();
+    showSuccessMessage('Progress updated successfully!');
+};
+
+// Notification functions
+const showSuccessMessage = (message) => {
+    showNotification(message, 'success');
+};
+
+const showErrorMessage = (message) => {
+    showNotification(message, 'error');
+};
+
+const showNotification = (message, type) => {
+    const notification = document.createElement('div');
+    notification.style.cssText = `
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        padding: 12px 20px;
+        background: ${type === 'success' ? 'rgba(34, 197, 94, 0.9)' : 'rgba(239, 68, 68, 0.9)'};
+        color: white;
+        border-radius: 8px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        z-index: 3000;
+        font-weight: 500;
+        backdrop-filter: blur(10px);
+        border: 1px solid ${type === 'success' ? 'rgba(34, 197, 94, 0.3)' : 'rgba(239, 68, 68, 0.3)'};
+        animation: slideIn 0.3s ease;
+    `;
+    notification.textContent = message;
+    
+    document.body.appendChild(notification);
+    
+    setTimeout(() => {
+        notification.style.animation = 'slideOut 0.3s ease forwards';
+        setTimeout(() => notification.remove(), 300);
+    }, 3000);
+};
+
+// Add CSS for notification animations
+const addNotificationStyles = () => {
+    const style = document.createElement('style');
+    style.textContent = `
+        @keyframes slideIn {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+        @keyframes slideOut {
+            from { transform: translateX(0); opacity: 1; }
+            to { transform: translateX(100%); opacity: 0; }
+        }
+    `;
+    document.head.appendChild(style);
+};
+
+// Initialize application
+const init = () => {
+    addNotificationStyles();
+    initializeFirebase();
+    setupEventListeners();
+    initAuth();
+    
+    // Auto-save every 30 seconds
+    setInterval(() => {
+        if (appState.isAuthenticated) {
+            saveAppState();
+        }
+    }, 30000);
+};
+
+// Initialize when DOM is loaded
+document.addEventListener('DOMContentLoaded', init);
