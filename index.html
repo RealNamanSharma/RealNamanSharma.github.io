@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JEE 2026 Tracker - Your Success Journey</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <!-- Background particles -->
+    <div class="particles" id="particles"></div>
+    
+    <!-- Header with countdown -->
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <h1 class="title">JEE 2026 Tracker</h1>
+                <p class="subtitle">Your Journey to Success</p>
+                <div class="countdown-container">
+                    <div class="countdown" id="countdown">
+                        <div class="countdown-item">
+                            <span class="countdown-number" id="days">0</span>
+                            <span class="countdown-label">Days</span>
+                        </div>
+                        <div class="countdown-item">
+                            <span class="countdown-number" id="hours">0</span>
+                            <span class="countdown-label">Hours</span>
+                        </div>
+                        <div class="countdown-item">
+                            <span class="countdown-number" id="minutes">0</span>
+                            <span class="countdown-label">Minutes</span>
+                        </div>
+                        <div class="countdown-item">
+                            <span class="countdown-number" id="seconds">0</span>
+                            <span class="countdown-label">Seconds</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="current-date" id="currentDate"></div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main content -->
+    <main class="main">
+        <div class="container">
+            <!-- Daily Progress Section -->
+            <section class="section glass-card">
+                <h2 class="section-title">Daily Progress Tracker</h2>
+                <div class="progress-grid">
+                    <div class="input-group">
+                        <label for="questionsToday" class="form-label">Questions Solved Today</label>
+                        <input type="number" id="questionsToday" class="form-control" placeholder="Enter questions solved" min="0">
+                    </div>
+                    <div class="input-group">
+                        <label for="dailyTarget" class="form-label">Daily Target</label>
+                        <input type="number" id="dailyTarget" class="form-control" placeholder="Set daily target" min="1" value="50">
+                    </div>
+                </div>
+                <div class="progress-display">
+                    <div class="progress-bar-container">
+                        <div class="progress-info">
+                            <span>Today's Progress</span>
+                            <span id="progressText">0 / 50</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" id="progressFill"></div>
+                        </div>
+                    </div>
+                </div>
+                <button class="btn btn--primary btn--lg" id="saveProgress">Save Today's Progress</button>
+            </section>
+
+            <!-- Todo List Section -->
+            <section class="section glass-card">
+                <h2 class="section-title">Study Todo List</h2>
+                <div class="todo-input-container">
+                    <input type="text" id="todoInput" class="form-control" placeholder="Add a new study task...">
+                    <select id="todoPriority" class="form-control">
+                        <option value="low">Low Priority</option>
+                        <option value="medium" selected>Medium Priority</option>
+                        <option value="high">High Priority</option>
+                    </select>
+                    <button class="btn btn--primary" id="addTodo">Add Task</button>
+                </div>
+                <div class="todo-list" id="todoList">
+                    <!-- Todo items will be inserted here -->
+                </div>
+            </section>
+
+            <!-- Analytics Section -->
+            <section class="section glass-card">
+                <h2 class="section-title">Progress Analytics</h2>
+                <div class="analytics-grid">
+                    <div class="stats-container">
+                        <div class="stat-card">
+                            <div class="stat-number" id="weeklyTotal">0</div>
+                            <div class="stat-label">This Week</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-number" id="averageDaily">0</div>
+                            <div class="stat-label">Daily Average</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-number" id="currentStreak">0</div>
+                            <div class="stat-label">Current Streak</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-number" id="bestDay">0</div>
+                            <div class="stat-label">Best Day</div>
+                        </div>
+                    </div>
+                    <div class="chart-container" style="position: relative; height: 400px;">
+                        <canvas id="progressChart"></canvas>
+                    </div>
+                    <div class="circular-progress">
+                        <div class="circle-container">
+                            <svg class="progress-circle" width="200" height="200">
+                                <circle cx="100" cy="100" r="90" fill="none" stroke="var(--color-border)" stroke-width="8"/>
+                                <circle cx="100" cy="100" r="90" fill="none" stroke="var(--color-primary)" stroke-width="8" 
+                                        stroke-dasharray="565.48" stroke-dashoffset="565.48" id="progressCircle"/>
+                            </svg>
+                            <div class="progress-center">
+                                <div class="progress-percentage" id="weeklyPercentage">0%</div>
+                                <div class="progress-label">Weekly Target</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Motivation Section -->
+            <section class="section glass-card">
+                <h2 class="section-title">Stay Motivated</h2>
+                <div class="motivation-content">
+                    <div class="quote-container">
+                        <blockquote class="motivational-quote" id="dailyQuote">
+                            "Success is not final, failure is not fatal: it is the courage to continue that counts."
+                        </blockquote>
+                    </div>
+                    <div class="achievements">
+                        <h3>Your Achievements</h3>
+                        <div class="badges-container" id="achievementBadges">
+                            <!-- Achievement badges will be inserted here -->
+                        </div>
+                    </div>
+                    <div class="overall-progress">
+                        <h3>Journey to JEE 2026</h3>
+                        <div class="timeline-progress">
+                            <div class="timeline-bar">
+                                <div class="timeline-fill" id="timelineFill"></div>
+                            </div>
+                            <div class="timeline-info">
+                                <span>Time Elapsed</span>
+                                <span id="timelinePercentage">0%</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <script src="app.js"></script>
+</body>
+</html>
