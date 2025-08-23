@@ -1,10 +1,8 @@
-// JEE 2026 Ultimate Tracker - Enhanced JavaScript with Fixed Authentication
-// Enhanced Application State and Configuration
-
+// Enhanced JEE 2026 Comprehensive Tracker - FULLY FIXED VERSION WITH CHARTS AND CALENDAR
 let firebaseInitialized = false;
 let auth, db;
 
-// Enhanced Configuration with Proper JEE Syllabus Structure
+// Configuration and Data
 const CONFIG = {
     examDates: {
         jeeMain1: new Date('2026-01-20T09:00:00'),
@@ -13,184 +11,90 @@ const CONFIG = {
     },
     defaultSettings: {
         dailyTarget: 50,
-        theme: 'dark',
-        notifications: true,
-        studyReminders: true,
-        pomodoroTime: 25,
-        shortBreakTime: 5,
-        longBreakTime: 15
+        theme: 'dark'
     },
     motivationalQuotes: [
         "Success is not final, failure is not fatal: it is the courage to continue that counts.",
-        "The expert in anything was once a beginner. Keep pushing forward!",
-        "Don't watch the clock; do what it does. Keep going towards your JEE dream.",
-        "Believe you can crack JEE and you're halfway there.",
-        "Champions keep solving until they get it right. You're a champion!",
-        "Every problem solved takes you one step closer to IIT.",
+        "The expert in anything was once a beginner.",
+        "Don't watch the clock; do what it does. Keep going.",
+        "Believe you can and you're halfway there.",
+        "Champions keep playing until they get it right.",
+        "Every accomplishment starts with the decision to try.",
         "Success is the sum of small efforts repeated day in and day out.",
-        "The only impossible JEE journey is the one you never begin.",
-        "Your limitation—it's only your imagination. Dream big, achieve bigger!",
-        "Great things never come from comfort zones. Push your limits!",
-        "Dream it. Wish it. Do it. JEE 2026 is yours to conquer!",
-        "The harder you work for something, the greater you'll feel when you achieve it.",
-        "Success isn't just about what you accomplish, but what you inspire others to do.",
-        "Every day is a chance to get better. Make today count!"
+        "The only impossible journey is the one you never begin."
     ],
-    
-    // Enhanced JEE Syllabus Structure - Proper Class 11 & 12 Division
     subjects: {
         physics: {
             name: "Physics",
-            totalChapters: 29,
             chapters: [
-                // Class 11 Physics
-                { id: "units", name: "Units and Measurements", topics: ["Physical Quantities", "SI Units", "Dimensional Analysis", "Significant Figures", "Error Analysis"], class: "11", difficulty: "Easy" },
-                { id: "kinematics", name: "Kinematics", topics: ["Motion in 1D", "Motion in 2D", "Projectile Motion", "Circular Motion"], class: "11", difficulty: "Medium" },
-                { id: "motion", name: "Laws of Motion", topics: ["Newton's Laws", "Friction", "Circular Motion", "Banking"], class: "11", difficulty: "Medium" },
-                { id: "workpower", name: "Work Energy and Power", topics: ["Work-Energy Theorem", "Potential Energy", "Power", "Collisions"], class: "11", difficulty: "Medium" },
-                { id: "system", name: "Motion of System of Particles and Rigid Body", topics: ["Center of Mass", "Angular Motion", "Moment of Inertia", "Rolling Motion"], class: "11", difficulty: "Hard" },
-                { id: "gravitation", name: "Gravitation", topics: ["Universal Law", "Planetary Motion", "Satellites", "Escape Velocity"], class: "11", difficulty: "Medium" },
-                { id: "bulk", name: "Properties of Bulk Matter", topics: ["Elasticity", "Surface Tension", "Viscosity", "Bernoulli's Principle"], class: "11", difficulty: "Medium" },
-                { id: "thermo", name: "Thermodynamics", topics: ["Heat Transfer", "Thermal Expansion", "Calorimetry", "Laws of Thermodynamics"], class: "11", difficulty: "Medium" },
-                { id: "kinetic", name: "Behaviour of Perfect Gases and Kinetic Theory", topics: ["Gas Laws", "Kinetic Theory", "Mean Free Path", "Degrees of Freedom"], class: "11", difficulty: "Hard" },
-                { id: "oscillations", name: "Oscillations and Waves", topics: ["SHM", "Pendulum", "Wave Motion", "Sound Waves", "Doppler Effect"], class: "11", difficulty: "Hard" },
-                
-                // Class 12 Physics
-                { id: "electrostatics", name: "Electrostatics", topics: ["Electric Charge", "Electric Field", "Gauss Law", "Electric Potential", "Capacitors"], class: "12", difficulty: "Hard" },
-                { id: "current", name: "Current Electricity", topics: ["Ohm's Law", "Kirchhoff's Laws", "Wheatstone Bridge", "Potentiometer"], class: "12", difficulty: "Medium" },
-                { id: "magnetic", name: "Magnetic Effects of Current and Magnetism", topics: ["Magnetic Field", "Ampere's Law", "Force on Current", "Galvanometer"], class: "12", difficulty: "Hard" },
-                { id: "induction", name: "Electromagnetic Induction and Alternating Currents", topics: ["Faraday's Law", "Lenz Law", "Self & Mutual Inductance", "AC Circuits"], class: "12", difficulty: "Hard" },
-                { id: "emwaves", name: "Electromagnetic Waves", topics: ["Maxwell's Equations", "EM Spectrum", "Wave Properties"], class: "12", difficulty: "Medium" },
-                { id: "optics", name: "Optics", topics: ["Reflection", "Refraction", "Mirrors", "Lenses", "Interference", "Diffraction", "Polarization"], class: "12", difficulty: "Hard" },
-                { id: "dual", name: "Dual Nature of Radiation and Matter", topics: ["Photoelectric Effect", "de Broglie Wavelength", "Davisson-Germer"], class: "12", difficulty: "Hard" },
-                { id: "atoms", name: "Atoms and Nuclei", topics: ["Bohr Model", "X-rays", "Radioactivity", "Nuclear Reactions", "Nuclear Energy"], class: "12", difficulty: "Medium" },
-                { id: "electronic", name: "Electronic Devices", topics: ["Semiconductors", "PN Junction", "Transistors", "Logic Gates"], class: "12", difficulty: "Easy" }
+                { id: "mech", name: "Mechanics", topics: ["Kinematics", "Laws of Motion", "Work Energy Power", "Rotational Motion", "Gravitation"] },
+                { id: "thermo", name: "Thermodynamics", topics: ["Thermal Properties", "Kinetic Theory", "Thermodynamics Laws"] },
+                { id: "waves", name: "Waves and Oscillations", topics: ["SHM", "Wave Motion", "Sound Waves"] },
+                { id: "electro", name: "Electrostatics", topics: ["Electric Charge", "Electric Field", "Electric Potential", "Capacitor"] },
+                { id: "current", name: "Current Electricity", topics: ["Ohm's Law", "Resistance", "DC Circuits"] },
+                { id: "magnetic", name: "Magnetic Effects", topics: ["Magnetic Field", "Force on Current", "Electromagnetic Induction"] },
+                { id: "ac", name: "Alternating Current", topics: ["AC Circuits", "LC Oscillations", "Transformers"] },
+                { id: "emwaves", name: "Electromagnetic Waves", topics: ["Wave Properties", "Spectrum"] },
+                { id: "optics", name: "Optics", topics: ["Reflection", "Refraction", "Interference", "Diffraction"] },
+                { id: "modern", name: "Modern Physics", topics: ["Photoelectric Effect", "Bohr Model", "Nuclear Physics"] }
             ]
         },
-        
         chemistry: {
             name: "Chemistry",
-            totalChapters: 28,
             chapters: [
-                // Class 11 Chemistry
-                { id: "basic", name: "Some Basic Concepts of Chemistry", topics: ["Stoichiometry", "Atomic & Molecular Mass", "Mole Concept", "Equivalent Weight"], class: "11", difficulty: "Easy" },
-                { id: "atomic", name: "Structure of Atom", topics: ["Bohr Model", "Quantum Numbers", "Electronic Configuration", "Aufbau Principle"], class: "11", difficulty: "Medium" },
-                { id: "periodic", name: "Classification of Elements and Periodicity in Properties", topics: ["Modern Periodic Law", "Periodic Trends", "s,p,d,f Block Elements"], class: "11", difficulty: "Medium" },
-                { id: "bonding", name: "Chemical Bonding and Molecular Structure", topics: ["Ionic Bonding", "Covalent Bonding", "VSEPR Theory", "Hybridization", "MOT"], class: "11", difficulty: "Hard" },
-                { id: "states", name: "States of Matter", topics: ["Gas Laws", "Liquid State", "Solid State", "Phase Transitions"], class: "11", difficulty: "Medium" },
-                { id: "thermodynamics", name: "Thermodynamics", topics: ["First Law", "Enthalpy", "Entropy", "Gibbs Free Energy"], class: "11", difficulty: "Hard" },
-                { id: "equilibrium", name: "Equilibrium", topics: ["Chemical Equilibrium", "Le Chatelier", "Ionic Equilibrium", "pH"], class: "11", difficulty: "Hard" },
-                { id: "hydrogen", name: "Hydrogen", topics: ["Properties", "Hydrides", "Water", "Hydrogen Peroxide"], class: "11", difficulty: "Easy" },
-                { id: "sblock", name: "s-Block Elements", topics: ["Alkali Metals", "Alkaline Earth Metals", "Properties", "Compounds"], class: "11", difficulty: "Medium" },
-                { id: "pblock11", name: "Some p-Block Elements", topics: ["Boron Family", "Carbon Family", "Nitrogen Family", "Oxygen Family"], class: "11", difficulty: "Medium" },
-                { id: "organic_purification", name: "Organic Chemistry - Some Basic Principles and Techniques", topics: ["IUPAC Nomenclature", "Isomerism", "Electronic Effects", "Reaction Mechanisms"], class: "11", difficulty: "Medium" },
-                { id: "hydrocarbons", name: "Hydrocarbons", topics: ["Alkanes", "Alkenes", "Alkynes", "Aromatic Hydrocarbons"], class: "11", difficulty: "Medium" },
-                { id: "environmental", name: "Environmental Chemistry", topics: ["Atmospheric Pollution", "Water Pollution", "Soil Pollution", "Green Chemistry"], class: "11", difficulty: "Easy" },
-                
-                // Class 12 Chemistry
-                { id: "solutions", name: "Solutions", topics: ["Concentration Terms", "Raoult's Law", "Colligative Properties", "Abnormal Molecular Mass"], class: "12", difficulty: "Hard" },
-                { id: "electrochemistry", name: "Electrochemistry", topics: ["Galvanic Cells", "Nernst Equation", "Electrolysis", "Batteries", "Corrosion"], class: "12", difficulty: "Hard" },
-                { id: "kinetics", name: "Chemical Kinetics", topics: ["Rate Laws", "Order & Molecularity", "Arrhenius Equation", "Catalysis"], class: "12", difficulty: "Hard" },
-                { id: "surface", name: "Surface Chemistry", topics: ["Adsorption", "Catalysis", "Colloids", "Emulsions"], class: "12", difficulty: "Medium" },
-                { id: "metallurgy", name: "General Principles and Processes of Isolation of Elements", topics: ["Occurrence", "Extraction", "Refining", "Uses of Metals"], class: "12", difficulty: "Medium" },
-                { id: "pblock12", name: "p-Block Elements", topics: ["Group 15-18", "Oxygen Family", "Halogen Family", "Noble Gases"], class: "12", difficulty: "Medium" },
-                { id: "dblock", name: "d-Block and f-Block Elements", topics: ["Transition Elements", "Inner Transition Elements", "Lanthanides", "Actinides"], class: "12", difficulty: "Medium" },
-                { id: "coordination", name: "Coordination Compounds", topics: ["Werner Theory", "IUPAC Nomenclature", "VBT", "CFT", "Applications"], class: "12", difficulty: "Hard" },
-                { id: "haloalkanes", name: "Haloalkanes and Haloarenes", topics: ["Nomenclature", "Preparation", "Reactions", "Uses"], class: "12", difficulty: "Medium" },
-                { id: "alcohols", name: "Alcohols, Phenols and Ethers", topics: ["Classification", "Preparation", "Properties", "Reactions"], class: "12", difficulty: "Medium" },
-                { id: "aldehydes", name: "Aldehydes, Ketones and Carboxylic Acids", topics: ["Nomenclature", "Preparation", "Properties", "Reactions"], class: "12", difficulty: "Medium" },
-                { id: "nitrogen", name: "Organic Compounds Containing Nitrogen", topics: ["Amines", "Diazonium Salts", "Cyanides"], class: "12", difficulty: "Hard" },
-                { id: "biomolecules", name: "Biomolecules", topics: ["Carbohydrates", "Proteins", "Lipids", "Nucleic Acids", "Vitamins"], class: "12", difficulty: "Easy" },
-                { id: "polymers", name: "Polymers", topics: ["Classification", "Polymerization", "Important Polymers", "Biodegradable Polymers"], class: "12", difficulty: "Easy" },
-                { id: "everyday", name: "Chemistry in Everyday Life", topics: ["Drugs", "Soaps & Detergents", "Food Chemistry"], class: "12", difficulty: "Easy" }
+                { id: "atomic", name: "Atomic Structure", topics: ["Bohr Model", "Quantum Numbers", "Electronic Configuration"] },
+                { id: "bonding", name: "Chemical Bonding", topics: ["Ionic Bonding", "Covalent Bonding", "Molecular Orbital Theory"] },
+                { id: "periodic", name: "Periodic Properties", topics: ["Trends", "Periodicity"] },
+                { id: "equilibrium", name: "Chemical Equilibrium", topics: ["Equilibrium Constant", "Le Chatelier Principle"] },
+                { id: "ionic", name: "Ionic Equilibrium", topics: ["Acids", "Bases", "Buffer Solutions"] },
+                { id: "thermochem", name: "Thermodynamics", topics: ["Enthalpy", "Entropy", "Gibbs Free Energy"] },
+                { id: "kinetics", name: "Chemical Kinetics", topics: ["Rate of Reaction", "Order", "Mechanism"] },
+                { id: "electrochem", name: "Electrochemistry", topics: ["Galvanic Cells", "Electrolysis", "Batteries"] },
+                { id: "solid", name: "Solid State", topics: ["Crystal Lattice", "Unit Cell", "Defects"] },
+                { id: "solutions", name: "Solutions", topics: ["Concentration", "Colligative Properties"] },
+                { id: "surface", name: "Surface Chemistry", topics: ["Adsorption", "Catalysis", "Colloids"] },
+                { id: "goc", name: "General Organic Chemistry", topics: ["Nomenclature", "Isomerism", "Electronic Effects"] },
+                { id: "hydrocarbons", name: "Hydrocarbons", topics: ["Alkanes", "Alkenes", "Alkynes", "Aromatic"] },
+                { id: "organic", name: "Organic Functional Groups", topics: ["Alcohols", "Ethers", "Aldehydes", "Ketones"] },
+                { id: "biomolecules", name: "Biomolecules", topics: ["Carbohydrates", "Proteins", "Nucleic Acids"] },
+                { id: "everyday", name: "Chemistry in Everyday Life", topics: ["Drugs", "Soaps", "Polymers"] },
+                { id: "coordination", name: "Coordination Compounds", topics: ["Werner Theory", "IUPAC", "Bonding"] },
+                { id: "pblock", name: "P-Block Elements", topics: ["Groups 13-18", "Properties"] },
+                { id: "dblock", name: "D and F Block Elements", topics: ["Transition Elements", "Lanthanides"] },
+                { id: "metallurgy", name: "Metallurgy", topics: ["Extraction", "Refining"] }
             ]
         },
-        
         mathematics: {
-            name: "Mathematics",
-            totalChapters: 29,
+            name: "Mathematics", 
             chapters: [
-                // Class 11 Mathematics
-                { id: "sets", name: "Sets", topics: ["Set Operations", "Venn Diagrams", "Relations", "Functions"], class: "11", difficulty: "Easy" },
-                { id: "relations", name: "Relations and Functions", topics: ["Types of Relations", "Equivalence Relations", "Functions", "Inverse Functions"], class: "11", difficulty: "Medium" },
-                { id: "trigonometry", name: "Trigonometric Functions", topics: ["Trigonometric Ratios", "Identities", "Equations", "Inverse Functions"], class: "11", difficulty: "Hard" },
-                { id: "induction", name: "Principle of Mathematical Induction", topics: ["Principle", "Applications", "Variations"], class: "11", difficulty: "Medium" },
-                { id: "complex", name: "Complex Numbers and Quadratic Equations", topics: ["Algebra", "Argand Plane", "Polar Form", "De Moivre's Theorem"], class: "11", difficulty: "Hard" },
-                { id: "inequalities", name: "Linear Inequalities", topics: ["Algebraic Solutions", "Graphical Solutions", "System of Inequalities"], class: "11", difficulty: "Medium" },
-                { id: "permutations", name: "Permutations and Combinations", topics: ["Fundamental Principle", "Permutations", "Combinations", "Applications"], class: "11", difficulty: "Hard" },
-                { id: "binomial", name: "Binomial Theorem", topics: ["Binomial Expansion", "General Term", "Middle Term", "Properties"], class: "11", difficulty: "Medium" },
-                { id: "sequences", name: "Sequences and Series", topics: ["AP", "GP", "HP", "AGP", "Sum to n Terms"], class: "11", difficulty: "Hard" },
-                { id: "straightlines", name: "Straight Lines", topics: ["Slope", "Equations", "Distance", "Area"], class: "11", difficulty: "Medium" },
-                { id: "conics", name: "Conic Sections", topics: ["Circle", "Parabola", "Ellipse", "Hyperbola"], class: "11", difficulty: "Hard" },
-                { id: "3dgeometry_intro", name: "Introduction to Three Dimensional Geometry", topics: ["Coordinates", "Distance", "Section Formula"], class: "11", difficulty: "Easy" },
-                { id: "limits", name: "Limits and Derivatives", topics: ["Limits", "Continuity", "Derivatives", "Applications"], class: "11", difficulty: "Hard" },
-                { id: "reasoning", name: "Mathematical Reasoning", topics: ["Statements", "Logical Operations", "Implications", "Quantifiers"], class: "11", difficulty: "Easy" },
-                { id: "statistics", name: "Statistics", topics: ["Mean", "Median", "Mode", "Standard Deviation", "Variance"], class: "11", difficulty: "Medium" },
-                { id: "probability11", name: "Probability", topics: ["Sample Space", "Events", "Addition & Multiplication Rules"], class: "11", difficulty: "Medium" },
-                
-                // Class 12 Mathematics
-                { id: "relations12", name: "Relations and Functions", topics: ["Types of Functions", "Composition", "Inverse Functions"], class: "12", difficulty: "Hard" },
-                { id: "inverse", name: "Inverse Trigonometric Functions", topics: ["Principal Values", "Properties", "Equations"], class: "12", difficulty: "Hard" },
-                { id: "matrices", name: "Matrices", topics: ["Types", "Operations", "Inverse", "Elementary Operations"], class: "12", difficulty: "Medium" },
-                { id: "determinants", name: "Determinants", topics: ["Properties", "Cofactor", "Adjoint", "Cramer's Rule", "Area & Volume"], class: "12", difficulty: "Hard" },
-                { id: "continuity", name: "Continuity and Differentiability", topics: ["Continuity", "Differentiability", "Chain Rule", "Derivative of Parametric Functions"], class: "12", difficulty: "Hard" },
-                { id: "applications", name: "Applications of Derivatives", topics: ["Rate of Change", "Tangents & Normals", "Maxima & Minima", "Curve Sketching"], class: "12", difficulty: "Hard" },
-                { id: "integrals", name: "Integrals", topics: ["Indefinite Integrals", "Integration by Parts", "Partial Fractions", "Substitution"], class: "12", difficulty: "Hard" },
-                { id: "integrals_app", name: "Applications of Integrals", topics: ["Area Under Curves", "Area Between Curves", "Volume of Solids"], class: "12", difficulty: "Hard" },
-                { id: "differential", name: "Differential Equations", topics: ["Formation", "Order & Degree", "Solution Methods", "Applications"], class: "12", difficulty: "Hard" },
-                { id: "vectors", name: "Vector Algebra", topics: ["Addition", "Scalar Product", "Vector Product", "Scalar Triple Product"], class: "12", difficulty: "Medium" },
-                { id: "3d", name: "Three Dimensional Geometry", topics: ["Direction Cosines", "Line", "Plane", "Distance"], class: "12", difficulty: "Hard" },
-                { id: "programming", name: "Linear Programming", topics: ["Constraints", "Objective Function", "Graphical Method", "Optimal Solution"], class: "12", difficulty: "Medium" },
-                { id: "probability12", name: "Probability", topics: ["Conditional Probability", "Bayes Theorem", "Random Variables", "Distributions"], class: "12", difficulty: "Hard" }
+                { id: "sets", name: "Sets Relations Functions", topics: ["Set Theory", "Relations", "Functions"] },
+                { id: "complex", name: "Complex Numbers", topics: ["Algebra", "Argand Plane", "De Moivre"] },
+                { id: "quadratic", name: "Quadratic Equations", topics: ["Nature of Roots", "Applications"] },
+                { id: "sequences", name: "Sequences and Series", topics: ["AP", "GP", "HP"] },
+                { id: "permutations", name: "Permutations Combinations", topics: ["Fundamental Principle", "Applications"] },
+                { id: "binomial", name: "Binomial Theorem", topics: ["Expansions", "Properties"] },
+                { id: "matrices", name: "Matrices Determinants", topics: ["Operations", "Properties", "Cramer's Rule"] },
+                { id: "probability", name: "Probability", topics: ["Basic Concepts", "Conditional Probability", "Bayes"] },
+                { id: "trigonometry", name: "Trigonometry", topics: ["Ratios", "Identities", "Equations"] },
+                { id: "coordinate", name: "Coordinate Geometry", topics: ["Straight Line", "Circle", "Conic Sections"] },
+                { id: "limits", name: "Limits Continuity", topics: ["Definition", "Properties", "Applications"] },
+                { id: "differentiation", name: "Differentiation", topics: ["Rules", "Applications", "Mean Value Theorems"] },
+                { id: "integration", name: "Integration", topics: ["Techniques", "Definite Integration", "Applications"] },
+                { id: "differential", name: "Differential Equations", topics: ["Formation", "Solution Methods"] },
+                { id: "vectors", name: "Vector Algebra", topics: ["Operations", "Scalar Product", "Vector Product"] },
+                { id: "3d", name: "3D Geometry", topics: ["Direction Cosines", "Planes", "Lines"] },
+                { id: "statistics", name: "Statistics", topics: ["Central Tendency", "Dispersion"] },
+                { id: "reasoning", name: "Mathematical Reasoning", topics: ["Logical Statements", "Quantifiers"] }
             ]
         }
     },
-    
-    // Formula Quick Reference Database
-    formulas: {
-        physics: [
-            { name: "Distance Formula", formula: "s = ut + ½at²", chapter: "Kinematics" },
-            { name: "Newton's Second Law", formula: "F = ma", chapter: "Laws of Motion" },
-            { name: "Kinetic Energy", formula: "KE = ½mv²", chapter: "Work Energy Power" },
-            { name: "Coulomb's Law", formula: "F = k(q₁q₂)/r²", chapter: "Electrostatics" },
-            { name: "Ohm's Law", formula: "V = IR", chapter: "Current Electricity" },
-            { name: "Lens Formula", formula: "1/f = 1/v - 1/u", chapter: "Optics" }
-        ],
-        chemistry: [
-            { name: "Ideal Gas Equation", formula: "PV = nRT", chapter: "States of Matter" },
-            { name: "pH Formula", formula: "pH = -log[H⁺]", chapter: "Equilibrium" },
-            { name: "Nernst Equation", formula: "E = E° - (RT/nF)lnQ", chapter: "Electrochemistry" },
-            { name: "Arrhenius Equation", formula: "k = Ae^(-Ea/RT)", chapter: "Chemical Kinetics" },
-            { name: "Molarity", formula: "M = n/V", chapter: "Solutions" }
-        ],
-        mathematics: [
-            { name: "Quadratic Formula", formula: "x = [-b ± √(b²-4ac)]/2a", chapter: "Complex Numbers" },
-            { name: "Binomial Theorem", formula: "(a+b)ⁿ = Σ(nCr × aⁿ⁻ʳ × bʳ)", chapter: "Binomial Theorem" },
-            { name: "Derivative of xⁿ", formula: "d/dx(xⁿ) = nxⁿ⁻¹", chapter: "Limits and Derivatives" },
-            { name: "Integration by Parts", formula: "∫udv = uv - ∫vdu", chapter: "Integrals" },
-            { name: "Area of Triangle", formula: "A = ½|x₁(y₂-y₃) + x₂(y₃-y₁) + x₃(y₁-y₂)|", chapter: "Coordinate Geometry" }
-        ]
-    },
-    
     pyqYears: ["2019", "2020", "2021", "2022", "2023", "2024"],
-    examTypes: ["JEE Main", "JEE Advanced"],
-    
-    // Achievement levels
-    achievements: {
-        questionsPerDay: [
-            { min: 0, max: 20, icon: "🌱", title: "Getting Started", color: "#81C784" },
-            { min: 21, max: 40, icon: "🔥", title: "Building Momentum", color: "#FFA726" },
-            { min: 41, max: 60, icon: "⚡", title: "Power Mode", color: "#FF7043" },
-            { min: 61, max: 80, icon: "🚀", title: "Beast Mode", color: "#AB47BC" },
-            { min: 81, max: 999, icon: "👑", title: "JEE Warrior", color: "#FFD700" }
-        ]
-    }
+    examTypes: ["JEE Main", "JEE Advanced"]
 };
 
-// Enhanced Application State
+// Application State
 let appState = {
     currentSection: 'dashboard',
-    currentClass: 'all',
     progressData: [],
     todos: [],
     chapterData: {},
@@ -204,114 +108,74 @@ let appState = {
     retryCount: 0,
     authRetryCount: 0,
     isInitialized: false,
-    currentStreak: 0,
-    longestStreak: 0,
-    studyPlans: [],
-    revisionSchedule: [],
-    achievements: [],
-    mobileMenuOpen: false,
-    pomodoroTimer: {
-        isRunning: false,
-        isPaused: false,
-        currentTime: 25 * 60, // 25 minutes in seconds
-        mode: 'focus', // focus, shortBreak, longBreak
-        sessions: 0
-    },
-    quickNotes: '',
-    currentFormulaSubject: 'physics'
+    chartsInitialized: false,
+    calendarInitialized: false
 };
 
-// Enhanced Utility Functions
+// Utility Functions
 const utils = {
     formatDate: (date) => date.toISOString().split('T')[0],
     parseDate: (dateString) => new Date(dateString + 'T00:00:00'),
     getToday: () => utils.formatDate(new Date()),
     
-    showNotification: (message, type = 'info', duration = 5000) => {
+    showNotification: (message, type = 'info') => {
+        console.log(`[${type.toUpperCase()}] ${message}`);
+        
+        // Remove existing notifications
+        document.querySelectorAll('.notification').forEach(n => n.remove());
+        
         const notification = document.createElement('div');
         notification.className = `notification notification--${type}`;
-        
-        const icons = {
-            success: '✅',
-            error: '❌', 
-            warning: '⚠️',
-            info: 'ℹ️'
-        };
-        
         notification.innerHTML = `
-            <span class="notification-icon">${icons[type] || icons.info}</span>
-            <span class="notification-message">${message}</span>
-            <button class="notification-close" onclick="this.parentElement.remove()">&times;</button>
+            <span>${message}</span>
+            <button onclick="this.parentElement.remove()" style="background:none;border:none;color:white;margin-left:12px;cursor:pointer;">&times;</button>
         `;
         
         const colors = {
-            error: 'linear-gradient(135deg, #ff4444, #cc1f1f)',
-            success: 'linear-gradient(135deg, #FFA726, #FFB74D)', 
-            info: 'linear-gradient(135deg, #42A5F5, #1976D2)',
-            warning: 'linear-gradient(135deg, #FF7043, #F4511E)'
+            error: '#ff4444',
+            success: '#44ff44', 
+            info: '#4444ff',
+            warning: '#ffaa44'
         };
         
         notification.style.cssText = `
             position: fixed;
             top: 100px;
             right: 20px;
-            background: ${colors[type] || colors.info};
+            background: rgba(0,0,0,0.9);
             color: white;
-            padding: 16px 20px;
-            border-radius: 12px;
+            padding: 12px 16px;
+            border-radius: 8px;
+            border-left: 4px solid ${colors[type] || colors.info};
             z-index: 3000;
             backdrop-filter: blur(10px);
             display: flex;
             align-items: center;
-            gap: 12px;
-            animation: slideInRight 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-            max-width: 400px;
-            min-width: 300px;
-            box-shadow: 0 8px 32px rgba(0,0,0,0.3);
-            border: 1px solid rgba(255,255,255,0.2);
+            gap: 8px;
+            animation: slideInRight 0.3s ease;
+            max-width: 350px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
         `;
         
+        // Add animation keyframe
         if (!document.getElementById('notificationStyles')) {
             const style = document.createElement('style');
             style.id = 'notificationStyles';
             style.textContent = `
                 @keyframes slideInRight {
-                    from { transform: translateX(100%) scale(0.8); opacity: 0; }
-                    to { transform: translateX(0) scale(1); opacity: 1; }
-                }
-                .notification-icon { font-size: 18px; }
-                .notification-message { flex: 1; font-weight: 500; line-height: 1.4; }
-                .notification-close {
-                    background: rgba(255,255,255,0.2);
-                    border: none;
-                    color: white;
-                    width: 24px;
-                    height: 24px;
-                    border-radius: 50%;
-                    cursor: pointer;
-                    display: flex;
-                    align-items: center;
-                    justify-content: center;
-                    transition: all 0.3s ease;
-                }
-                .notification-close:hover {
-                    background: rgba(255,255,255,0.3);
-                    transform: scale(1.1);
+                    from { transform: translateX(100%); opacity: 0; }
+                    to { transform: translateX(0); opacity: 1; }
                 }
             `;
             document.head.appendChild(style);
         }
         
         document.body.appendChild(notification);
-        
         setTimeout(() => {
             if (notification.parentNode) {
-                notification.style.animation = 'slideOutRight 0.3s ease-in-out forwards';
-                setTimeout(() => notification.remove(), 300);
+                notification.remove();
             }
-        }, duration);
-        
-        return notification;
+        }, 5000);
     },
     
     debounce: (func, wait) => {
@@ -325,55 +189,36 @@ const utils = {
             timeout = setTimeout(later, wait);
         };
     },
-    
-    checkAchievement: (questionsToday) => {
-        const achievement = CONFIG.achievements.questionsPerDay.find(
-            level => questionsToday >= level.min && questionsToday <= level.max
-        );
-        return achievement || CONFIG.achievements.questionsPerDay[0];
-    },
-    
-    calculateStreak: () => {
-        if (appState.progressData.length === 0) return 0;
-        
-        const sortedData = appState.progressData
-            .sort((a, b) => new Date(b.date) - new Date(a.date));
-        
-        let streak = 0;
-        let currentDate = new Date();
-        
-        for (const entry of sortedData) {
-            const entryDate = new Date(entry.date);
-            const daysDiff = Math.floor((currentDate - entryDate) / (1000 * 60 * 60 * 24));
-            
-            if (daysDiff === streak && entry.questions > 0) {
-                streak++;
-                currentDate = entryDate;
-            } else {
-                break;
+
+    // Check if Chart.js is loaded
+    waitForChartJS: () => {
+        return new Promise((resolve) => {
+            if (window.Chart) {
+                resolve(true);
+                return;
             }
-        }
-        
-        return streak;
-    },
-    
-    isMobile: () => window.innerWidth <= 768,
-    
-    scrollToSection: (sectionId) => {
-        const section = document.getElementById(sectionId);
-        if (section) {
-            section.scrollIntoView({ behavior: 'smooth', block: 'start' });
-        }
-    },
-    
-    formatTime: (seconds) => {
-        const minutes = Math.floor(seconds / 60);
-        const remainingSeconds = seconds % 60;
-        return `${minutes.toString().padStart(2, '0')}:${remainingSeconds.toString().padStart(2, '0')}`;
+            
+            let attempts = 0;
+            const maxAttempts = 50;
+            
+            const checkChart = () => {
+                attempts++;
+                if (window.Chart) {
+                    resolve(true);
+                } else if (attempts >= maxAttempts) {
+                    console.error('Chart.js failed to load');
+                    resolve(false);
+                } else {
+                    setTimeout(checkChart, 100);
+                }
+            };
+            
+            checkChart();
+        });
     }
 };
 
-// Enhanced Firebase Authentication with Fixed Demo Mode
+// Enhanced Firebase Authentication - COMPLETELY FIXED
 const FirebaseAuth = {
     provider: null,
     isInitialized: false,
@@ -381,18 +226,17 @@ const FirebaseAuth = {
     async waitForFirebase() {
         return new Promise((resolve) => {
             let attempts = 0;
-            const maxAttempts = 30; // Reduced timeout for faster fallback
+            const maxAttempts = 50;
             
             const check = () => {
                 attempts++;
-                if (window.firebaseReady && window.firebaseApp && window.auth && window.db) {
+                if (window.firebaseInitialized && window.auth && window.db) {
                     auth = window.auth;
                     db = window.db;
                     firebaseInitialized = true;
-                    console.log('✅ Firebase initialized successfully with persistence');
                     resolve(true);
                 } else if (window.firebaseError || attempts >= maxAttempts) {
-                    console.warn('⚠️ Firebase initialization timeout or error:', window.firebaseError);
+                    console.error('Firebase initialization failed:', window.firebaseError);
                     resolve(false);
                 } else {
                     setTimeout(check, 100);
@@ -408,25 +252,14 @@ const FirebaseAuth = {
         try {
             const available = await this.waitForFirebase();
             if (!available) {
-                console.warn('Firebase not available, enabling demo mode fallback');
+                console.warn('Firebase not available, continuing with demo mode');
                 updateConnectionStatus('offline');
-                // Show auth modal but allow demo mode immediately
-                setTimeout(() => {
-                    if (!appState.user) {
-                        this.showAuthModal();
-                    }
-                }, 1000);
                 return false;
             }
             
-            const { 
-                GoogleAuthProvider, 
-                signInWithPopup, 
-                signInWithEmailAndPassword, 
-                createUserWithEmailAndPassword, 
-                signOut, 
-                onAuthStateChanged
-            } = await import('https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js');
+            const { GoogleAuthProvider, signInWithPopup, signInWithEmailAndPassword, 
+                    createUserWithEmailAndPassword, signOut, onAuthStateChanged } = 
+                    await import('https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js');
             
             this.provider = new GoogleAuthProvider();
             this.signInWithPopup = signInWithPopup;
@@ -435,31 +268,29 @@ const FirebaseAuth = {
             this.signOut = signOut;
             this.onAuthStateChanged = onAuthStateChanged;
             
-            // Enhanced auth state change handler with persistence
-            this.onAuthStateChanged(auth, async (user) => {
-                console.log('🔐 Auth state changed:', user?.email || 'No user');
+            // Setup auth state listener
+            this.onAuthStateChanged(auth, (user) => {
+                console.log('Auth state changed:', user?.email || 'No user');
+                appState.user = user;
+                this.updateUI();
                 
                 if (user) {
-                    appState.user = user;
                     updateConnectionStatus('connected');
                     this.hideAuthModal();
-                    this.updateUI();
-                    await this.syncUserData();
-                    utils.showNotification(`Welcome back, ${user.displayName || user.email.split('@')[0]}! 🎉`, 'success');
-                } else if (appState.isInitialized && !appState.user?.isDemo) {
+                    this.syncUserData();
+                } else {
                     updateConnectionStatus('offline');
-                    setTimeout(() => this.showAuthModal(), 1000);
+                    if (!appState.user || !appState.user.isDemo) {
+                        this.showAuthModal();
+                    }
                 }
             });
             
             this.isInitialized = true;
             return true;
-            
         } catch (error) {
-            console.error('❌ Auth initialization error:', error);
-            this.showAuthError('googleAuthError', 'Authentication system temporarily unavailable. Please try demo mode.');
+            console.error('Auth initialization error:', error);
             updateConnectionStatus('offline');
-            setTimeout(() => this.showAuthModal(), 1000);
             return false;
         }
     },
@@ -478,29 +309,28 @@ const FirebaseAuth = {
             appState.user = result.user;
             appState.authRetryCount = 0;
             
-            utils.showNotification(`Welcome, ${result.user.displayName}! 🚀`, 'success');
+            utils.showNotification(`Welcome ${result.user.displayName}!`, 'success');
             this.hideAuthModal();
             await this.syncUserData();
             
             return result.user;
-            
         } catch (error) {
-            console.error('❌ Google sign in error:', error);
+            console.error('Google sign in error:', error);
             
             const errorMessages = {
                 'auth/popup-blocked': 'Popup was blocked. Please allow popups and try again.',
-                'auth/popup-closed-by-user': 'Sign-in was cancelled. Please try again.',
-                'auth/network-request-failed': 'Network error. Please check your connection and try again.',
-                'auth/too-many-requests': 'Too many attempts. Please wait a few minutes before trying again.',
-                'auth/internal-error': 'Internal error occurred. Please try again or use email sign-in.'
+                'auth/popup-closed-by-user': 'Sign-in was cancelled.',
+                'auth/network-request-failed': 'Network error. Please check your connection.',
+                'auth/too-many-requests': 'Too many attempts. Please try again later.',
+                'auth/internal-error': 'Internal error. Please try again or use email sign-in.'
             };
             
-            const message = errorMessages[error.code] || 'Google sign-in failed. Please try again or use demo mode.';
+            const message = errorMessages[error.code] || 'Google sign-in failed. Please try again.';
             this.showAuthError('googleAuthError', message);
             updateConnectionStatus('offline');
             
             appState.authRetryCount++;
-            if (appState.authRetryCount >= 2) {
+            if (appState.authRetryCount >= 3) {
                 this.showTroubleshooting();
             }
             
@@ -512,7 +342,7 @@ const FirebaseAuth = {
         try {
             this.clearAuthError('emailAuthError');
             
-            const email = document.getElementById('emailInput')?.value.trim();
+            const email = document.getElementById('emailInput')?.value;
             const password = document.getElementById('passwordInput')?.value;
             
             if (!email || !password) {
@@ -521,26 +351,31 @@ const FirebaseAuth = {
             
             updateConnectionStatus('connecting');
             
+            if (!this.signInWithEmailAndPassword) {
+                const initialized = await this.initializeAuth();
+                if (!initialized) throw new Error('Auth system unavailable');
+            }
+            
             const result = await this.signInWithEmailAndPassword(auth, email, password);
             appState.user = result.user;
             
-            utils.showNotification('Successfully signed in! 🎯', 'success');
+            utils.showNotification('Successfully signed in!', 'success');
             this.hideAuthModal();
             await this.syncUserData();
             
             return result.user;
-            
         } catch (error) {
-            console.error('❌ Email sign in error:', error);
+            console.error('Email sign in error:', error);
             
             const errorMessages = {
-                'auth/user-not-found': 'No account found with this email. Please sign up first.',
-                'auth/wrong-password': 'Incorrect password. Please try again.',
-                'auth/invalid-email': 'Please enter a valid email address.',
-                'auth/too-many-requests': 'Too many failed attempts. Please try again later.'
+                'auth/user-not-found': 'No account found with this email.',
+                'auth/wrong-password': 'Incorrect password.',
+                'auth/invalid-email': 'Invalid email address.',
+                'auth/too-many-requests': 'Too many failed attempts. Try again later.',
+                'auth/network-request-failed': 'Network error. Please check your connection.'
             };
             
-            const message = errorMessages[error.code] || 'Sign-in failed. Please try again.';
+            const message = errorMessages[error.code] || error.message || 'Sign-in failed. Please try again.';
             this.showAuthError('emailAuthError', message);
             updateConnectionStatus('offline');
             
@@ -552,7 +387,7 @@ const FirebaseAuth = {
         try {
             this.clearAuthError('emailAuthError');
             
-            const email = document.getElementById('emailInput')?.value.trim();
+            const email = document.getElementById('emailInput')?.value;
             const password = document.getElementById('passwordInput')?.value;
             
             if (!email || !password) {
@@ -560,30 +395,35 @@ const FirebaseAuth = {
             }
             
             if (password.length < 6) {
-                throw new Error('Password must be at least 6 characters long');
+                throw new Error('Password must be at least 6 characters');
             }
             
             updateConnectionStatus('connecting');
             
+            if (!this.createUserWithEmailAndPassword) {
+                const initialized = await this.initializeAuth();
+                if (!initialized) throw new Error('Auth system unavailable');
+            }
+            
             const result = await this.createUserWithEmailAndPassword(auth, email, password);
             appState.user = result.user;
             
-            utils.showNotification('Account created successfully! Welcome! 🎉', 'success');
+            utils.showNotification('Account created successfully!', 'success');
             this.hideAuthModal();
             await this.syncUserData();
             
             return result.user;
-            
         } catch (error) {
-            console.error('❌ Email sign up error:', error);
+            console.error('Email sign up error:', error);
             
             const errorMessages = {
-                'auth/email-already-in-use': 'An account with this email already exists. Please sign in instead.',
-                'auth/invalid-email': 'Please enter a valid email address.',
-                'auth/weak-password': 'Password is too weak. Please use at least 6 characters.'
+                'auth/email-already-in-use': 'An account already exists with this email.',
+                'auth/invalid-email': 'Invalid email address.',
+                'auth/weak-password': 'Password is too weak. Use at least 6 characters.',
+                'auth/network-request-failed': 'Network error. Please check your connection.'
             };
             
-            const message = errorMessages[error.code] || 'Sign-up failed. Please try again.';
+            const message = errorMessages[error.code] || error.message || 'Sign-up failed. Please try again.';
             this.showAuthError('emailAuthError', message);
             updateConnectionStatus('offline');
             
@@ -601,7 +441,16 @@ const FirebaseAuth = {
             appState.progressData = [];
             appState.todos = [];
             appState.chapterData = {};
-            appState.currentStreak = 0;
+            appState.chartsInitialized = false;
+            appState.calendarInitialized = false;
+            
+            // Clear charts
+            Object.values(appState.charts).forEach(chart => {
+                if (chart && typeof chart.destroy === 'function') {
+                    chart.destroy();
+                }
+            });
+            appState.charts = {};
             
             this.updateUI();
             updateDashboardStats();
@@ -609,39 +458,44 @@ const FirebaseAuth = {
             renderTodos();
             this.showAuthModal();
             
-            utils.showNotification('Successfully signed out! 👋', 'success');
+            utils.showNotification('Successfully signed out!', 'success');
             updateConnectionStatus('offline');
-            
         } catch (error) {
-            console.error('❌ Sign out error:', error);
-            utils.showNotification('Sign out failed. Please try again.', 'error');
+            console.error('Sign out error:', error);
+            utils.showNotification('Sign out failed.', 'error');
         }
     },
     
-    // FIXED: Demo mode now works immediately
     enterDemoMode() {
-        console.log('🎯 Entering demo mode...');
-        
-        appState.user = { 
-            uid: 'demo-' + Date.now(), 
-            email: 'demo@jeetracker.com', 
-            displayName: 'Demo User', 
-            isDemo: true,
-            photoURL: null
-        };
-        
+        console.log('Entering demo mode...');
+        appState.user = { uid: 'demo', email: 'demo@jeetracker.com', displayName: 'Demo User', isDemo: true };
         this.updateUI();
         this.hideAuthModal();
         updateConnectionStatus('offline');
         
-        // Load sample data immediately
+        // Load sample data for demo
         loadSampleData();
         loadSampleChapterData();
         
-        // Update all displays
-        updateAllDisplays();
+        // Update all displays with a delay to ensure DOM is ready
+        setTimeout(() => {
+            updateDashboardStats();
+            updateTodayProgress();
+            updateSubjectProgress();
+            renderTodos();
+            renderChapters();
+            
+            // Reset chart and calendar initialization flags
+            appState.chartsInitialized = false;
+            appState.calendarInitialized = false;
+            
+            // Re-render calendar if we're on the calendar tab
+            if (appState.currentSection === 'calendar') {
+                renderCalendar();
+            }
+        }, 200);
         
-        utils.showNotification('🎯 Demo Mode Active - Explore all features!', 'info', 7000);
+        utils.showNotification('Demo Mode Active - Data will not sync across devices', 'info');
     },
     
     updateUI() {
@@ -649,37 +503,29 @@ const FirebaseAuth = {
         const userAvatar = document.getElementById('userAvatar');
         const userName = document.getElementById('userName');
         
-        if (appState.user) {
-            if (userInfo) {
-                userInfo.style.display = 'flex';
-                
-                if (userAvatar) {
-                    if (appState.user.photoURL && !appState.user.isDemo) {
-                        userAvatar.src = appState.user.photoURL;
-                        userAvatar.style.display = 'block';
-                    } else {
-                        userAvatar.style.display = 'none';
-                    }
-                }
-                
-                if (userName) {
-                    const displayName = appState.user.displayName || 
-                                     appState.user.email?.split('@')[0] || 
-                                     'User';
-                    userName.textContent = displayName.length > 15 ? 
-                                          displayName.substring(0, 15) + '...' : 
-                                          displayName;
-                }
+        if (appState.user && userInfo) {
+            userInfo.style.display = 'flex';
+            if (userAvatar && appState.user.photoURL) {
+                userAvatar.src = appState.user.photoURL;
+                userAvatar.style.display = 'block';
+            } else if (userAvatar) {
+                userAvatar.style.display = 'none';
             }
-        } else {
-            if (userInfo) userInfo.style.display = 'none';
+            if (userName) {
+                userName.textContent = appState.user.displayName || appState.user.email || 'User';
+            }
+        } else if (userInfo) {
+            userInfo.style.display = 'none';
         }
     },
     
     showAuthModal() {
         const modal = document.getElementById('authModal');
-        if (modal && !appState.user) {
+        if (modal) {
             modal.classList.remove('hidden');
+            modal.style.display = 'flex';
+            modal.style.opacity = '1';
+            modal.style.visibility = 'visible';
         }
     },
     
@@ -687,14 +533,23 @@ const FirebaseAuth = {
         const modal = document.getElementById('authModal');
         if (modal) {
             modal.classList.add('hidden');
+            modal.style.opacity = '0';
+            modal.style.visibility = 'hidden';
+            setTimeout(() => {
+                if (modal.classList.contains('hidden')) {
+                    modal.style.display = 'none';
+                }
+            }, 300);
         }
     },
     
     showAuthError(elementId, message) {
         const errorElement = document.getElementById(elementId);
         if (errorElement) {
-            errorElement.innerHTML = `<span style="color: #ff6b6b;">⚠️ ${message}</span>`;
+            errorElement.textContent = message;
             errorElement.classList.remove('hidden');
+            errorElement.style.display = 'block';
+            errorElement.style.visibility = 'visible';
         }
     },
     
@@ -708,12 +563,10 @@ const FirebaseAuth = {
     
     showTroubleshooting() {
         const troubleshooting = document.getElementById('troubleshooting');
-        const showBtn = document.getElementById('showTroubleshootingBtn');
         if (troubleshooting) {
             troubleshooting.classList.remove('hidden');
-            if (showBtn) {
-                showBtn.textContent = 'Hide Troubleshooting';
-            }
+            troubleshooting.style.display = 'block';
+            troubleshooting.style.visibility = 'visible';
         }
     },
     
@@ -721,23 +574,261 @@ const FirebaseAuth = {
         if (!appState.user || appState.user.isDemo) return;
         
         try {
-            updateConnectionStatus('connecting');
-            // In a real implementation, this would sync with Firebase
-            console.log('📡 Syncing user data...');
+            await Promise.all([
+                FirebaseDB.loadProgressData(),
+                FirebaseDB.loadTodos(),
+                FirebaseDB.loadChapterData(),
+                FirebaseDB.loadSettings()
+            ]);
             
-            updateAllDisplays();
+            updateDashboardStats();
+            updateTodayProgress();
+            updateSubjectProgress();
+            renderTodos();
+            renderChapters();
+            
+            // Reset initialization flags to force re-render
+            appState.chartsInitialized = false;
+            appState.calendarInitialized = false;
+            
+            if (appState.currentSection === 'analytics') {
+                initializeCharts();
+            }
+            if (appState.currentSection === 'calendar') {
+                renderCalendar();
+            }
+            
             appState.lastSyncTime = new Date();
-            updateConnectionStatus('connected');
-            
         } catch (error) {
-            console.error('❌ Sync error:', error);
-            utils.showNotification('Some data failed to sync. Working in offline mode.', 'warning');
-            updateConnectionStatus('offline');
+            console.error('Sync error:', error);
+            utils.showNotification('Failed to sync some data. Working offline.', 'warning');
         }
     }
 };
 
-// Connection Status Management
+// Enhanced Firebase Database Operations - FIXED
+const FirebaseDB = {
+    firestoreImports: null,
+    
+    async initializeFirestore() {
+        if (!firebaseInitialized || this.firestoreImports) return this.firestoreImports !== null;
+        
+        try {
+            this.firestoreImports = await import('https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js');
+            return true;
+        } catch (error) {
+            console.error('Failed to load Firestore:', error);
+            return false;
+        }
+    },
+    
+    async saveProgressEntry(entry) {
+        if (!appState.user || appState.user.isDemo) {
+            storage.save('progressData', appState.progressData);
+            return;
+        }
+        
+        try {
+            const initialized = await this.initializeFirestore();
+            if (!initialized) throw new Error('Firestore not available');
+            
+            const { doc, setDoc } = this.firestoreImports;
+            
+            const docRef = doc(db, 'users', appState.user.uid, 'progress', entry.date);
+            await setDoc(docRef, entry);
+            console.log('Progress entry saved to Firebase');
+        } catch (error) {
+            console.error('Error saving progress:', error);
+            storage.save('progressData', appState.progressData);
+            throw error;
+        }
+    },
+    
+    async loadProgressData() {
+        if (!appState.user || appState.user.isDemo) return;
+        
+        try {
+            const initialized = await this.initializeFirestore();
+            if (!initialized) throw new Error('Firestore not available');
+            
+            const { collection, query, orderBy, getDocs } = this.firestoreImports;
+            
+            const progressRef = collection(db, 'users', appState.user.uid, 'progress');
+            const q = query(progressRef, orderBy('date'));
+            const querySnapshot = await getDocs(q);
+            
+            appState.progressData = [];
+            querySnapshot.forEach((doc) => {
+                appState.progressData.push(doc.data());
+            });
+            console.log('Progress data loaded from Firebase:', appState.progressData.length, 'entries');
+        } catch (error) {
+            console.error('Error loading progress data:', error);
+            throw error;
+        }
+    },
+    
+    async saveChapterData(chapterData) {
+        if (!appState.user || appState.user.isDemo) {
+            storage.save('chapterData', appState.chapterData);
+            return;
+        }
+        
+        try {
+            const initialized = await this.initializeFirestore();
+            if (!initialized) throw new Error('Firestore not available');
+            
+            const { doc, setDoc } = this.firestoreImports;
+            
+            const docRef = doc(db, 'users', appState.user.uid, 'chapters', 'data');
+            await setDoc(docRef, chapterData);
+            console.log('Chapter data saved to Firebase');
+        } catch (error) {
+            console.error('Error saving chapter data:', error);
+            storage.save('chapterData', appState.chapterData);
+            throw error;
+        }
+    },
+    
+    async loadChapterData() {
+        if (!appState.user || appState.user.isDemo) return;
+        
+        try {
+            const initialized = await this.initializeFirestore();
+            if (!initialized) throw new Error('Firestore not available');
+            
+            const { doc, getDoc } = this.firestoreImports;
+            
+            const docRef = doc(db, 'users', appState.user.uid, 'chapters', 'data');
+            const docSnap = await getDoc(docRef);
+            
+            if (docSnap.exists()) {
+                appState.chapterData = docSnap.data();
+                console.log('Chapter data loaded from Firebase');
+            }
+        } catch (error) {
+            console.error('Error loading chapter data:', error);
+            throw error;
+        }
+    },
+    
+    async saveTodo(todo) {
+        if (!appState.user || appState.user.isDemo) {
+            storage.save('todos', appState.todos);
+            return;
+        }
+        
+        try {
+            const initialized = await this.initializeFirestore();
+            if (!initialized) throw new Error('Firestore not available');
+            
+            const { doc, setDoc } = this.firestoreImports;
+            
+            const docRef = doc(db, 'users', appState.user.uid, 'todos', todo.id.toString());
+            await setDoc(docRef, todo);
+            console.log('Todo saved to Firebase');
+        } catch (error) {
+            console.error('Error saving todo:', error);
+            storage.save('todos', appState.todos);
+            throw error;
+        }
+    },
+    
+    async deleteTodo(todoId) {
+        if (!appState.user || appState.user.isDemo) {
+            storage.save('todos', appState.todos);
+            return;
+        }
+        
+        try {
+            const initialized = await this.initializeFirestore();
+            if (!initialized) throw new Error('Firestore not available');
+            
+            const { doc, deleteDoc } = this.firestoreImports;
+            
+            const docRef = doc(db, 'users', appState.user.uid, 'todos', todoId.toString());
+            await deleteDoc(docRef);
+            console.log('Todo deleted from Firebase');
+        } catch (error) {
+            console.error('Error deleting todo:', error);
+            storage.save('todos', appState.todos);
+            throw error;
+        }
+    },
+    
+    async loadTodos() {
+        if (!appState.user || appState.user.isDemo) return;
+        
+        try {
+            const initialized = await this.initializeFirestore();
+            if (!initialized) throw new Error('Firestore not available');
+            
+            const { collection, getDocs } = this.firestoreImports;
+            
+            const todosRef = collection(db, 'users', appState.user.uid, 'todos');
+            const querySnapshot = await getDocs(todosRef);
+            
+            appState.todos = [];
+            querySnapshot.forEach((doc) => {
+                appState.todos.push(doc.data());
+            });
+            console.log('Todos loaded from Firebase:', appState.todos.length, 'items');
+        } catch (error) {
+            console.error('Error loading todos:', error);
+            throw error;
+        }
+    },
+    
+    async saveSettings(settings) {
+        if (!appState.user || appState.user.isDemo) {
+            storage.save('settings', appState.settings);
+            return;
+        }
+        
+        try {
+            const initialized = await this.initializeFirestore();
+            if (!initialized) throw new Error('Firestore not available');
+            
+            const { doc, setDoc } = this.firestoreImports;
+            
+            const docRef = doc(db, 'users', appState.user.uid, 'settings', 'userSettings');
+            await setDoc(docRef, settings);
+            console.log('Settings saved to Firebase');
+        } catch (error) {
+            console.error('Error saving settings:', error);
+            storage.save('settings', appState.settings);
+            throw error;
+        }
+    },
+    
+    async loadSettings() {
+        if (!appState.user || appState.user.isDemo) return;
+        
+        try {
+            const initialized = await this.initializeFirestore();
+            if (!initialized) throw new Error('Firestore not available');
+            
+            const { doc, getDoc } = this.firestoreImports;
+            
+            const docRef = doc(db, 'users', appState.user.uid, 'settings', 'userSettings');
+            const docSnap = await getDoc(docRef);
+            
+            if (docSnap.exists()) {
+                appState.settings = { ...CONFIG.defaultSettings, ...docSnap.data() };
+                const targetInput = document.getElementById('dailyTarget');
+                if (targetInput) {
+                    targetInput.value = appState.settings.dailyTarget;
+                }
+                console.log('Settings loaded from Firebase');
+            }
+        } catch (error) {
+            console.error('Error loading settings:', error);
+            throw error;
+        }
+    }
+};
+
+// Connection Status Management - FIXED
 const updateConnectionStatus = (status) => {
     const indicator = document.getElementById('statusIndicator');
     const statusText = document.getElementById('statusText');
@@ -751,631 +842,420 @@ const updateConnectionStatus = (status) => {
     switch (status) {
         case 'connected':
             indicator.classList.add('connected');
-            if (appState.user?.isDemo) {
-                statusText.textContent = '🎯 Demo Mode';
-            } else {
-                statusText.textContent = '🟢 Connected';
-            }
+            statusText.textContent = appState.user?.isDemo ? 'Demo Mode' : 'Connected';
             break;
-            
         case 'connecting':
-            statusText.textContent = '🔄 Syncing...';
+            statusText.textContent = 'Connecting...';
             break;
-            
         case 'offline':
-            statusText.textContent = '🔴 Offline';
-            
+            indicator.classList.add('offline');
+            statusText.textContent = 'Offline Mode';
             if (!appState.user?.isDemo && retryBtn) {
                 retryBtn.classList.remove('hidden');
             }
             break;
-            
         default:
-            statusText.textContent = '⚠️ Unknown';
+            statusText.textContent = 'Unknown';
     }
+    
+    console.log('Connection status updated:', status);
 };
 
-// Local Storage
+// Local Storage - FIXED
 const storage = {
     save: (key, data) => {
         try {
-            localStorage.setItem(`jee-tracker-v3-${key}`, JSON.stringify(data));
-            return true;
+            const dataToSave = JSON.stringify(data);
+            localStorage.setItem(`jee-tracker-${key}`, dataToSave);
+            console.log(`Saved ${key} to localStorage`);
         } catch (error) {
-            console.error('❌ Failed to save to localStorage:', error);
-            return false;
+            console.error('Failed to save to localStorage:', error);
         }
     },
     
     load: (key, defaultValue = null) => {
         try {
-            const data = localStorage.getItem(`jee-tracker-v3-${key}`);
-            return data ? JSON.parse(data) : defaultValue;
+            const data = localStorage.getItem(`jee-tracker-${key}`);
+            if (data) {
+                const parsed = JSON.parse(data);
+                console.log(`Loaded ${key} from localStorage`);
+                return parsed;
+            }
+            return defaultValue;
         } catch (error) {
-            console.error('❌ Failed to load from localStorage:', error);
+            console.error('Failed to load from localStorage:', error);
             return defaultValue;
         }
     }
 };
 
-// Enhanced Application Initialization - FIXED
+// Application Initialization - FULLY FIXED
 const init = async () => {
-    console.log('🚀 Initializing JEE 2026 Ultimate Tracker...');
+    console.log('Initializing JEE 2026 Tracker...');
     
+    // Load local state first
+    loadAppState();
+    
+    // Setup event listeners FIRST before showing auth modal
+    setupEventListeners();
+    
+    // Start countdowns and quotes
+    startCountdowns();
+    updateMotivationalQuote();
+    
+    // Set current date
+    const questionDateInput = document.getElementById('questionDate');
+    if (questionDateInput) {
+        questionDateInput.value = utils.getToday();
+    }
+    
+    // Show dashboard by default
+    showSection('dashboard');
+    
+    // Initialize Firebase Auth
+    updateConnectionStatus('connecting');
     try {
-        showSmoothLoader();
-        
-        loadAppState();
-        setupEventListeners();
-        startCountdowns();
-        updateMotivationalQuote();
-        
-        const questionDateInput = document.getElementById('questionDate');
-        if (questionDateInput) {
-            questionDateInput.value = utils.getToday();
-            questionDateInput.max = utils.getToday();
+        const initialized = await FirebaseAuth.initializeAuth();
+        if (initialized) {
+            console.log('Firebase initialized successfully');
+        } else {
+            console.warn('Firebase unavailable, demo mode available');
+            updateConnectionStatus('offline');
+            // Show auth modal for demo/offline mode after slight delay
+            setTimeout(() => FirebaseAuth.showAuthModal(), 500);
         }
-        
-        showSection('dashboard');
-        
-        // Initialize Firebase Auth (non-blocking) with faster fallback
-        setTimeout(async () => {
-            try {
-                await FirebaseAuth.initializeAuth();
-            } catch (error) {
-                console.error('❌ Firebase init error:', error);
-                updateConnectionStatus('offline');
-            }
-        }, 500);
-        
-        // Network listeners
-        window.addEventListener('online', () => {
-            appState.isOnline = true;
-            utils.showNotification('🌐 Back online!', 'success');
-        });
-        
-        window.addEventListener('offline', () => {
-            appState.isOnline = false;
-            utils.showNotification('📡 Working offline', 'warning');
-        });
-        
-        if (utils.isMobile()) {
-            initMobileOptimizations();
-        }
-        
-        appState.isInitialized = true;
-        console.log('✅ App initialized successfully!');
-        
-        setTimeout(() => {
-            hideSmoothLoader();
-            // If no user after init, show auth modal with demo mode available
-            if (!appState.user) {
-                setTimeout(() => FirebaseAuth.showAuthModal(), 500);
-            }
-        }, 2000);
-        
     } catch (error) {
-        console.error('❌ App initialization failed:', error);
-        hideSmoothLoader();
-        utils.showNotification('App initialization failed. Please refresh the page.', 'error');
+        console.error('Firebase initialization error:', error);
+        updateConnectionStatus('offline');
+        setTimeout(() => FirebaseAuth.showAuthModal(), 500);
     }
-};
-
-// Enhanced Mobile Optimizations
-const initMobileOptimizations = () => {
-    console.log('📱 Initializing mobile optimizations...');
     
-    // Prevent zoom on input focus
-    const inputs = document.querySelectorAll('input, select, textarea');
-    inputs.forEach(input => {
-        input.addEventListener('focus', () => {
-            if (utils.isMobile()) {
-                input.style.fontSize = '16px';
-            }
-        });
+    // Network listeners
+    window.addEventListener('online', () => {
+        appState.isOnline = true;
+        if (appState.user && !appState.user.isDemo) {
+            updateConnectionStatus('connected');
+        }
     });
     
-    // Add touch-friendly interactions
-    document.querySelectorAll('.smooth-btn').forEach(btn => {
-        btn.addEventListener('touchstart', function() {
-            this.style.transform = 'scale(0.95)';
-        }, { passive: true });
-        
-        btn.addEventListener('touchend', function() {
-            this.style.transform = '';
-        }, { passive: true });
+    window.addEventListener('offline', () => {
+        appState.isOnline = false;
+        updateConnectionStatus('offline');
     });
+    
+    // Window resize listener for chart responsiveness
+    window.addEventListener('resize', utils.debounce(() => {
+        if (appState.chartsInitialized) {
+            Object.values(appState.charts).forEach(chart => {
+                if (chart && typeof chart.resize === 'function') {
+                    chart.resize();
+                }
+            });
+        }
+    }, 250));
+    
+    appState.isInitialized = true;
+    console.log('App initialized successfully');
 };
 
-// Loader Functions
-const showSmoothLoader = () => {
-    const loader = document.getElementById('smoothLoader');
-    if (loader) {
-        loader.classList.remove('hidden');
-        loader.style.display = 'flex';
-    }
-};
-
-const hideSmoothLoader = () => {
-    const loader = document.getElementById('smoothLoader');
-    if (loader) {
-        loader.style.opacity = '0';
-        setTimeout(() => {
-            loader.classList.add('hidden');
-            loader.style.display = 'none';
-            loader.style.opacity = '1';
-        }, 500);
-    }
-};
-
-// Load Application State
+// Load Application State - FIXED
 const loadAppState = () => {
-    console.log('💾 Loading application state...');
+    console.log('Loading application state...');
     
-    try {
-        appState.progressData = storage.load('progressData', []);
-        appState.todos = storage.load('todos', []);
-        appState.chapterData = storage.load('chapterData', {});
-        appState.settings = { ...CONFIG.defaultSettings, ...storage.load('settings', {}) };
-        appState.quickNotes = storage.load('quickNotes', '');
-        
-        appState.currentStreak = utils.calculateStreak();
-        appState.longestStreak = storage.load('longestStreak', 0);
-        
-        if (appState.currentStreak > appState.longestStreak) {
-            appState.longestStreak = appState.currentStreak;
-            storage.save('longestStreak', appState.longestStreak);
-        }
-        
-        const targetInput = document.getElementById('dailyTarget');
-        if (targetInput) {
-            targetInput.value = appState.settings.dailyTarget;
-        }
-        
-        console.log('✅ Application state loaded successfully');
-        
-    } catch (error) {
-        console.error('❌ Failed to load application state:', error);
-        utils.showNotification('Failed to load some data. Using defaults.', 'warning');
+    appState.progressData = storage.load('progressData', []);
+    appState.todos = storage.load('todos', []);
+    appState.chapterData = storage.load('chapterData', {});
+    appState.settings = { ...CONFIG.defaultSettings, ...storage.load('settings', {}) };
+    
+    const targetInput = document.getElementById('dailyTarget');
+    if (targetInput) {
+        targetInput.value = appState.settings.dailyTarget;
     }
+    
+    // Force update all displays with delay to ensure DOM elements exist
+    setTimeout(() => {
+        updateDashboardStats();
+        updateTodayProgress();
+        updateSubjectProgress();
+        renderTodos();
+        renderChapters();
+    }, 200);
+    
+    console.log('Application state loaded:', {
+        progressEntries: appState.progressData.length,
+        todos: appState.todos.length,
+        chaptersTracked: Object.keys(appState.chapterData).length
+    });
 };
 
-// Enhanced Sample Data
+// Sample Data Functions - FIXED
 const loadSampleData = () => {
-    console.log('📊 Loading sample data for demo...');
+    const today = utils.getToday();
+    const yesterday = utils.formatDate(new Date(Date.now() - 24 * 60 * 60 * 1000));
+    const dayBeforeYesterday = utils.formatDate(new Date(Date.now() - 48 * 60 * 60 * 1000));
+    const threeDaysAgo = utils.formatDate(new Date(Date.now() - 72 * 60 * 60 * 1000));
+    const fourDaysAgo = utils.formatDate(new Date(Date.now() - 96 * 60 * 60 * 1000));
     
-    const sampleProgressData = [];
-    const today = new Date();
-    
-    for (let i = 29; i >= 0; i--) {
-        const date = new Date(today);
-        date.setDate(date.getDate() - i);
-        const dateString = utils.formatDate(date);
-        
-        const baseQuestions = 25 + Math.floor(Math.random() * 50);
-        const physics = Math.floor(baseQuestions * (0.3 + Math.random() * 0.2));
-        const chemistry = Math.floor(baseQuestions * (0.3 + Math.random() * 0.2));
-        const mathematics = baseQuestions - physics - chemistry;
-        
-        sampleProgressData.push({
-            date: dateString,
-            questions: baseQuestions,
-            target: 50,
-            subjects: {
-                Physics: Math.max(0, physics),
-                Chemistry: Math.max(0, chemistry),
-                Mathematics: Math.max(0, mathematics)
-            }
-        });
-    }
+    const sampleProgressData = [
+        {"date": fourDaysAgo, "questions": 35, "target": 50, "subjects": {"Physics": 12, "Chemistry": 15, "Mathematics": 8}},
+        {"date": threeDaysAgo, "questions": 42, "target": 50, "subjects": {"Physics": 14, "Chemistry": 18, "Mathematics": 10}},
+        {"date": dayBeforeYesterday, "questions": 48, "target": 50, "subjects": {"Physics": 16, "Chemistry": 20, "Mathematics": 12}},
+        {"date": yesterday, "questions": 55, "target": 50, "subjects": {"Physics": 18, "Chemistry": 19, "Mathematics": 18}},
+        {"date": today, "questions": 62, "target": 50, "subjects": {"Physics": 21, "Chemistry": 20, "Mathematics": 21}}
+    ];
     
     const sampleTodos = [
-        {
-            id: Date.now() + 1,
-            task: "Complete Mechanics chapter revision - Focus on rotational motion",
-            priority: "High",
-            subject: "Physics",
-            completed: false,
-            dueDate: utils.formatDate(new Date(Date.now() + 86400000)),
-            createdAt: new Date().toISOString()
-        },
-        {
-            id: Date.now() + 2,
-            task: "Practice Organic Chemistry reactions from Alcohols chapter",
-            priority: "Medium",
-            subject: "Chemistry",
-            completed: false,
-            dueDate: utils.formatDate(new Date(Date.now() + 2 * 86400000)),
-            createdAt: new Date().toISOString()
-        },
-        {
-            id: Date.now() + 3,
-            task: "Solve 20 Integration problems - substitution method",
-            priority: "High",
-            subject: "Mathematics",
-            completed: true,
-            dueDate: utils.formatDate(new Date(Date.now() - 86400000)),
-            createdAt: new Date().toISOString(),
-            completedAt: new Date().toISOString()
-        },
-        {
-            id: Date.now() + 4,
-            task: "Review Electromagnetic Induction formulas",
-            priority: "Medium",
-            subject: "Physics",
-            completed: false,
-            dueDate: utils.formatDate(new Date(Date.now() + 3 * 86400000)),
-            createdAt: new Date().toISOString()
-        }
+        {"id": Date.now() - 1000, "task": "Complete Mechanics chapter revision", "priority": "High", "subject": "Physics", "completed": false, "dueDate": utils.formatDate(new Date(Date.now() + 2 * 24 * 60 * 60 * 1000))},
+        {"id": Date.now(), "task": "Practice Organic Chemistry reactions", "priority": "Medium", "subject": "Chemistry", "completed": false, "dueDate": utils.formatDate(new Date(Date.now() + 24 * 60 * 60 * 1000))}
     ];
     
     appState.progressData = sampleProgressData;
     appState.todos = sampleTodos;
-    appState.currentStreak = 7;
-    appState.quickNotes = "Important formulas to remember:\n- Kinetic Energy: KE = ½mv²\n- Ohm's Law: V = IR\n- Quadratic Formula: x = [-b ± √(b²-4ac)]/2a\n\nFocus areas for next week:\n1. Rotational Dynamics\n2. Coordination Chemistry\n3. Integration by Parts";
     
-    // Save to localStorage for demo persistence
-    storage.save('progressData', appState.progressData);
-    storage.save('todos', appState.todos);
-    storage.save('quickNotes', appState.quickNotes);
-    
-    console.log('✅ Sample data loaded and saved');
+    console.log('Sample data loaded');
 };
 
 const loadSampleChapterData = () => {
-    console.log('📚 Loading sample chapter data...');
-    
+    // Sample chapter completion data
     const sampleChapterData = {
-        'physics_kinematics': {
-            completed: true,
-            confidence: 8,
-            notes: "Strong understanding of projectile motion and relative velocity",
-            pyq: { "jeeMain2023": true, "jeeMain2022": true, "jeeMain2021": true }
-        },
-        'physics_motion': {
-            completed: true,
-            confidence: 9,
-            notes: "Mastered Newton's laws and friction problems",
-            pyq: { "jeeMain2023": true, "jeeMain2022": true }
-        },
-        'physics_workpower': {
-            completed: false,
-            confidence: 6,
-            notes: "Need more practice with collision problems",
-            pyq: { "jeeMain2023": false, "jeeMain2022": true }
-        },
-        'chemistry_atomic': {
-            completed: true,
-            confidence: 9,
-            notes: "Excellent grasp of quantum numbers and electronic configuration",
-            pyq: { "jeeMain2023": true, "jeeMain2022": true }
-        },
-        'chemistry_periodic': {
-            completed: true,
-            confidence: 7,
-            notes: "Good understanding of periodic trends",
-            pyq: { "jeeMain2023": true }
-        },
-        'mathematics_sets': {
-            completed: true,
-            confidence: 8,
-            notes: "Set operations and Venn diagrams clear",
-            pyq: { "jeeMain2023": true, "jeeMain2022": true }
-        },
-        'mathematics_complex': {
-            completed: false,
-            confidence: 5,
-            notes: "Struggling with De Moivre's theorem applications",
-            pyq: { "jeeMain2023": false }
-        }
+        physics_mech: { completed: true, confidence: 8, notes: "Good understanding of kinematics and dynamics", pyq: { "jeeMain2023": true, "jeeMain2022": true, "jeeAdvanced2023": true } },
+        physics_thermo: { completed: true, confidence: 7, notes: "Need more practice on entropy calculations", pyq: { "jeeMain2023": true } },
+        chemistry_atomic: { completed: true, confidence: 7, notes: "Need more practice on quantum numbers", pyq: { "jeeMain2023": true, "jeeAdvanced2022": true } },
+        chemistry_bonding: { completed: false, confidence: 5, notes: "Working on molecular orbital theory", pyq: {} },
+        mathematics_sets: { completed: false, confidence: 5, notes: "", pyq: {} },
+        mathematics_complex: { completed: true, confidence: 9, notes: "Strong understanding of all concepts", pyq: { "jeeMain2023": true, "jeeMain2022": true, "jeeAdvanced2023": true, "jeeAdvanced2022": true } }
     };
     
     appState.chapterData = sampleChapterData;
-    storage.save('chapterData', appState.chapterData);
-    console.log('✅ Sample chapter data loaded and saved');
+    console.log('Sample chapter data loaded');
 };
 
-// Event Listeners Setup - FIXED
+// Event Listeners Setup - COMPLETELY FIXED
 const setupEventListeners = () => {
-    console.log('🔧 Setting up event listeners...');
+    console.log('Setting up event listeners...');
     
-    // Navigation
-    document.querySelectorAll('.nav-link, .bottom-nav-item').forEach(link => {
-        link.addEventListener('click', (e) => {
+    // Navigation - FIXED
+    document.addEventListener('click', (e) => {
+        if (e.target.classList.contains('nav-link')) {
             e.preventDefault();
-            const section = link.getAttribute('data-section') || 
-                           link.getAttribute('href')?.substring(1);
-            
-            if (section) {
-                showSection(section);
-                closeMobileMenu();
-            }
-        });
+            const section = e.target.getAttribute('href').substring(1);
+            console.log('Navigating to section:', section);
+            showSection(section);
+        }
     });
     
-    // Mobile menu toggle - FIXED for proper visibility
-    const mobileMenuToggle = document.getElementById('mobileMenuToggle');
-    const navMenu = document.getElementById('navMenu');
-    
-    if (mobileMenuToggle && navMenu) {
-        mobileMenuToggle.addEventListener('click', (e) => {
-            e.stopPropagation();
-            appState.mobileMenuOpen = !appState.mobileMenuOpen;
-            
-            if (appState.mobileMenuOpen) {
-                navMenu.classList.add('active');
-                mobileMenuToggle.classList.add('active');
-                document.body.style.overflow = 'hidden';
-            } else {
-                navMenu.classList.remove('active');
-                mobileMenuToggle.classList.remove('active');
-                document.body.style.overflow = '';
-            }
-        });
+    // Authentication - FIXED WITH IMMEDIATE HANDLERS
+    document.addEventListener('click', async (e) => {
+        const target = e.target;
         
-        // Close menu when clicking outside
-        document.addEventListener('click', (e) => {
-            if (appState.mobileMenuOpen && !navMenu.contains(e.target) && !mobileMenuToggle.contains(e.target)) {
-                closeMobileMenu();
+        // Google Sign In
+        if (target.id === 'googleSignInBtn' || target.closest('#googleSignInBtn')) {
+            e.preventDefault();
+            console.log('Google sign in clicked');
+            try {
+                await FirebaseAuth.signInWithGoogle();
+            } catch (error) {
+                console.error('Google sign in failed:', error);
             }
-        });
-    }
-    
-    // Authentication event listeners - FIXED
-    setupAuthListeners();
-    
-    // Progress tracking
-    const saveProgressBtn = document.getElementById('saveProgress');
-    if (saveProgressBtn) {
-        saveProgressBtn.addEventListener('click', saveProgress);
-    }
-    
-    // Auto-calculation for subject inputs
-    ['physicsCount', 'chemistryCount', 'mathCount'].forEach(id => {
-        const element = document.getElementById(id);
-        if (element) {
-            element.addEventListener('input', calculateTotal);
         }
-    });
-    
-    // Todo management
-    setupTodoListeners();
-    
-    // Class selector for chapters
-    document.querySelectorAll('.class-tab').forEach(btn => {
-        btn.addEventListener('click', (e) => {
-            const classType = e.target.dataset.class;
-            setClassFilter(classType);
-        });
-    });
-    
-    // Modal controls - FIXED to allow closing
-    setupModalListeners();
-    
-    // Export functionality
-    const exportBtn = document.getElementById('exportBtn');
-    if (exportBtn) {
-        exportBtn.addEventListener('click', () => {
-            const modal = document.getElementById('exportModal');
-            if (modal) modal.classList.remove('hidden');
-        });
-    }
-    
-    // Study tools listeners
-    setupStudyToolsListeners();
-    
-    // Escape key to close modals
-    document.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape') {
-            document.querySelectorAll('.modal:not(.hidden)').forEach(modal => {
-                modal.classList.add('hidden');
-            });
+        
+        // Email Sign In
+        if (target.id === 'emailSignInBtn' || target.closest('#emailSignInBtn')) {
+            e.preventDefault();
+            console.log('Email sign in clicked');
+            try {
+                await FirebaseAuth.signInWithEmail();
+            } catch (error) {
+                console.error('Email sign in failed:', error);
+            }
         }
-    });
-    
-    console.log('✅ Event listeners setup complete');
-};
-
-// Authentication Event Listeners - FIXED
-const setupAuthListeners = () => {
-    const googleSignInBtn = document.getElementById('googleSignInBtn');
-    const emailSignInBtn = document.getElementById('emailSignInBtn');
-    const emailSignUpBtn = document.getElementById('emailSignUpBtn');
-    const demoModeBtn = document.getElementById('demoModeBtn');
-    const signOutBtn = document.getElementById('signOutBtn');
-    const retryBtn = document.getElementById('retryBtn');
-    const showTroubleshootingBtn = document.getElementById('showTroubleshootingBtn');
-    
-    if (googleSignInBtn) {
-        googleSignInBtn.addEventListener('click', () => {
-            FirebaseAuth.signInWithGoogle().catch(console.error);
-        });
-    }
-    
-    if (emailSignInBtn) {
-        emailSignInBtn.addEventListener('click', () => {
-            FirebaseAuth.signInWithEmail().catch(console.error);
-        });
-    }
-    
-    if (emailSignUpBtn) {
-        emailSignUpBtn.addEventListener('click', () => {
-            FirebaseAuth.signUpWithEmail().catch(console.error);
-        });
-    }
-    
-    // FIXED: Demo mode button now works immediately
-    if (demoModeBtn) {
-        demoModeBtn.addEventListener('click', () => {
-            console.log('Demo mode button clicked');
+        
+        // Email Sign Up
+        if (target.id === 'emailSignUpBtn' || target.closest('#emailSignUpBtn')) {
+            e.preventDefault();
+            console.log('Email sign up clicked');
+            try {
+                await FirebaseAuth.signUpWithEmail();
+            } catch (error) {
+                console.error('Email sign up failed:', error);
+            }
+        }
+        
+        // Demo Mode - CRITICAL FIX
+        if (target.id === 'demoModeBtn' || target.closest('#demoModeBtn')) {
+            e.preventDefault();
+            console.log('Demo mode clicked');
             FirebaseAuth.enterDemoMode();
-        });
-    }
-    
-    if (signOutBtn) {
-        signOutBtn.addEventListener('click', () => {
-            if (confirm('Are you sure you want to sign out?')) {
-                FirebaseAuth.signOutUser().catch(console.error);
-            }
-        });
-    }
-    
-    if (retryBtn) {
-        retryBtn.addEventListener('click', () => {
-            FirebaseAuth.initializeAuth();
-        });
-    }
-    
-    if (showTroubleshootingBtn) {
-        showTroubleshootingBtn.addEventListener('click', () => {
-            const troubleshooting = document.getElementById('troubleshooting');
-            if (troubleshooting) {
-                troubleshooting.classList.toggle('hidden');
-                showTroubleshootingBtn.textContent = troubleshooting.classList.contains('hidden') ? 
-                    'Show Troubleshooting' : 'Hide Troubleshooting';
-            }
-        });
-    }
-};
-
-// Todo Event Listeners
-const setupTodoListeners = () => {
-    const addTaskBtn = document.getElementById('addTaskBtn');
-    const addTodoBtn = document.getElementById('addTodo');
-    const closeTodoFormBtn = document.getElementById('closeTodoForm');
-    
-    if (addTaskBtn) {
-        addTaskBtn.addEventListener('click', () => {
-            const form = document.getElementById('todoFormCompact');
-            if (form) {
-                form.classList.toggle('active');
-            }
-        });
-    }
-    
-    if (addTodoBtn) {
-        addTodoBtn.addEventListener('click', addTodo);
-    }
-    
-    if (closeTodoFormBtn) {
-        closeTodoFormBtn.addEventListener('click', () => {
-            const form = document.getElementById('todoFormCompact');
-            if (form) {
-                form.classList.remove('active');
-            }
-        });
-    }
-    
-    // Filter buttons
-    document.querySelectorAll('.filter-tab').forEach(btn => {
-        btn.addEventListener('click', (e) => {
-            const filter = e.target.dataset.filter;
-            filterTodos(filter);
-        });
-    });
-};
-
-// Study Tools Event Listeners
-const setupStudyToolsListeners = () => {
-    // Pomodoro Timer
-    const startTimerBtn = document.getElementById('startTimer');
-    const pauseTimerBtn = document.getElementById('pauseTimer');
-    const resetTimerBtn = document.getElementById('resetTimer');
-    
-    if (startTimerBtn) startTimerBtn.addEventListener('click', startPomodoroTimer);
-    if (pauseTimerBtn) pauseTimerBtn.addEventListener('click', pausePomodoroTimer);
-    if (resetTimerBtn) resetTimerBtn.addEventListener('click', resetPomodoroTimer);
-    
-    // Formula Search
-    const formulaSearch = document.getElementById('formulaSearch');
-    if (formulaSearch) {
-        formulaSearch.addEventListener('input', (e) => {
-            searchFormulas(e.target.value);
-        });
-    }
-    
-    // Formula Categories
-    document.querySelectorAll('.formula-cat-btn').forEach(btn => {
-        btn.addEventListener('click', (e) => {
-            const subject = e.target.dataset.subject;
-            switchFormulaSubject(subject);
-        });
-    });
-    
-    // Quick Notes
-    const quickNotes = document.getElementById('quickNotes');
-    const saveNotesBtn = document.getElementById('saveNotes');
-    const exportNotesBtn = document.getElementById('exportNotes');
-    
-    if (quickNotes) {
-        quickNotes.addEventListener('input', utils.debounce((e) => {
-            appState.quickNotes = e.target.value;
-            storage.save('quickNotes', appState.quickNotes);
-        }, 1000));
-    }
-    
-    if (saveNotesBtn) {
-        saveNotesBtn.addEventListener('click', () => {
-            appState.quickNotes = quickNotes?.value || '';
-            storage.save('quickNotes', appState.quickNotes);
-            utils.showNotification('Notes saved! 📝', 'success');
-        });
-    }
-    
-    if (exportNotesBtn) {
-        exportNotesBtn.addEventListener('click', exportNotes);
-    }
-};
-
-// Modal Event Listeners - FIXED to allow closing
-const setupModalListeners = () => {
-    const modals = document.querySelectorAll('.modal');
-    modals.forEach(modal => {
-        // Allow clicking backdrop to close
-        modal.addEventListener('click', (e) => {
-            if (e.target === modal || e.target.classList.contains('modal-backdrop')) {
-                modal.classList.add('hidden');
-            }
-        });
+        }
         
-        // Close button
-        const closeBtn = modal.querySelector('.modal-close');
-        if (closeBtn) {
-            closeBtn.addEventListener('click', (e) => {
-                e.preventDefault();
+        // Sign Out
+        if (target.id === 'signOutBtn' || target.closest('#signOutBtn')) {
+            e.preventDefault();
+            console.log('Sign out clicked');
+            try {
+                await FirebaseAuth.signOutUser();
+            } catch (error) {
+                console.error('Sign out failed:', error);
+            }
+        }
+        
+        // Retry Connection
+        if (target.id === 'retryBtn' || target.closest('#retryBtn')) {
+            e.preventDefault();
+            console.log('Retry connection clicked');
+            updateConnectionStatus('connecting');
+            await FirebaseAuth.initializeAuth();
+        }
+        
+        // Progress Saving
+        if (target.id === 'saveProgress' || target.closest('#saveProgress')) {
+            e.preventDefault();
+            console.log('Save progress clicked');
+            await saveProgress();
+        }
+        
+        // Todo Management
+        if (target.id === 'addTodo' || target.closest('#addTodo')) {
+            e.preventDefault();
+            console.log('Add todo clicked');
+            await addTodo();
+        }
+        
+        // Export/Import buttons
+        if (target.id === 'exportBtn' || target.closest('#exportBtn')) {
+            e.preventDefault();
+            const modal = document.getElementById('exportModal');
+            if (modal) {
+                modal.classList.remove('hidden');
+                modal.style.display = 'flex';
+                modal.style.visibility = 'visible';
+                modal.style.opacity = '1';
+            }
+        }
+        
+        // Calendar navigation
+        if (target.id === 'prevMonth' || target.closest('#prevMonth')) {
+            e.preventDefault();
+            changeMonth(-1);
+        }
+        
+        if (target.id === 'nextMonth' || target.closest('#nextMonth')) {
+            e.preventDefault();
+            changeMonth(1);
+        }
+        
+        // Modal closes
+        if (target.classList.contains('modal-close')) {
+            e.preventDefault();
+            const modal = target.closest('.modal');
+            if (modal) {
                 modal.classList.add('hidden');
-            });
+                modal.style.opacity = '0';
+                modal.style.visibility = 'hidden';
+                setTimeout(() => modal.style.display = 'none', 300);
+            }
+        }
+        
+        // Calendar day clicks
+        if (target.classList.contains('calendar-day') && target.dataset.date) {
+            openDayModal(target.dataset.date);
+        }
+        
+        // Filter buttons
+        if (target.classList.contains('filter-btn')) {
+            const filter = target.dataset.filter;
+            if (filter) {
+                filterTodos(filter);
+            }
+        }
+        
+        // Theme toggle
+        if (target.id === 'themeToggle' || target.closest('#themeToggle')) {
+            toggleTheme();
+        }
+        
+        // Export functions
+        if (target.id === 'exportAllJSON') {
+            exportAllData();
+        }
+        if (target.id === 'exportProgressCSV') {
+            exportProgressCSV();
+        }
+        if (target.id === 'exportChaptersCSV') {
+            exportChaptersCSV();
+        }
+        if (target.id === 'backupData') {
+            backupData();
+        }
+        if (target.id === 'exportChapterData') {
+            exportChapterData();
+        }
+        if (target.id === 'importChapterData') {
+            const fileInput = document.getElementById('importChapterFile');
+            if (fileInput) fileInput.click();
+        }
+        if (target.id === 'saveModalProgress') {
+            await saveModalProgress();
+        }
+        if (target.id === 'closeModal') {
+            closeModal();
         }
     });
-};
-
-// Helper Functions
-const closeMobileMenu = () => {
-    const navMenu = document.getElementById('navMenu');
-    const mobileMenuToggle = document.getElementById('mobileMenuToggle');
     
-    if (navMenu && mobileMenuToggle && appState.mobileMenuOpen) {
-        navMenu.classList.remove('active');
-        mobileMenuToggle.classList.remove('active');
-        document.body.style.overflow = '';
-        appState.mobileMenuOpen = false;
-    }
+    // Input event listeners
+    document.addEventListener('input', (e) => {
+        const target = e.target;
+        
+        // Auto-calculate total - FIXED
+        if (['physicsCount', 'chemistryCount', 'mathCount'].includes(target.id)) {
+            calculateTotal();
+        }
+    });
+    
+    // Change event listeners
+    document.addEventListener('change', (e) => {
+        const target = e.target;
+        
+        if (target.id === 'dailyTarget') {
+            updateDailyTarget();
+        }
+        
+        if (target.id === 'questionDate') {
+            loadDateData();
+        }
+        
+        if (target.id === 'importChapterFile') {
+            importChapterData(e);
+        }
+    });
+    
+    // Modal background clicks
+    document.addEventListener('click', (e) => {
+        if (e.target.classList.contains('modal') && !e.target.classList.contains('auth-modal')) {
+            e.target.classList.add('hidden');
+            e.target.style.opacity = '0';
+            e.target.style.visibility = 'hidden';
+            setTimeout(() => e.target.style.display = 'none', 300);
+        }
+    });
+    
+    console.log('Event listeners setup complete with delegation');
 };
 
+// Navigation - FIXED WITH CHART AND CALENDAR INITIALIZATION
 const showSection = (sectionName) => {
-    console.log('🎯 Showing section:', sectionName);
+    console.log('Showing section:', sectionName);
     
-    // Update navigation
-    document.querySelectorAll('.nav-link, .bottom-nav-item').forEach(link => {
+    // Update navigation active state
+    document.querySelectorAll('.nav-link').forEach(link => {
         link.classList.remove('active');
-        const linkSection = link.getAttribute('data-section') || 
-                           link.getAttribute('href')?.substring(1);
-        if (linkSection === sectionName) {
+        const linkHref = link.getAttribute('href');
+        if (linkHref === `#${sectionName}`) {
             link.classList.add('active');
         }
     });
     
-    // Switch sections
+    // Hide all sections and show the target section
     document.querySelectorAll('.section').forEach(section => {
         section.classList.remove('active');
         section.style.display = 'none';
@@ -1385,42 +1265,84 @@ const showSection = (sectionName) => {
     if (targetSection) {
         targetSection.classList.add('active');
         targetSection.style.display = 'block';
+        targetSection.style.visibility = 'visible';
+        
         appState.currentSection = sectionName;
         
-        // Initialize section content
-        setTimeout(() => {
-            switch (sectionName) {
-                case 'chapters':
-                    renderChapters();
-                    break;
-                case 'todos':
-                    renderTodos();
-                    break;
-                case 'analytics':
-                    initializeCharts();
-                    break;
-                case 'calendar':
+        // Initialize section-specific functionality with proper delays
+        if (sectionName === 'analytics') {
+            const loadingState = document.getElementById('analyticsLoading');
+            const chartsContainer = document.getElementById('chartsContainer');
+            
+            if (loadingState) loadingState.style.display = 'flex';
+            if (chartsContainer) chartsContainer.style.display = 'none';
+            
+            // Delay to ensure DOM is ready and visible
+            setTimeout(async () => {
+                console.log('Initializing analytics charts...');
+                try {
+                    await initializeCharts();
+                    if (loadingState) loadingState.style.display = 'none';
+                    if (chartsContainer) chartsContainer.style.display = 'grid';
+                } catch (error) {
+                    console.error('Failed to initialize charts:', error);
+                    if (loadingState) loadingState.innerHTML = '<p>Failed to load charts</p>';
+                    utils.showNotification('Failed to load charts', 'error');
+                }
+            }, 300);
+        }
+        
+        if (sectionName === 'chapters') {
+            setTimeout(() => {
+                console.log('Rendering chapters...');
+                renderChapters();
+            }, 100);
+        }
+        
+        if (sectionName === 'calendar') {
+            const loadingState = document.getElementById('calendarLoading');
+            const calendarContainer = document.getElementById('calendarContainer');
+            
+            if (loadingState) loadingState.style.display = 'flex';
+            if (calendarContainer) calendarContainer.style.display = 'none';
+            
+            setTimeout(() => {
+                console.log('Rendering calendar...');
+                try {
                     renderCalendar();
-                    break;
-                case 'tools':
-                    initializeStudyTools();
-                    break;
-            }
-        }, 100);
+                    if (loadingState) loadingState.style.display = 'none';
+                    if (calendarContainer) calendarContainer.style.display = 'block';
+                } catch (error) {
+                    console.error('Failed to render calendar:', error);
+                    if (loadingState) loadingState.innerHTML = '<p>Failed to load calendar</p>';
+                }
+            }, 200);
+        }
+        
+        console.log('Successfully switched to section:', sectionName);
+    } else {
+        console.error('Section not found:', sectionName);
     }
 };
 
-// Countdown Functions
+// Countdown Functions - FIXED
 const startCountdowns = () => {
     const updateCountdowns = () => {
+        const examMapping = {
+            'jeeMain1': 'main1',
+            'jeeMain2': 'main2', 
+            'jeeAdvanced': 'advanced'
+        };
+        
         Object.keys(CONFIG.examDates).forEach(exam => {
-            const examKey = exam.replace('jee', '').replace('Main1', 'main1').replace('Main2', 'main2').replace('Advanced', 'advanced');
+            const examKey = examMapping[exam];
             updateCountdown(examKey, CONFIG.examDates[exam]);
         });
     };
     
     updateCountdowns();
     setInterval(updateCountdowns, 1000);
+    console.log('Countdown timers started');
 };
 
 const updateCountdown = (exam, targetDate) => {
@@ -1430,305 +1352,41 @@ const updateCountdown = (exam, targetDate) => {
     const daysEl = document.getElementById(`days-${exam}`);
     const hoursEl = document.getElementById(`hours-${exam}`);
     const minutesEl = document.getElementById(`minutes-${exam}`);
-    const progressEl = document.getElementById(`${exam}Progress`);
+    const secondsEl = document.getElementById(`seconds-${exam}`);
     
-    if (!daysEl || !hoursEl || !minutesEl) return;
+    if (!daysEl || !hoursEl || !minutesEl || !secondsEl) return;
     
     if (distance < 0) {
-        [daysEl, hoursEl, minutesEl].forEach(el => el.textContent = '00');
-        if (progressEl) progressEl.style.width = '100%';
+        [daysEl, hoursEl, minutesEl, secondsEl].forEach(el => el.textContent = '00');
         return;
     }
     
     const days = Math.floor(distance / (1000 * 60 * 60 * 24));
     const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
     const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+    const seconds = Math.floor((distance % (1000 * 60)) / 1000);
     
     daysEl.textContent = String(days).padStart(3, '0');
     hoursEl.textContent = String(hours).padStart(2, '0');
     minutesEl.textContent = String(minutes).padStart(2, '0');
-    
-    // Update progress bar
-    if (progressEl) {
-        const totalTime = new Date('2026-05-18').getTime() - new Date('2025-08-23').getTime();
-        const elapsed = new Date().getTime() - new Date('2025-08-23').getTime();
-        const progress = Math.min((elapsed / totalTime) * 100, 100);
-        progressEl.style.width = progress + '%';
-    }
+    secondsEl.textContent = String(seconds).padStart(2, '0');
 };
 
-// Motivational Quotes
+// Motivational Quotes - FIXED
 const updateMotivationalQuote = () => {
     const quoteElement = document.getElementById('motivationalQuote');
     if (quoteElement) {
         const randomQuote = CONFIG.motivationalQuotes[Math.floor(Math.random() * CONFIG.motivationalQuotes.length)];
         quoteElement.textContent = randomQuote;
+        quoteElement.style.display = 'block';
+        quoteElement.style.visibility = 'visible';
     }
-    
-    // Update every 30 seconds
     setTimeout(updateMotivationalQuote, 30000);
 };
 
-// Progress Functions
-const calculateTotal = () => {
-    const physicsInput = document.getElementById('physicsCount');
-    const chemistryInput = document.getElementById('chemistryCount');
-    const mathInput = document.getElementById('mathCount');
-    const totalInput = document.getElementById('questionsCount');
-    
-    if (physicsInput && chemistryInput && mathInput && totalInput) {
-        const physics = parseInt(physicsInput.value) || 0;
-        const chemistry = parseInt(chemistryInput.value) || 0;
-        const math = parseInt(mathInput.value) || 0;
-        
-        totalInput.value = physics + chemistry + math;
-    }
-};
-
-const saveProgress = () => {
-    const dateInput = document.getElementById('questionDate');
-    const questionsInput = document.getElementById('questionsCount');
-    const physicsInput = document.getElementById('physicsCount');
-    const chemistryInput = document.getElementById('chemistryCount');
-    const mathInput = document.getElementById('mathCount');
-    const targetInput = document.getElementById('dailyTarget');
-    
-    if (!dateInput || !questionsInput) return;
-    
-    const date = dateInput.value;
-    const questions = parseInt(questionsInput.value) || 0;
-    const physics = parseInt(physicsInput?.value) || 0;
-    const chemistry = parseInt(chemistryInput?.value) || 0;
-    const math = parseInt(mathInput?.value) || 0;
-    const target = parseInt(targetInput?.value) || 50;
-    
-    if (!date) {
-        utils.showNotification('Please select a date', 'error');
-        return;
-    }
-    
-    if (questions === 0) {
-        utils.showNotification('Please enter the number of questions solved', 'error');
-        return;
-    }
-    
-    const progressEntry = {
-        date,
-        questions,
-        target,
-        subjects: {
-            Physics: physics,
-            Chemistry: chemistry,
-            Mathematics: math
-        }
-    };
-    
-    const existingIndex = appState.progressData.findIndex(entry => entry.date === date);
-    if (existingIndex >= 0) {
-        appState.progressData[existingIndex] = progressEntry;
-        utils.showNotification('Progress updated successfully! 📈', 'success');
-    } else {
-        appState.progressData.push(progressEntry);
-        utils.showNotification('Progress saved successfully! 🎉', 'success');
-    }
-    
-    appState.progressData.sort((a, b) => new Date(a.date) - new Date(b.date));
-    appState.settings.dailyTarget = target;
-    
-    storage.save('progressData', appState.progressData);
-    storage.save('settings', appState.settings);
-    
-    updateAllDisplays();
-    
-    // Clear form
-    [questionsInput, physicsInput, chemistryInput, mathInput].forEach(input => {
-        if (input) input.value = '';
-    });
-    
-    // Add smooth button animation
-    const btn = document.getElementById('saveProgress');
-    if (btn) {
-        btn.style.transform = 'scale(0.95)';
-        setTimeout(() => {
-            btn.style.transform = '';
-        }, 150);
-    }
-};
-
-// Todo Functions
-const addTodo = () => {
-    const taskInput = document.getElementById('todoTask');
-    const subjectSelect = document.getElementById('todoSubject');
-    const prioritySelect = document.getElementById('todoPriority');
-    const dueDateInput = document.getElementById('todoDueDate');
-    
-    if (!taskInput) return;
-    
-    const task = taskInput.value.trim();
-    if (!task) {
-        utils.showNotification('Please enter a task description', 'error');
-        return;
-    }
-    
-    const newTodo = {
-        id: Date.now(),
-        task,
-        subject: subjectSelect?.value || 'General',
-        priority: prioritySelect?.value || 'Medium',
-        dueDate: dueDateInput?.value || '',
-        completed: false,
-        createdAt: new Date().toISOString()
-    };
-    
-    appState.todos.push(newTodo);
-    storage.save('todos', appState.todos);
-    
-    renderTodos();
-    
-    // Clear form
-    taskInput.value = '';
-    if (subjectSelect) subjectSelect.value = 'General';
-    if (prioritySelect) prioritySelect.value = 'Medium';
-    if (dueDateInput) dueDateInput.value = '';
-    
-    // Hide form
-    const form = document.getElementById('todoFormCompact');
-    if (form) form.classList.remove('active');
-    
-    utils.showNotification('Task added successfully! ✅', 'success');
-};
-
-const toggleTodo = (id) => {
-    const todo = appState.todos.find(item => item.id === id);
-    if (todo) {
-        todo.completed = !todo.completed;
-        todo.completedAt = todo.completed ? new Date().toISOString() : null;
-        storage.save('todos', appState.todos);
-        renderTodos();
-        utils.showNotification(`Task ${todo.completed ? 'completed' : 'reopened'}! 🎯`, 'success');
-    }
-};
-
-const deleteTodo = (id) => {
-    if (confirm('Are you sure you want to delete this task?')) {
-        appState.todos = appState.todos.filter(item => item.id !== id);
-        storage.save('todos', appState.todos);
-        renderTodos();
-        utils.showNotification('Task deleted! 🗑️', 'success');
-    }
-};
-
-const filterTodos = (filter) => {
-    document.querySelectorAll('.filter-tab').forEach(btn => {
-        btn.classList.remove('active');
-        if (btn.dataset.filter === filter) {
-            btn.classList.add('active');
-        }
-    });
-    
-    renderTodos(filter);
-};
-
-const renderTodos = (filter = 'all') => {
-    const container = document.getElementById('todosContainer');
-    if (!container) return;
-    
-    let filteredTodos = [...appState.todos];
-    
-    switch (filter) {
-        case 'pending':
-            filteredTodos = filteredTodos.filter(todo => !todo.completed);
-            break;
-        case 'completed':
-            filteredTodos = filteredTodos.filter(todo => todo.completed);
-            break;
-        case 'high':
-            filteredTodos = filteredTodos.filter(todo => todo.priority === 'High');
-            break;
-    }
-    
-    // Sort by priority and due date
-    filteredTodos.sort((a, b) => {
-        const priorityOrder = { 'High': 3, 'Medium': 2, 'Low': 1 };
-        if (a.priority !== b.priority) {
-            return priorityOrder[b.priority] - priorityOrder[a.priority];
-        }
-        if (a.dueDate && b.dueDate) {
-            return new Date(a.dueDate) - new Date(b.dueDate);
-        }
-        return new Date(b.createdAt || 0) - new Date(a.createdAt || 0);
-    });
-    
-    container.innerHTML = '';
-    
-    if (filteredTodos.length === 0) {
-        container.innerHTML = `
-            <div class="empty-todos glass-card">
-                <div style="text-align: center; color: rgba(255, 255, 255, 0.5); padding: 40px;">
-                    <div style="font-size: 48px; margin-bottom: 16px;">📝</div>
-                    <h3>No tasks found</h3>
-                    <p>Add a new task to get started!</p>
-                </div>
-            </div>
-        `;
-        return;
-    }
-    
-    filteredTodos.forEach(todo => {
-        const todoElement = document.createElement('div');
-        todoElement.className = `todo-item glass-card ${todo.completed ? 'completed' : ''}`;
-        
-        const isOverdue = todo.dueDate && new Date(todo.dueDate) < new Date() && !todo.completed;
-        
-        todoElement.innerHTML = `
-            <div class="todo-header">
-                <div class="todo-task ${todo.completed ? 'completed-task' : ''}">${todo.task}</div>
-                <div class="todo-actions">
-                    <button class="btn btn--sm btn--outline smooth-btn" onclick="toggleTodo(${todo.id})" title="${todo.completed ? 'Mark as incomplete' : 'Mark as complete'}">
-                        ${todo.completed ? '↶' : '✓'}
-                    </button>
-                    <button class="btn btn--sm btn--outline smooth-btn delete-btn" onclick="deleteTodo(${todo.id})" title="Delete task" style="color: #ff6b6b; border-color: #ff6b6b;">×</button>
-                </div>
-            </div>
-            <div class="todo-meta">
-                <span class="todo-priority ${todo.priority.toLowerCase()}">${todo.priority}</span>
-                <span class="todo-subject">${todo.subject}</span>
-                ${todo.dueDate ? `<span class="todo-due ${isOverdue ? 'overdue' : ''}" style="color: ${isOverdue ? '#ff6b6b' : 'rgba(255, 255, 255, 0.7)'};">${isOverdue ? '⚠️ ' : '📅 '}${new Date(todo.dueDate).toLocaleDateString()}</span>` : ''}
-            </div>
-        `;
-        
-        container.appendChild(todoElement);
-    });
-    
-    // Update stats
-    const pendingCount = appState.todos.filter(todo => !todo.completed).length;
-    const completedToday = appState.todos.filter(todo => 
-        todo.completed && todo.completedAt && 
-        new Date(todo.completedAt).toDateString() === new Date().toDateString()
-    ).length;
-    
-    const pendingEl = document.getElementById('pendingCount');
-    const completedTodayEl = document.getElementById('completedToday');
-    
-    if (pendingEl) pendingEl.textContent = `${pendingCount} pending`;
-    if (completedTodayEl) completedTodayEl.textContent = `${completedToday} completed today`;
-};
-
-// Chapter Functions
-const setClassFilter = (classType) => {
-    document.querySelectorAll('.class-tab').forEach(btn => {
-        btn.classList.remove('active');
-        if (btn.dataset.class === classType) {
-            btn.classList.add('active');
-        }
-    });
-    
-    appState.currentClass = classType;
-    renderChapters();
-};
-
+// Chapter Management Functions - FIXED
 const renderChapters = () => {
-    console.log('📚 Rendering chapters...');
+    console.log('Rendering chapters...');
     Object.keys(CONFIG.subjects).forEach(subject => {
         renderSubjectChapters(subject);
     });
@@ -1737,19 +1395,18 @@ const renderChapters = () => {
 
 const renderSubjectChapters = (subject) => {
     const container = document.getElementById(`${subject}Chapters`);
-    if (!container) return;
-    
-    const subjectData = CONFIG.subjects[subject];
-    container.innerHTML = '';
-    
-    let chaptersToShow = subjectData.chapters;
-    if (appState.currentClass !== 'all') {
-        chaptersToShow = subjectData.chapters.filter(chapter => 
-            chapter.class === appState.currentClass
-        );
+    if (!container) {
+        console.warn(`Container not found for ${subject}Chapters`);
+        return;
     }
     
-    chaptersToShow.forEach(chapter => {
+    console.log(`Rendering ${subject} chapters`);
+    const subjectData = CONFIG.subjects[subject];
+    container.innerHTML = '';
+    container.style.display = 'grid';
+    container.style.visibility = 'visible';
+    
+    subjectData.chapters.forEach(chapter => {
         const chapterKey = `${subject}_${chapter.id}`;
         const chapterData = appState.chapterData[chapterKey] || {
             completed: false,
@@ -1759,97 +1416,108 @@ const renderSubjectChapters = (subject) => {
         };
         
         const chapterElement = document.createElement('div');
-        chapterElement.className = 'chapter-card glass-card';
-        
-        const difficultyColors = {
-            'Easy': '#81C784',
-            'Medium': '#FFA726',
-            'Hard': '#FF7043'
-        };
-        
+        chapterElement.className = 'chapter-card';
+        chapterElement.style.display = 'block';
+        chapterElement.style.visibility = 'visible';
         chapterElement.innerHTML = `
             <div class="chapter-header">
                 <input type="checkbox" class="chapter-checkbox" id="checkbox_${chapterKey}" 
                        ${chapterData.completed ? 'checked' : ''}>
                 <label for="checkbox_${chapterKey}" class="chapter-title">${chapter.name}</label>
-                <div class="chapter-badges">
-                    <span class="class-badge">Class ${chapter.class}</span>
-                    <span class="difficulty-badge" style="background-color: ${difficultyColors[chapter.difficulty]}20; color: ${difficultyColors[chapter.difficulty]}; border: 1px solid ${difficultyColors[chapter.difficulty]}40; padding: 2px 8px; border-radius: 12px; font-size: 11px;">
-                        ${chapter.difficulty}
-                    </span>
-                </div>
             </div>
-            <div class="chapter-topics" style="margin-bottom: 12px; color: rgba(255, 255, 255, 0.7); font-size: 13px;">${chapter.topics.slice(0, 4).join(' • ')}${chapter.topics.length > 4 ? '...' : ''}</div>
+            <div class="chapter-topics">${chapter.topics.join(' • ')}</div>
             
             <div class="chapter-controls">
-                <div class="confidence-control" style="margin-bottom: 12px;">
-                    <span class="confidence-label" style="font-size: 12px; color: rgba(255, 255, 255, 0.8);">Confidence Level:</span>
+                <div class="confidence-control">
+                    <span class="confidence-label">Confidence:</span>
                     <input type="range" class="confidence-slider" min="1" max="10" 
-                           value="${chapterData.confidence}" id="confidence_${chapterKey}" style="flex: 1; margin: 0 8px;">
-                    <span class="confidence-value" id="value_${chapterKey}" style="font-weight: bold; color: #FFA726; font-size: 12px;">${chapterData.confidence}/10</span>
+                           value="${chapterData.confidence}" id="confidence_${chapterKey}">
+                    <span class="confidence-value" id="value_${chapterKey}">${chapterData.confidence}</span>
                 </div>
                 
-                <div class="pyq-section" style="margin-bottom: 12px;">
-                    <h5 style="font-size: 12px; margin-bottom: 8px; color: rgba(255, 255, 255, 0.9);">Previous Year Questions</h5>
-                    <div class="pyq-checkboxes" style="display: flex; gap: 8px;">
-                        ${CONFIG.pyqYears.slice(-3).map(year => `
-                            <label class="pyq-checkbox" style="display: flex; align-items: center; gap: 4px; font-size: 11px; cursor: pointer;">
-                                <input type="checkbox" id="main_${chapterKey}_${year}" 
-                                       ${chapterData.pyq[`jeeMain${year}`] ? 'checked' : ''} style="accent-color: #FFA726;">
-                                <span class="pyq-year" style="color: rgba(255, 255, 255, 0.8);">${year}</span>
-                            </label>
-                        `).join('')}
+                <div class="pyq-section">
+                    <div class="pyq-group">
+                        <h5>JEE Main PYQs</h5>
+                        <div class="pyq-years">
+                            ${CONFIG.pyqYears.map(year => `
+                                <div class="pyq-year">
+                                    <input type="checkbox" id="main_${chapterKey}_${year}" 
+                                           ${chapterData.pyq[`jeeMain${year}`] ? 'checked' : ''}>
+                                    <label for="main_${chapterKey}_${year}">${year}</label>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                    <div class="pyq-group">
+                        <h5>JEE Advanced PYQs</h5>
+                        <div class="pyq-years">
+                            ${CONFIG.pyqYears.map(year => `
+                                <div class="pyq-year">
+                                    <input type="checkbox" id="adv_${chapterKey}_${year}" 
+                                           ${chapterData.pyq[`jeeAdvanced${year}`] ? 'checked' : ''}>
+                                    <label for="adv_${chapterKey}_${year}">${year}</label>
+                                </div>
+                            `).join('')}
+                        </div>
                     </div>
                 </div>
                 
                 <div class="notes-section">
+                    <label class="notes-label" for="notes_${chapterKey}">Personal Notes:</label>
                     <textarea class="notes-textarea" id="notes_${chapterKey}" 
-                              placeholder="Add your notes, doubts, or important points..." style="width: 100%; min-height: 60px; background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 167, 38, 0.2); border-radius: 6px; padding: 8px; color: white; font-size: 12px; resize: vertical;">${chapterData.notes}</textarea>
+                              placeholder="Add your notes, important points, or areas to review...">${chapterData.notes}</textarea>
                 </div>
             </div>
         `;
         
         container.appendChild(chapterElement);
+        
+        // Add event listeners for this chapter using delegation
         setupChapterEventListeners(chapterKey);
     });
+    
+    console.log(`Rendered ${subjectData.chapters.length} chapters for ${subject}`);
 };
 
 const setupChapterEventListeners = (chapterKey) => {
-    const checkbox = document.getElementById(`checkbox_${chapterKey}`);
-    if (checkbox) {
-        checkbox.addEventListener('change', () => {
-            updateChapterData(chapterKey, 'completed', checkbox.checked);
-        });
-    }
-    
-    const slider = document.getElementById(`confidence_${chapterKey}`);
-    const valueDisplay = document.getElementById(`value_${chapterKey}`);
-    if (slider && valueDisplay) {
-        slider.addEventListener('input', () => {
-            valueDisplay.textContent = slider.value + '/10';
-            updateChapterData(chapterKey, 'confidence', parseInt(slider.value));
-        });
-    }
-    
-    CONFIG.pyqYears.forEach(year => {
-        const mainCheckbox = document.getElementById(`main_${chapterKey}_${year}`);
-        if (mainCheckbox) {
-            mainCheckbox.addEventListener('change', () => {
-                updateChapterPYQ(chapterKey, `jeeMain${year}`, mainCheckbox.checked);
-            });
+    // Use event delegation to handle chapter interactions
+    document.addEventListener('change', (e) => {
+        const target = e.target;
+        
+        // Completion checkbox
+        if (target.id === `checkbox_${chapterKey}`) {
+            updateChapterData(chapterKey, 'completed', target.checked);
         }
+        
+        // Confidence slider
+        if (target.id === `confidence_${chapterKey}`) {
+            const valueDisplay = document.getElementById(`value_${chapterKey}`);
+            if (valueDisplay) {
+                valueDisplay.textContent = target.value;
+            }
+            updateChapterData(chapterKey, 'confidence', parseInt(target.value));
+        }
+        
+        // PYQ checkboxes
+        CONFIG.pyqYears.forEach(year => {
+            if (target.id === `main_${chapterKey}_${year}`) {
+                updateChapterPYQ(chapterKey, `jeeMain${year}`, target.checked);
+            }
+            if (target.id === `adv_${chapterKey}_${year}`) {
+                updateChapterPYQ(chapterKey, `jeeAdvanced${year}`, target.checked);
+            }
+        });
     });
     
-    const notesTextarea = document.getElementById(`notes_${chapterKey}`);
-    if (notesTextarea) {
-        const debouncedUpdate = utils.debounce((value) => {
-            updateChapterData(chapterKey, 'notes', value);
-        }, 1000);
-        
-        notesTextarea.addEventListener('input', () => {
-            debouncedUpdate(notesTextarea.value);
-        });
-    }
+    // Notes textarea with debouncing
+    document.addEventListener('input', (e) => {
+        if (e.target.id === `notes_${chapterKey}`) {
+            const debouncedUpdate = utils.debounce((value) => {
+                updateChapterData(chapterKey, 'notes', value);
+            }, 500);
+            debouncedUpdate(e.target.value);
+        }
+    });
 };
 
 const updateChapterData = (chapterKey, field, value) => {
@@ -1863,12 +1531,12 @@ const updateChapterData = (chapterKey, field, value) => {
     }
     
     appState.chapterData[chapterKey][field] = value;
-    storage.save('chapterData', appState.chapterData);
+    
+    // Save data
+    saveChapterData();
     updateSubjectProgress();
     
-    if (field === 'completed' && value) {
-        utils.showNotification('Chapter completed! 🎯', 'success');
-    }
+    console.log(`Updated chapter data for ${chapterKey}:`, field, value);
 };
 
 const updateChapterPYQ = (chapterKey, pyqKey, checked) => {
@@ -1883,302 +1551,24 @@ const updateChapterPYQ = (chapterKey, pyqKey, checked) => {
     
     if (checked) {
         appState.chapterData[chapterKey].pyq[pyqKey] = true;
-        utils.showNotification('PYQ marked as completed! 📚', 'success');
     } else {
         delete appState.chapterData[chapterKey].pyq[pyqKey];
     }
     
-    storage.save('chapterData', appState.chapterData);
+    saveChapterData();
+    console.log(`Updated PYQ data for ${chapterKey}:`, pyqKey, checked);
 };
 
-// Study Tools Functions
-const initializeStudyTools = () => {
-    console.log('🛠️ Initializing study tools...');
-    updateTimerDisplay();
-    renderFormulas();
-    loadQuickNotes();
-};
-
-// Pomodoro Timer Functions
-const startPomodoroTimer = () => {
-    if (!appState.pomodoroTimer.isRunning) {
-        appState.pomodoroTimer.isRunning = true;
-        appState.pomodoroTimer.isPaused = false;
-        
-        appState.pomodoroInterval = setInterval(() => {
-            appState.pomodoroTimer.currentTime--;
-            updateTimerDisplay();
-            
-            if (appState.pomodoroTimer.currentTime <= 0) {
-                handleTimerComplete();
-            }
-        }, 1000);
-        
-        updateTimerButtons();
-        utils.showNotification('Focus time started! 🎯', 'success');
-    }
-};
-
-const pausePomodoroTimer = () => {
-    if (appState.pomodoroTimer.isRunning) {
-        clearInterval(appState.pomodoroInterval);
-        appState.pomodoroTimer.isRunning = false;
-        appState.pomodoroTimer.isPaused = true;
-        updateTimerButtons();
-        utils.showNotification('Timer paused ⏸️', 'info');
-    } else if (appState.pomodoroTimer.isPaused) {
-        startPomodoroTimer();
-    }
-};
-
-const resetPomodoroTimer = () => {
-    clearInterval(appState.pomodoroInterval);
-    appState.pomodoroTimer.isRunning = false;
-    appState.pomodoroTimer.isPaused = false;
-    appState.pomodoroTimer.currentTime = appState.settings.pomodoroTime * 60;
-    appState.pomodoroTimer.mode = 'focus';
-    updateTimerDisplay();
-    updateTimerButtons();
-    utils.showNotification('Timer reset! 🔄', 'info');
-};
-
-const handleTimerComplete = () => {
-    clearInterval(appState.pomodoroInterval);
-    appState.pomodoroTimer.isRunning = false;
-    
-    if (appState.pomodoroTimer.mode === 'focus') {
-        appState.pomodoroTimer.sessions++;
-        if (appState.pomodoroTimer.sessions % 4 === 0) {
-            // Long break after 4 sessions
-            appState.pomodoroTimer.mode = 'longBreak';
-            appState.pomodoroTimer.currentTime = appState.settings.longBreakTime * 60;
-            utils.showNotification('Great work! Take a long break! 🎉', 'success');
-        } else {
-            // Short break
-            appState.pomodoroTimer.mode = 'shortBreak';
-            appState.pomodoroTimer.currentTime = appState.settings.shortBreakTime * 60;
-            utils.showNotification('Focus session complete! Take a short break! ☕', 'success');
-        }
-    } else {
-        // Break complete, back to focus
-        appState.pomodoroTimer.mode = 'focus';
-        appState.pomodoroTimer.currentTime = appState.settings.pomodoroTime * 60;
-        utils.showNotification('Break over! Ready for another focus session? 💪', 'info');
-    }
-    
-    updateTimerDisplay();
-    updateTimerButtons();
-};
-
-const updateTimerDisplay = () => {
-    const timerDisplay = document.getElementById('timerDisplay');
-    const timerLabel = document.getElementById('timerLabel');
-    
-    if (timerDisplay) {
-        timerDisplay.textContent = utils.formatTime(appState.pomodoroTimer.currentTime);
-    }
-    
-    if (timerLabel) {
-        const labels = {
-            'focus': 'Focus Time',
-            'shortBreak': 'Short Break',
-            'longBreak': 'Long Break'
-        };
-        timerLabel.textContent = labels[appState.pomodoroTimer.mode];
-    }
-};
-
-const updateTimerButtons = () => {
-    const startBtn = document.getElementById('startTimer');
-    const pauseBtn = document.getElementById('pauseTimer');
-    
-    if (startBtn) {
-        startBtn.textContent = appState.pomodoroTimer.isPaused ? 'Resume' : 'Start';
-        startBtn.disabled = appState.pomodoroTimer.isRunning;
-    }
-    
-    if (pauseBtn) {
-        pauseBtn.textContent = appState.pomodoroTimer.isRunning ? 'Pause' : 'Resume';
-        pauseBtn.disabled = !appState.pomodoroTimer.isRunning && !appState.pomodoroTimer.isPaused;
-    }
-};
-
-// Formula Functions
-const renderFormulas = () => {
-    const container = document.getElementById('formulaList');
-    if (!container) return;
-    
-    const formulas = CONFIG.formulas[appState.currentFormulaSubject] || [];
-    container.innerHTML = '';
-    
-    formulas.forEach(formula => {
-        const formulaElement = document.createElement('div');
-        formulaElement.className = 'formula-item glass-card';
-        formulaElement.style.cssText = 'padding: 16px; margin-bottom: 12px; border: 1px solid rgba(255, 167, 38, 0.2);';
-        formulaElement.innerHTML = `
-            <div class="formula-name" style="font-weight: bold; color: #FFA726; margin-bottom: 8px;">${formula.name}</div>
-            <div class="formula-expression" style="font-family: 'Courier New', monospace; background: rgba(255, 255, 255, 0.05); padding: 8px; border-radius: 4px; margin-bottom: 8px; font-size: 14px;">${formula.formula}</div>
-            <div class="formula-chapter" style="font-size: 12px; color: rgba(255, 255, 255, 0.7);">${formula.chapter}</div>
-        `;
-        container.appendChild(formulaElement);
-    });
-};
-
-const switchFormulaSubject = (subject) => {
-    appState.currentFormulaSubject = subject;
-    
-    document.querySelectorAll('.formula-cat-btn').forEach(btn => {
-        btn.classList.remove('active');
-        if (btn.dataset.subject === subject) {
-            btn.classList.add('active');
-        }
-    });
-    
-    renderFormulas();
-};
-
-const searchFormulas = (searchTerm) => {
-    const container = document.getElementById('formulaList');
-    if (!container) return;
-    
-    const allFormulas = Object.values(CONFIG.formulas).flat();
-    const filteredFormulas = searchTerm 
-        ? allFormulas.filter(formula => 
-            formula.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            formula.formula.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            formula.chapter.toLowerCase().includes(searchTerm.toLowerCase())
-          )
-        : CONFIG.formulas[appState.currentFormulaSubject] || [];
-    
-    container.innerHTML = '';
-    
-    filteredFormulas.forEach(formula => {
-        const formulaElement = document.createElement('div');
-        formulaElement.className = 'formula-item glass-card';
-        formulaElement.style.cssText = 'padding: 16px; margin-bottom: 12px; border: 1px solid rgba(255, 167, 38, 0.2);';
-        formulaElement.innerHTML = `
-            <div class="formula-name" style="font-weight: bold; color: #FFA726; margin-bottom: 8px;">${formula.name}</div>
-            <div class="formula-expression" style="font-family: 'Courier New', monospace; background: rgba(255, 255, 255, 0.05); padding: 8px; border-radius: 4px; margin-bottom: 8px; font-size: 14px;">${formula.formula}</div>
-            <div class="formula-chapter" style="font-size: 12px; color: rgba(255, 255, 255, 0.7);">${formula.chapter}</div>
-        `;
-        container.appendChild(formulaElement);
-    });
-};
-
-const loadQuickNotes = () => {
-    const quickNotes = document.getElementById('quickNotes');
-    if (quickNotes) {
-        quickNotes.value = appState.quickNotes;
-    }
-};
-
-const exportNotes = () => {
-    const notes = appState.quickNotes;
-    if (!notes.trim()) {
-        utils.showNotification('No notes to export!', 'warning');
-        return;
-    }
-    
-    const blob = new Blob([notes], { type: 'text/plain' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = `JEE_Notes_${new Date().toISOString().split('T')[0]}.txt`;
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    URL.revokeObjectURL(url);
-    
-    utils.showNotification('Notes exported successfully! 📄', 'success');
-};
-
-// Update Functions
-const updateAllDisplays = () => {
+const saveChapterData = async () => {
     try {
-        updateDashboardStats();
-        updateTodayProgress();
-        updateSubjectProgress();
-        updateStreakDisplay();
-        if (appState.currentSection === 'calendar') renderCalendar();
-        if (appState.currentSection === 'todos') renderTodos();
-        if (appState.currentSection === 'chapters') renderChapters();
-    } catch (error) {
-        console.error('❌ Error updating displays:', error);
-    }
-};
-
-const updateDashboardStats = () => {
-    // Calculate total questions from progress data
-    const totalQuestions = appState.progressData.reduce((sum, entry) => sum + entry.questions, 0);
-    const avgDaily = appState.progressData.length > 0 ? 
-        Math.round(totalQuestions / appState.progressData.length) : 0;
-    
-    // Calculate overall completion rate
-    const totalChapters = Object.values(CONFIG.subjects).reduce((sum, subject) => sum + subject.chapters.length, 0);
-    const completedChapters = Object.values(appState.chapterData).filter(data => data.completed).length;
-    const completionRate = totalChapters > 0 ? Math.round((completedChapters / totalChapters) * 100) : 0;
-    
-    // Update analytics stats
-    const totalQuestionsEl = document.getElementById('totalQuestions');
-    const longestStreakEl = document.getElementById('longestStreak');
-    const avgDailyEl = document.getElementById('avgDaily');
-    const completionRateEl = document.getElementById('completionRate');
-    
-    if (totalQuestionsEl) totalQuestionsEl.textContent = totalQuestions.toLocaleString();
-    if (longestStreakEl) longestStreakEl.textContent = appState.longestStreak;
-    if (avgDailyEl) avgDailyEl.textContent = avgDaily;
-    if (completionRateEl) completionRateEl.textContent = completionRate + '%';
-};
-
-const updateTodayProgress = () => {
-    const today = utils.getToday();
-    const todayEntry = appState.progressData.find(entry => entry.date === today);
-    const target = appState.settings.dailyTarget;
-    
-    const questionsToday = todayEntry ? todayEntry.questions : 0;
-    const progress = Math.min(Math.round((questionsToday / target) * 100), 100);
-    
-    // Update dashboard elements
-    const todayQuestionsEl = document.getElementById('todayQuestions');
-    const todayTargetEl = document.getElementById('todayTarget');
-    const progressPercentageEl = document.getElementById('progressPercentage');
-    
-    if (todayQuestionsEl) todayQuestionsEl.textContent = questionsToday;
-    if (todayTargetEl) todayTargetEl.textContent = target;
-    if (progressPercentageEl) progressPercentageEl.textContent = progress + '%';
-    
-    // Update circular progress
-    const circle = document.getElementById('progressCircle');
-    if (circle) {
-        const circumference = 2 * Math.PI * 60;
-        const offset = circumference - (progress / 100) * circumference;
-        
-        circle.style.strokeDasharray = circumference;
-        circle.style.strokeDashoffset = offset;
-    }
-    
-    // Update achievement
-    const achievement = utils.checkAchievement(questionsToday);
-    const achievementEl = document.getElementById('achievementLevel');
-    if (achievementEl && achievement) {
-        achievementEl.textContent = achievement.icon;
-        achievementEl.title = achievement.title;
-    }
-    
-    // Update status message
-    const statusEl = document.getElementById('progressStatus');
-    if (statusEl) {
-        if (progress >= 100) {
-            statusEl.textContent = 'Goal Achieved! 🎉';
-        } else if (progress >= 75) {
-            statusEl.textContent = 'Almost There! 💪';
-        } else if (progress >= 50) {
-            statusEl.textContent = 'Good Progress! 🔥';
-        } else if (progress > 0) {
-            statusEl.textContent = 'Keep Going! 🚀';
+        if (appState.user && !appState.user.isDemo) {
+            await FirebaseDB.saveChapterData(appState.chapterData);
         } else {
-            statusEl.textContent = 'Start Today! 📚';
+            storage.save('chapterData', appState.chapterData);
         }
+    } catch (error) {
+        console.error('Error saving chapter data:', error);
+        storage.save('chapterData', appState.chapterData);
     }
 };
 
@@ -2210,15 +1600,29 @@ const updateSubjectProgress = () => {
         const percentageEl = document.getElementById(`${subject}Percentage`);
         const progressCircle = document.getElementById(`${subject}ProgressCircle`);
         
-        if (completedEl) completedEl.textContent = `${completedChapters}/${totalChapters}`;
-        if (confidenceEl) confidenceEl.textContent = avgConfidence;
-        if (percentageEl) percentageEl.textContent = `${completionPercentage}%`;
+        if (completedEl) {
+            completedEl.textContent = `${completedChapters}/${totalChapters}`;
+            completedEl.style.display = 'block';
+            completedEl.style.visibility = 'visible';
+        }
+        if (confidenceEl) {
+            confidenceEl.textContent = avgConfidence;
+            confidenceEl.style.display = 'block';
+            confidenceEl.style.visibility = 'visible';
+        }
+        if (percentageEl) {
+            percentageEl.textContent = `${completionPercentage}%`;
+            percentageEl.style.display = 'block';
+            percentageEl.style.visibility = 'visible';
+        }
         
         if (progressCircle) {
-            const circumference = 2 * Math.PI * 45;
+            const circumference = 2 * Math.PI * 54;
             const offset = circumference - (completionPercentage / 100) * circumference;
             progressCircle.style.strokeDasharray = circumference;
             progressCircle.style.strokeDashoffset = offset;
+            progressCircle.style.display = 'block';
+            progressCircle.style.visibility = 'visible';
         }
         
         // Update chapter section progress bars
@@ -2227,120 +1631,1177 @@ const updateSubjectProgress = () => {
         
         if (progressBar) {
             progressBar.style.width = `${completionPercentage}%`;
+            progressBar.style.display = 'block';
+            progressBar.style.visibility = 'visible';
         }
         if (progressText) {
             progressText.textContent = `${completedChapters}/${totalChapters}`;
+            progressText.style.display = 'block';
+            progressText.style.visibility = 'visible';
         }
     });
+    
+    console.log('Subject progress updated');
 };
 
-const updateStreakDisplay = () => {
-    appState.currentStreak = utils.calculateStreak();
+// Progress Tracking Functions - FIXED
+const calculateTotal = () => {
+    const physicsInput = document.getElementById('physicsCount');
+    const chemistryInput = document.getElementById('chemistryCount');
+    const mathInput = document.getElementById('mathCount');
+    const totalInput = document.getElementById('questionsCount');
     
-    const streakEl = document.getElementById('streakCount');
-    if (streakEl) {
-        streakEl.textContent = appState.currentStreak;
+    if (physicsInput && chemistryInput && mathInput && totalInput) {
+        const physics = parseInt(physicsInput.value) || 0;
+        const chemistry = parseInt(chemistryInput.value) || 0;
+        const math = parseInt(mathInput.value) || 0;
+        
+        totalInput.value = physics + chemistry + math;
+    }
+};
+
+const saveProgress = async () => {
+    console.log('Saving progress...');
+    
+    const dateInput = document.getElementById('questionDate');
+    const questionsInput = document.getElementById('questionsCount');
+    const targetInput = document.getElementById('dailyTarget');
+    const physicsInput = document.getElementById('physicsCount');
+    const chemistryInput = document.getElementById('chemistryCount');
+    const mathInput = document.getElementById('mathCount');
+    
+    if (!dateInput || !questionsInput || !targetInput) {
+        console.error('Required form elements not found');
+        utils.showNotification('Error: Form elements not found', 'error');
+        return;
     }
     
-    // Update longest streak if current is higher
-    if (appState.currentStreak > appState.longestStreak) {
-        appState.longestStreak = appState.currentStreak;
-        storage.save('longestStreak', appState.longestStreak);
-        
-        if (appState.currentStreak > 0 && appState.currentStreak % 7 === 0) {
-            utils.showNotification(`🔥 Amazing! ${appState.currentStreak} day streak!`, 'success');
+    const date = dateInput.value;
+    const questions = parseInt(questionsInput.value) || 0;
+    const target = parseInt(targetInput.value) || 50;
+    
+    const physics = physicsInput ? parseInt(physicsInput.value) || 0 : 0;
+    const chemistry = chemistryInput ? parseInt(chemistryInput.value) || 0 : 0;
+    const math = mathInput ? parseInt(mathInput.value) || 0 : 0;
+    
+    if (!date) {
+        utils.showNotification('Please select a date', 'error');
+        return;
+    }
+    
+    const progressEntry = {
+        date,
+        questions,
+        target,
+        subjects: {
+            Physics: physics,
+            Chemistry: chemistry,
+            Mathematics: math
         }
-    }
-};
-
-// Calendar and Charts (Placeholder implementations)
-const renderCalendar = () => {
-    console.log('📅 Rendering calendar...');
-    const calendarGrid = document.getElementById('calendarGrid');
-    if (calendarGrid) {
-        // Simple calendar placeholder
-        calendarGrid.innerHTML = '<div style="grid-column: 1/-1; text-align: center; padding: 40px; color: rgba(255,255,255,0.5);">📅 Calendar view coming soon...</div>';
-    }
-};
-
-const initializeCharts = () => {
-    console.log('📊 Initializing charts...');
+    };
     
-    // Initialize progress chart if canvas exists
-    const progressCanvas = document.getElementById('progressChart');
-    if (progressCanvas && window.Chart) {
-        const ctx = progressCanvas.getContext('2d');
+    console.log('Progress entry:', progressEntry);
+    
+    // Update local state
+    const existingIndex = appState.progressData.findIndex(entry => entry.date === date);
+    if (existingIndex >= 0) {
+        appState.progressData[existingIndex] = progressEntry;
+    } else {
+        appState.progressData.push(progressEntry);
+    }
+    
+    appState.progressData.sort((a, b) => new Date(a.date) - new Date(b.date));
+    
+    // Save data
+    try {
+        await FirebaseDB.saveProgressEntry(progressEntry);
+        console.log('Progress saved to Firebase');
+    } catch (error) {
+        console.log('Firebase save failed, using localStorage');
+        storage.save('progressData', appState.progressData);
+    }
+    
+    updateDashboardStats();
+    updateTodayProgress();
+    
+    // Re-render calendar if we're on that tab and reset charts if we're on analytics
+    if (appState.currentSection === 'calendar') {
+        renderCalendar();
+    }
+    if (appState.currentSection === 'analytics') {
+        appState.chartsInitialized = false;
+        initializeCharts();
+    }
+    
+    // Clear form
+    [questionsInput, physicsInput, chemistryInput, mathInput].forEach(input => {
+        if (input) input.value = '';
+    });
+    
+    utils.showNotification('Progress saved successfully!', 'success');
+    console.log('Progress saved successfully');
+};
+
+const updateDailyTarget = async () => {
+    const targetInput = document.getElementById('dailyTarget');
+    if (targetInput) {
+        const newTarget = parseInt(targetInput.value) || 50;
+        appState.settings.dailyTarget = newTarget;
         
-        // Clear any existing chart
-        if (appState.charts.progressChart) {
-            appState.charts.progressChart.destroy();
+        try {
+            await FirebaseDB.saveSettings(appState.settings);
+        } catch (error) {
+            storage.save('settings', appState.settings);
         }
         
-        const last30Days = appState.progressData.slice(-30);
-        const labels = last30Days.map(entry => new Date(entry.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' }));
-        const questionsData = last30Days.map(entry => entry.questions);
-        const targetData = last30Days.map(entry => entry.target);
+        updateTodayProgress();
+        console.log('Daily target updated to:', newTarget);
+    }
+};
+
+const loadDateData = () => {
+    const dateInput = document.getElementById('questionDate');
+    if (!dateInput) return;
+    
+    const date = dateInput.value;
+    const entry = appState.progressData.find(item => item.date === date);
+    
+    const questionsInput = document.getElementById('questionsCount');
+    const physicsInput = document.getElementById('physicsCount');
+    const chemistryInput = document.getElementById('chemistryCount');
+    const mathInput = document.getElementById('mathCount');
+    const targetInput = document.getElementById('dailyTarget');
+    
+    if (entry) {
+        if (questionsInput) questionsInput.value = entry.questions;
+        if (physicsInput) physicsInput.value = entry.subjects.Physics || 0;
+        if (chemistryInput) chemistryInput.value = entry.subjects.Chemistry || 0;
+        if (mathInput) mathInput.value = entry.subjects.Mathematics || 0;
+        if (targetInput) targetInput.value = entry.target;
+    } else {
+        [questionsInput, physicsInput, chemistryInput, mathInput].forEach(input => {
+            if (input) input.value = '';
+        });
+    }
+    
+    console.log('Loaded date data for:', date);
+};
+
+// Dashboard Statistics - FIXED
+const updateDashboardStats = () => {
+    console.log('Updating dashboard stats...');
+    // This function can be expanded to update any dashboard statistics
+};
+
+const updateTodayProgress = () => {
+    const today = utils.getToday();
+    const todayEntry = appState.progressData.find(entry => entry.date === today);
+    const target = appState.settings.dailyTarget;
+    
+    const questionsToday = todayEntry ? todayEntry.questions : 0;
+    const progress = Math.min(Math.round((questionsToday / target) * 100), 100);
+    
+    console.log('Updating today progress:', { questionsToday, target, progress });
+    
+    const todayQuestionsEl = document.getElementById('todayQuestions');
+    const todayTargetEl = document.getElementById('todayTarget');
+    const todayProgressEl = document.getElementById('todayProgress');
+    
+    if (todayQuestionsEl) {
+        todayQuestionsEl.textContent = questionsToday;
+        todayQuestionsEl.style.display = 'block';
+        todayQuestionsEl.style.visibility = 'visible';
+    }
+    if (todayTargetEl) {
+        todayTargetEl.textContent = target;
+        todayTargetEl.style.display = 'block';
+        todayTargetEl.style.visibility = 'visible';
+    }
+    if (todayProgressEl) {
+        todayProgressEl.textContent = progress + '%';
+        todayProgressEl.style.display = 'block';
+        todayProgressEl.style.visibility = 'visible';
+    }
+    
+    const progressFill = document.getElementById('progressFill');
+    if (progressFill) {
+        progressFill.style.width = progress + '%';
+        progressFill.style.display = 'block';
+        progressFill.style.visibility = 'visible';
+    }
+    
+    const circle = document.getElementById('progressCircle');
+    const percentageEl = document.getElementById('progressPercentage');
+    
+    if (circle && percentageEl) {
+        const circumference = 2 * Math.PI * 54;
+        const offset = circumference - (progress / 100) * circumference;
         
-        appState.charts.progressChart = new Chart(ctx, {
+        circle.style.strokeDasharray = circumference;
+        circle.style.strokeDashoffset = offset;
+        circle.style.display = 'block';
+        circle.style.visibility = 'visible';
+        
+        percentageEl.textContent = progress + '%';
+        percentageEl.style.display = 'block';
+        percentageEl.style.visibility = 'visible';
+    }
+};
+
+// Charts Implementation - COMPLETELY FIXED WITH ERROR HANDLING
+const initializeCharts = async () => {
+    console.log('Initializing charts with data length:', appState.progressData.length);
+    
+    // Check if charts are already initialized
+    if (appState.chartsInitialized) {
+        console.log('Charts already initialized');
+        return;
+    }
+    
+    // Wait for Chart.js to load
+    const chartJSLoaded = await utils.waitForChartJS();
+    if (!chartJSLoaded) {
+        console.error('Chart.js failed to load');
+        utils.showNotification('Chart.js failed to load', 'error');
+        return;
+    }
+    
+    console.log('Chart.js loaded successfully');
+    
+    try {
+        // Destroy existing charts first
+        Object.values(appState.charts).forEach(chart => {
+            if (chart && typeof chart.destroy === 'function') {
+                chart.destroy();
+            }
+        });
+        appState.charts = {};
+        
+        // Create all charts
+        await Promise.all([
+            createProgressChart(),
+            createSubjectChart(), 
+            createChapterChart(),
+            createConfidenceChart()
+        ]);
+        
+        appState.chartsInitialized = true;
+        console.log('All charts initialized successfully');
+        
+    } catch (error) {
+        console.error('Error initializing charts:', error);
+        utils.showNotification('Failed to load some charts', 'error');
+    }
+};
+
+const createProgressChart = async () => {
+    const ctx = document.getElementById('progressChart');
+    if (!ctx) {
+        console.warn('Progress chart canvas not found');
+        return;
+    }
+    
+    const chartData = appState.progressData.length > 0 ? 
+        appState.progressData.slice(-14) : // Show last 14 days
+        [
+            { date: '2025-08-20', questions: 42, target: 50 },
+            { date: '2025-08-21', questions: 48, target: 50 },
+            { date: '2025-08-22', questions: 55, target: 50 },
+            { date: '2025-08-23', questions: 62, target: 50 }
+        ];
+    
+    try {
+        appState.charts.progress = new Chart(ctx.getContext('2d'), {
             type: 'line',
             data: {
-                labels: labels,
+                labels: chartData.map(entry => {
+                    const date = new Date(entry.date + 'T00:00:00');
+                    return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+                }),
                 datasets: [{
                     label: 'Questions Solved',
-                    data: questionsData,
-                    borderColor: '#FFA726',
-                    backgroundColor: 'rgba(255, 167, 38, 0.1)',
+                    data: chartData.map(entry => entry.questions),
+                    borderColor: '#1FB8CD',
+                    backgroundColor: 'rgba(31, 184, 205, 0.1)',
+                    fill: true,
                     tension: 0.4,
-                    fill: true
+                    pointBackgroundColor: '#1FB8CD',
+                    pointBorderColor: '#1FB8CD',
+                    pointRadius: 5
                 }, {
                     label: 'Daily Target',
-                    data: targetData,
-                    borderColor: '#FFB74D',
-                    backgroundColor: 'transparent',
+                    data: chartData.map(entry => entry.target),
+                    borderColor: '#B4413C',
+                    backgroundColor: 'rgba(180, 65, 60, 0.1)',
                     borderDash: [5, 5],
-                    tension: 0
+                    pointBackgroundColor: '#B4413C',
+                    pointBorderColor: '#B4413C',
+                    pointRadius: 3
                 }]
             },
             options: {
                 responsive: true,
                 maintainAspectRatio: false,
                 plugins: {
-                    legend: {
-                        labels: {
-                            color: 'rgba(255, 255, 255, 0.8)'
-                        }
+                    legend: { 
+                        labels: { color: 'white' },
+                        display: true
+                    },
+                    tooltip: {
+                        backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                        titleColor: 'white',
+                        bodyColor: 'white',
+                        borderColor: '#1FB8CD',
+                        borderWidth: 1
                     }
                 },
                 scales: {
+                    x: {
+                        ticks: { color: 'rgba(255, 255, 255, 0.7)' },
+                        grid: { color: 'rgba(255, 255, 255, 0.1)' }
+                    },
                     y: {
                         beginAtZero: true,
-                        ticks: {
-                            color: 'rgba(255, 255, 255, 0.6)'
-                        },
-                        grid: {
-                            color: 'rgba(255, 255, 255, 0.1)'
-                        }
+                        ticks: { color: 'rgba(255, 255, 255, 0.7)' },
+                        grid: { color: 'rgba(255, 255, 255, 0.1)' }
+                    }
+                },
+                interaction: {
+                    intersect: false,
+                    mode: 'index'
+                }
+            }
+        });
+        
+        console.log('Progress chart created');
+    } catch (error) {
+        console.error('Error creating progress chart:', error);
+        throw error;
+    }
+};
+
+const createSubjectChart = async () => {
+    const ctx = document.getElementById('subjectChart');
+    if (!ctx) {
+        console.warn('Subject chart canvas not found');
+        return;
+    }
+    
+    const subjectTotals = appState.progressData.length > 0 
+        ? appState.progressData.reduce((acc, entry) => {
+            Object.keys(entry.subjects).forEach(subject => {
+                acc[subject] = (acc[subject] || 0) + entry.subjects[subject];
+            });
+            return acc;
+        }, {})
+        : { Physics: 150, Chemistry: 140, Mathematics: 130 };
+    
+    try {
+        appState.charts.subject = new Chart(ctx.getContext('2d'), {
+            type: 'doughnut',
+            data: {
+                labels: Object.keys(subjectTotals),
+                datasets: [{
+                    data: Object.values(subjectTotals),
+                    backgroundColor: ['#1FB8CD', '#FFC185', '#B4413C'],
+                    borderColor: ['#1FB8CD', '#FFC185', '#B4413C'],
+                    borderWidth: 2,
+                    hoverOffset: 4
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { 
+                        labels: { color: 'white' },
+                        display: true,
+                        position: 'bottom'
                     },
-                    x: {
-                        ticks: {
-                            color: 'rgba(255, 255, 255, 0.6)'
-                        },
-                        grid: {
-                            color: 'rgba(255, 255, 255, 0.1)'
+                    tooltip: {
+                        backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                        titleColor: 'white',
+                        bodyColor: 'white',
+                        borderColor: '#1FB8CD',
+                        borderWidth: 1,
+                        callbacks: {
+                            label: function(context) {
+                                const total = context.dataset.data.reduce((a, b) => a + b, 0);
+                                const percentage = Math.round((context.raw / total) * 100);
+                                return `${context.label}: ${context.raw} (${percentage}%)`;
+                            }
                         }
                     }
                 }
             }
         });
+        
+        console.log('Subject chart created');
+    } catch (error) {
+        console.error('Error creating subject chart:', error);
+        throw error;
     }
 };
 
-// Make functions globally available
+const createChapterChart = async () => {
+    const ctx = document.getElementById('chapterChart');
+    if (!ctx) {
+        console.warn('Chapter chart canvas not found');
+        return;
+    }
+    
+    const subjectCompletion = {};
+    
+    Object.keys(CONFIG.subjects).forEach(subject => {
+        const subjectData = CONFIG.subjects[subject];
+        const totalChapters = subjectData.chapters.length;
+        let completedChapters = 0;
+        
+        subjectData.chapters.forEach(chapter => {
+            const chapterKey = `${subject}_${chapter.id}`;
+            const chapterData = appState.chapterData[chapterKey];
+            if (chapterData && chapterData.completed) {
+                completedChapters++;
+            }
+        });
+        
+        subjectCompletion[CONFIG.subjects[subject].name] = Math.round((completedChapters / totalChapters) * 100);
+    });
+    
+    try {
+        appState.charts.chapter = new Chart(ctx.getContext('2d'), {
+            type: 'bar',
+            data: {
+                labels: Object.keys(subjectCompletion),
+                datasets: [{
+                    label: 'Completion Percentage',
+                    data: Object.values(subjectCompletion),
+                    backgroundColor: ['rgba(31, 184, 205, 0.8)', 'rgba(255, 193, 133, 0.8)', 'rgba(180, 65, 60, 0.8)'],
+                    borderColor: ['#1FB8CD', '#FFC185', '#B4413C'],
+                    borderWidth: 2,
+                    borderRadius: 8
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { 
+                        labels: { color: 'white' },
+                        display: true
+                    },
+                    tooltip: {
+                        backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                        titleColor: 'white',
+                        bodyColor: 'white',
+                        borderColor: '#1FB8CD',
+                        borderWidth: 1,
+                        callbacks: {
+                            label: function(context) {
+                                return `${context.label}: ${context.raw}% complete`;
+                            }
+                        }
+                    }
+                },
+                scales: {
+                    x: {
+                        ticks: { color: 'rgba(255, 255, 255, 0.7)' },
+                        grid: { color: 'rgba(255, 255, 255, 0.1)' }
+                    },
+                    y: {
+                        beginAtZero: true,
+                        max: 100,
+                        ticks: { 
+                            color: 'rgba(255, 255, 255, 0.7)',
+                            callback: function(value) {
+                                return value + '%';
+                            }
+                        },
+                        grid: { color: 'rgba(255, 255, 255, 0.1)' }
+                    }
+                }
+            }
+        });
+        
+        console.log('Chapter chart created');
+    } catch (error) {
+        console.error('Error creating chapter chart:', error);
+        throw error;
+    }
+};
+
+const createConfidenceChart = async () => {
+    const ctx = document.getElementById('confidenceChart');
+    if (!ctx) {
+        console.warn('Confidence chart canvas not found');
+        return;
+    }
+    
+    const confidenceLevels = Object.keys(CONFIG.subjects).map(subject => {
+        const subjectData = CONFIG.subjects[subject];
+        let totalConfidence = 0;
+        let count = 0;
+        
+        subjectData.chapters.forEach(chapter => {
+            const chapterKey = `${subject}_${chapter.id}`;
+            const chapterData = appState.chapterData[chapterKey];
+            if (chapterData && chapterData.confidence) {
+                totalConfidence += chapterData.confidence;
+                count++;
+            }
+        });
+        
+        return count > 0 ? Math.round((totalConfidence / count) * 10) / 10 : 5;
+    });
+    
+    try {
+        appState.charts.confidence = new Chart(ctx.getContext('2d'), {
+            type: 'radar',
+            data: {
+                labels: Object.values(CONFIG.subjects).map(s => s.name),
+                datasets: [{
+                    label: 'Average Confidence Level',
+                    data: confidenceLevels,
+                    backgroundColor: 'rgba(31, 184, 205, 0.2)',
+                    borderColor: '#1FB8CD',
+                    pointBackgroundColor: '#1FB8CD',
+                    pointBorderColor: '#1FB8CD',
+                    pointRadius: 6,
+                    borderWidth: 2
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { 
+                        labels: { color: 'white' },
+                        display: true
+                    },
+                    tooltip: {
+                        backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                        titleColor: 'white',
+                        bodyColor: 'white',
+                        borderColor: '#1FB8CD',
+                        borderWidth: 1,
+                        callbacks: {
+                            label: function(context) {
+                                return `${context.label}: ${context.raw}/10`;
+                            }
+                        }
+                    }
+                },
+                scales: {
+                    r: {
+                        beginAtZero: true,
+                        max: 10,
+                        ticks: { 
+                            color: 'rgba(255, 255, 255, 0.7)',
+                            stepSize: 2
+                        },
+                        grid: { color: 'rgba(255, 255, 255, 0.2)' },
+                        angleLines: { color: 'rgba(255, 255, 255, 0.2)' },
+                        pointLabels: { 
+                            color: 'rgba(255, 255, 255, 0.8)',
+                            font: { size: 12 }
+                        }
+                    }
+                }
+            }
+        });
+        
+        console.log('Confidence chart created');
+    } catch (error) {
+        console.error('Error creating confidence chart:', error);
+        throw error;
+    }
+};
+
+// Calendar Functions - COMPLETELY FIXED
+const renderCalendar = () => {
+    const calendarGrid = document.getElementById('calendarGrid');
+    const monthYear = document.getElementById('currentMonth');
+    
+    if (!calendarGrid || !monthYear) {
+        console.warn('Calendar elements not found');
+        return;
+    }
+    
+    const year = appState.currentMonth.getFullYear();
+    const month = appState.currentMonth.getMonth();
+    
+    monthYear.textContent = `${appState.currentMonth.toLocaleString('default', { month: 'long' })} ${year}`;
+    monthYear.style.display = 'block';
+    monthYear.style.visibility = 'visible';
+    
+    calendarGrid.innerHTML = '';
+    calendarGrid.style.display = 'grid';
+    calendarGrid.style.visibility = 'visible';
+    
+    // Day headers
+    const dayHeaders = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+    dayHeaders.forEach(day => {
+        const dayHeader = document.createElement('div');
+        dayHeader.className = 'calendar-day-header';
+        dayHeader.textContent = day;
+        calendarGrid.appendChild(dayHeader);
+    });
+    
+    const firstDay = new Date(year, month, 1);
+    const lastDay = new Date(year, month + 1, 0);
+    const daysInMonth = lastDay.getDate();
+    const startingDayOfWeek = firstDay.getDay();
+    
+    // Empty days for previous month
+    for (let i = 0; i < startingDayOfWeek; i++) {
+        const emptyDay = document.createElement('div');
+        emptyDay.className = 'calendar-day other-month';
+        emptyDay.style.display = 'flex';
+        emptyDay.style.visibility = 'visible';
+        calendarGrid.appendChild(emptyDay);
+    }
+    
+    // Days of the month
+    const today = utils.getToday();
+    for (let day = 1; day <= daysInMonth; day++) {
+        const dayElement = document.createElement('div');
+        const dayDate = utils.formatDate(new Date(year, month, day));
+        const progressEntry = appState.progressData.find(entry => entry.date === dayDate);
+        
+        dayElement.className = 'calendar-day';
+        dayElement.textContent = day;
+        dayElement.dataset.date = dayDate;
+        dayElement.style.display = 'flex';
+        dayElement.style.visibility = 'visible';
+        
+        if (progressEntry) {
+            const questions = progressEntry.questions;
+            if (questions === 0) {
+                dayElement.classList.add('no-data');
+            } else if (questions <= 20) {
+                dayElement.classList.add('low');
+            } else if (questions <= 40) {
+                dayElement.classList.add('medium');
+            } else if (questions <= 60) {
+                dayElement.classList.add('high');
+            } else {
+                dayElement.classList.add('very-high');
+            }
+            
+            // Add tooltip with question count
+            dayElement.title = `${questions} questions solved`;
+        } else {
+            dayElement.classList.add('no-data');
+            dayElement.title = 'No data recorded';
+        }
+        
+        if (dayDate === today) {
+            dayElement.classList.add('today');
+        }
+        
+        calendarGrid.appendChild(dayElement);
+    }
+    
+    appState.calendarInitialized = true;
+    console.log('Calendar rendered for', monthYear.textContent);
+};
+
+const changeMonth = (direction) => {
+    appState.currentMonth.setMonth(appState.currentMonth.getMonth() + direction);
+    renderCalendar();
+};
+
+const openDayModal = (date) => {
+    const modal = document.getElementById('dayModal');
+    if (!modal) return;
+    
+    const entry = appState.progressData.find(item => item.date === date);
+    
+    const modalDateEl = document.getElementById('modalDate');
+    if (modalDateEl) {
+        const dateObj = new Date(date + 'T00:00:00');
+        modalDateEl.textContent = dateObj.toLocaleDateString('en-US', { 
+            weekday: 'long', 
+            year: 'numeric', 
+            month: 'long', 
+            day: 'numeric' 
+        });
+        modalDateEl.style.display = 'block';
+        modalDateEl.style.visibility = 'visible';
+    }
+    
+    const modalQuestions = document.getElementById('modalQuestions');
+    const modalPhysics = document.getElementById('modalPhysics');
+    const modalChemistry = document.getElementById('modalChemistry');
+    const modalMath = document.getElementById('modalMath');
+    
+    if (entry) {
+        if (modalQuestions) modalQuestions.value = entry.questions;
+        if (modalPhysics) modalPhysics.value = entry.subjects.Physics || 0;
+        if (modalChemistry) modalChemistry.value = entry.subjects.Chemistry || 0;
+        if (modalMath) modalMath.value = entry.subjects.Mathematics || 0;
+    } else {
+        [modalQuestions, modalPhysics, modalChemistry, modalMath].forEach(input => {
+            if (input) input.value = '';
+        });
+    }
+    
+    modal.dataset.date = date;
+    modal.classList.remove('hidden');
+    modal.style.display = 'flex';
+    modal.style.opacity = '1';
+    modal.style.visibility = 'visible';
+};
+
+const closeModal = () => {
+    const modal = document.getElementById('dayModal');
+    if (modal) {
+        modal.classList.add('hidden');
+        modal.style.opacity = '0';
+        modal.style.visibility = 'hidden';
+        setTimeout(() => modal.style.display = 'none', 300);
+    }
+};
+
+const saveModalProgress = async () => {
+    const modal = document.getElementById('dayModal');
+    if (!modal) return;
+    
+    const date = modal.dataset.date;
+    
+    const modalQuestions = document.getElementById('modalQuestions');
+    const modalPhysics = document.getElementById('modalPhysics');
+    const modalChemistry = document.getElementById('modalChemistry');
+    const modalMath = document.getElementById('modalMath');
+    
+    const questions = modalQuestions ? parseInt(modalQuestions.value) || 0 : 0;
+    const physics = modalPhysics ? parseInt(modalPhysics.value) || 0 : 0;
+    const chemistry = modalChemistry ? parseInt(modalChemistry.value) || 0 : 0;
+    const math = modalMath ? parseInt(modalMath.value) || 0 : 0;
+    
+    const progressEntry = {
+        date,
+        questions,
+        target: appState.settings.dailyTarget,
+        subjects: {
+            Physics: physics,
+            Chemistry: chemistry,
+            Mathematics: math
+        }
+    };
+    
+    const existingIndex = appState.progressData.findIndex(entry => entry.date === date);
+    if (existingIndex >= 0) {
+        appState.progressData[existingIndex] = progressEntry;
+    } else {
+        appState.progressData.push(progressEntry);
+    }
+    
+    appState.progressData.sort((a, b) => new Date(a.date) - new Date(b.date));
+    
+    try {
+        await FirebaseDB.saveProgressEntry(progressEntry);
+    } catch (error) {
+        storage.save('progressData', appState.progressData);
+    }
+    
+    updateDashboardStats();
+    updateTodayProgress();
+    renderCalendar();
+    
+    // Update charts if we're on analytics tab
+    if (appState.currentSection === 'analytics') {
+        appState.chartsInitialized = false;
+        initializeCharts();
+    }
+    
+    closeModal();
+    
+    utils.showNotification('Progress updated successfully!', 'success');
+};
+
+// Todo Management - FIXED
+const addTodo = async () => {
+    const taskInput = document.getElementById('todoTask');
+    const subjectSelect = document.getElementById('todoSubject');
+    const prioritySelect = document.getElementById('todoPriority');
+    const dueDateInput = document.getElementById('todoDueDate');
+    
+    if (!taskInput) return;
+    
+    const task = taskInput.value.trim();
+    const subject = subjectSelect ? subjectSelect.value : 'General';
+    const priority = prioritySelect ? prioritySelect.value : 'Medium';
+    const dueDate = dueDateInput ? dueDateInput.value : '';
+    
+    if (!task) {
+        utils.showNotification('Please enter a task description', 'error');
+        return;
+    }
+    
+    const newTodo = {
+        id: Date.now(),
+        task,
+        subject,
+        priority,
+        dueDate,
+        completed: false
+    };
+    
+    appState.todos.push(newTodo);
+    
+    try {
+        await FirebaseDB.saveTodo(newTodo);
+    } catch (error) {
+        storage.save('todos', appState.todos);
+    }
+    
+    renderTodos();
+    
+    // Clear form
+    taskInput.value = '';
+    if (subjectSelect) subjectSelect.value = 'General';
+    if (prioritySelect) prioritySelect.value = 'Medium';
+    if (dueDateInput) dueDateInput.value = '';
+    
+    utils.showNotification('Task added successfully!', 'success');
+    console.log('Todo added:', newTodo);
+};
+
+const renderTodos = (filter = 'all') => {
+    const container = document.getElementById('todosContainer');
+    if (!container) return;
+    
+    let filteredTodos = [...appState.todos];
+    
+    switch (filter) {
+        case 'pending':
+            filteredTodos = filteredTodos.filter(todo => !todo.completed);
+            break;
+        case 'completed':
+            filteredTodos = filteredTodos.filter(todo => todo.completed);
+            break;
+        case 'high':
+            filteredTodos = filteredTodos.filter(todo => todo.priority === 'High');
+            break;
+    }
+    
+    container.innerHTML = '';
+    container.style.display = 'block';
+    container.style.visibility = 'visible';
+    
+    if (filteredTodos.length === 0) {
+        container.innerHTML = '<div style="text-align: center; color: rgba(255, 255, 255, 0.5); padding: 20px;">No tasks found</div>';
+        return;
+    }
+    
+    filteredTodos.forEach(todo => {
+        const todoElement = document.createElement('div');
+        todoElement.className = `todo-item ${todo.completed ? 'completed' : ''}`;
+        todoElement.style.display = 'block';
+        todoElement.style.visibility = 'visible';
+        
+        todoElement.innerHTML = `
+            <div class="todo-header">
+                <div class="todo-task">${todo.task}</div>
+                <div class="todo-actions">
+                    <button class="todo-btn" data-action="toggle" data-id="${todo.id}" title="${todo.completed ? 'Mark as incomplete' : 'Mark as complete'}">
+                        ${todo.completed ? '↶' : '✓'}
+                    </button>
+                    <button class="todo-btn" data-action="delete" data-id="${todo.id}" title="Delete task">×</button>
+                </div>
+            </div>
+            <div class="todo-meta">
+                <span class="todo-priority ${todo.priority.toLowerCase()}">${todo.priority}</span>
+                <span class="todo-subject">${todo.subject}</span>
+                ${todo.dueDate ? `<span class="todo-due">Due: ${todo.dueDate}</span>` : ''}
+            </div>
+        `;
+        
+        container.appendChild(todoElement);
+    });
+    
+    // Add event listeners for todo actions using delegation
+    container.removeEventListener('click', handleTodoActions); // Remove previous listener to avoid duplicates
+    container.addEventListener('click', handleTodoActions);
+    
+    console.log('Todos rendered:', filteredTodos.length, 'items');
+};
+
+const handleTodoActions = async (e) => {
+    const button = e.target.closest('.todo-btn');
+    if (!button) return;
+    
+    const action = button.dataset.action;
+    const id = parseInt(button.dataset.id);
+    
+    if (action === 'toggle') {
+        await toggleTodo(id);
+    } else if (action === 'delete') {
+        await deleteTodo(id);
+    }
+};
+
+const toggleTodo = async (id) => {
+    const todo = appState.todos.find(item => item.id === id);
+    if (todo) {
+        todo.completed = !todo.completed;
+        
+        try {
+            await FirebaseDB.saveTodo(todo);
+        } catch (error) {
+            storage.save('todos', appState.todos);
+        }
+        
+        renderTodos();
+        utils.showNotification(`Task ${todo.completed ? 'completed' : 'reopened'}!`, 'success');
+    }
+};
+
+const deleteTodo = async (id) => {
+    appState.todos = appState.todos.filter(item => item.id !== id);
+    
+    try {
+        await FirebaseDB.deleteTodo(id);
+    } catch (error) {
+        storage.save('todos', appState.todos);
+    }
+    
+    renderTodos();
+    utils.showNotification('Task deleted!', 'success');
+};
+
+const filterTodos = (filter) => {
+    document.querySelectorAll('.filter-btn').forEach(btn => {
+        btn.classList.remove('active');
+        if (btn.dataset.filter === filter) {
+            btn.classList.add('active');
+        }
+    });
+    
+    renderTodos(filter);
+};
+
+// Data Export Functions - FIXED
+const exportAllData = () => {
+    const data = {
+        progressData: appState.progressData,
+        chapterData: appState.chapterData,
+        todos: appState.todos,
+        settings: appState.settings,
+        exportDate: new Date().toISOString(),
+        version: '2.0'
+    };
+    
+    const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `jee-tracker-complete-${utils.getToday()}.json`;
+    a.click();
+    URL.revokeObjectURL(url);
+    
+    utils.showNotification('All data exported successfully!', 'success');
+    
+    const modal = document.getElementById('exportModal');
+    if (modal) {
+        modal.classList.add('hidden');
+        modal.style.opacity = '0';
+        modal.style.visibility = 'hidden';
+        setTimeout(() => modal.style.display = 'none', 300);
+    }
+};
+
+const exportProgressCSV = () => {
+    const csvRows = [
+        ['Date', 'Total Questions', 'Physics', 'Chemistry', 'Mathematics', 'Target', 'Goal Achieved']
+    ];
+    
+    appState.progressData.forEach(entry => {
+        csvRows.push([
+            entry.date,
+            entry.questions,
+            entry.subjects.Physics || 0,
+            entry.subjects.Chemistry || 0,
+            entry.subjects.Mathematics || 0,
+            entry.target,
+            entry.questions >= entry.target ? 'Yes' : 'No'
+        ]);
+    });
+    
+    const csvContent = csvRows.map(row => row.join(',')).join('\n');
+    const blob = new Blob([csvContent], { type: 'text/csv' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `jee-progress-${utils.getToday()}.csv`;
+    a.click();
+    URL.revokeObjectURL(url);
+    
+    utils.showNotification('Progress data exported to CSV!', 'success');
+    
+    const modal = document.getElementById('exportModal');
+    if (modal) {
+        modal.classList.add('hidden');
+        modal.style.opacity = '0';
+        modal.style.visibility = 'hidden';
+        setTimeout(() => modal.style.display = 'none', 300);
+    }
+};
+
+const exportChaptersCSV = () => {
+    const csvRows = [
+        ['Subject', 'Chapter', 'Completed', 'Confidence', 'Notes', 'JEE Main PYQs', 'JEE Advanced PYQs']
+    ];
+    
+    Object.keys(CONFIG.subjects).forEach(subject => {
+        const subjectData = CONFIG.subjects[subject];
+        
+        subjectData.chapters.forEach(chapter => {
+            const chapterKey = `${subject}_${chapter.id}`;
+            const chapterData = appState.chapterData[chapterKey] || {};
+            
+            const mainPYQs = CONFIG.pyqYears.filter(year => 
+                chapterData.pyq && chapterData.pyq[`jeeMain${year}`]
+            ).join('; ');
+            
+            const advPYQs = CONFIG.pyqYears.filter(year => 
+                chapterData.pyq && chapterData.pyq[`jeeAdvanced${year}`]
+            ).join('; ');
+            
+            csvRows.push([
+                CONFIG.subjects[subject].name,
+                chapter.name,
+                chapterData.completed ? 'Yes' : 'No',
+                chapterData.confidence || 5,
+                (chapterData.notes || '').replace(/,/g, ';'), // Replace commas to avoid CSV issues
+                mainPYQs,
+                advPYQs
+            ]);
+        });
+    });
+    
+    const csvContent = csvRows.map(row => row.join(',')).join('\n');
+    const blob = new Blob([csvContent], { type: 'text/csv' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `jee-chapters-${utils.getToday()}.csv`;
+    a.click();
+    URL.revokeObjectURL(url);
+    
+    utils.showNotification('Chapter data exported to CSV!', 'success');
+    
+    const modal = document.getElementById('exportModal');
+    if (modal) {
+        modal.classList.add('hidden');
+        modal.style.opacity = '0';
+        modal.style.visibility = 'hidden';
+        setTimeout(() => modal.style.display = 'none', 300);
+    }
+};
+
+const backupData = () => {
+    const data = {
+        progressData: appState.progressData,
+        chapterData: appState.chapterData,
+        todos: appState.todos,
+        settings: appState.settings,
+        user: appState.user ? {
+            uid: appState.user.uid,
+            email: appState.user.email,
+            displayName: appState.user.displayName
+        } : null,
+        backupDate: new Date().toISOString(),
+        version: '2.0'
+    };
+    
+    storage.save('backup', data);
+    utils.showNotification('Data backed up locally!', 'success');
+    
+    const modal = document.getElementById('exportModal');
+    if (modal) {
+        modal.classList.add('hidden');
+        modal.style.opacity = '0';
+        modal.style.visibility = 'hidden';
+        setTimeout(() => modal.style.display = 'none', 300);
+    }
+};
+
+const exportChapterData = () => {
+    const blob = new Blob([JSON.stringify(appState.chapterData, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `chapter-data-${utils.getToday()}.json`;
+    a.click();
+    URL.revokeObjectURL(url);
+    
+    utils.showNotification('Chapter data exported!', 'success');
+};
+
+const importChapterData = (event) => {
+    const file = event.target.files[0];
+    if (!file) return;
+    
+    const reader = new FileReader();
+    reader.onload = (e) => {
+        try {
+            const data = JSON.parse(e.target.result);
+            
+            if (typeof data === 'object' && data !== null) {
+                appState.chapterData = { ...appState.chapterData, ...data };
+                renderChapters();
+                updateSubjectProgress();
+                saveChapterData();
+                utils.showNotification('Chapter data imported successfully!', 'success');
+            } else {
+                throw new Error('Invalid data format');
+            }
+        } catch (error) {
+            utils.showNotification('Failed to import chapter data. Invalid file format.', 'error');
+        }
+    };
+    reader.readAsText(file);
+};
+
+// Theme Management - FIXED
+const toggleTheme = () => {
+    const currentTheme = appState.settings.theme;
+    const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+    
+    appState.settings.theme = newTheme;
+    document.documentElement.setAttribute('data-color-scheme', newTheme);
+    
+    const themeToggle = document.getElementById('themeToggle');
+    if (themeToggle) {
+        themeToggle.textContent = newTheme === 'dark' ? '🌙' : '☀️';
+    }
+    
+    try {
+        FirebaseDB.saveSettings(appState.settings);
+    } catch (error) {
+        storage.save('settings', appState.settings);
+    }
+    
+    console.log('Theme toggled to:', newTheme);
+};
+
+// Make functions globally available - FIXED
 window.toggleTodo = toggleTodo;
 window.deleteTodo = deleteTodo;
-window.showSection = showSection;
+window.FirebaseAuth = FirebaseAuth;
+window.updateConnectionStatus = updateConnectionStatus;
 
-// Initialize when DOM is loaded
-document.addEventListener('DOMContentLoaded', init);
+// Initialize when DOM is loaded - FIXED
+const initApp = () => {
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', init);
+    } else {
+        console.log('DOM ready - Starting initialization...');
+        init();
+    }
+};
 
-console.log('🎯 JEE 2026 Ultimate Tracker Enhanced JavaScript loaded successfully!');
+// Start the application
+initApp();
