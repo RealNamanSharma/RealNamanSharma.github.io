@@ -11,7 +11,7 @@
     <link rel="manifest" href="data:application/json,{%22name%22:%22JEE%202026%20Tracker%22,%22short_name%22:%22JEE%20Tracker%22,%22display%22:%22standalone%22,%22background_color%22:%22%230c0c0c%22,%22theme_color%22:%22%23FFA726%22,%22icons%22:[{%22src%22:%22data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20192%20192'%3E%3Cpath%20fill='%23FFA726'%20d='M96%2010L96%2010c47.4%200%2086%2038.6%2086%2086v0c0%2047.4-38.6%2086-86%2086h0c-47.4%200-86-38.6-86-86v0C10%2048.6%2048.6%2010%2096%2010z'/%3E%3Ctext%20x='96'%20y='120'%20text-anchor='middle'%20fill='white'%20font-size='80'%20font-weight='bold'%3EJEE%3C/text%3E%3C/svg%3E%22,%22sizes%22:%22192x192%22,%22type%22:%22image/svg+xml%22}]}">
     <meta name="theme-color" content="#FFA726">
     
-    <!-- Firebase SDK with Auth Persistence -->
+    <!-- Firebase SDK with Enhanced Auth Persistence -->
     <script type="module">
         import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
         import { getAuth, setPersistence, browserLocalPersistence } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js';
@@ -31,23 +31,26 @@
             window.auth = getAuth(window.firebaseApp);
             window.db = getFirestore(window.firebaseApp);
             
-            // Enable auth persistence
+            // Enable persistent auth - this fixes the login refresh issue
             await setPersistence(window.auth, browserLocalPersistence);
             
             // Enable offline persistence for Firestore
             await enableNetwork(window.db);
             
-            console.log('Firebase initialized with persistence enabled');
+            console.log('✅ Firebase initialized with enhanced persistence');
             window.firebaseReady = true;
         } catch (error) {
-            console.error('Firebase initialization error:', error);
+            console.error('❌ Firebase initialization error:', error);
             window.firebaseError = error;
             window.firebaseReady = false;
         }
     </script>
 </head>
 <body>
+    <!-- Enhanced Particle Background -->
     <div class="particles-bg"></div>
+    
+    <!-- Smooth Loader -->
     <div class="smooth-loader" id="smoothLoader">
         <div class="loader-content">
             <div class="loader-spinner"></div>
@@ -63,84 +66,86 @@
         <button class="retry-btn hidden" id="retryBtn">Retry</button>
     </div>
     
-    <!-- Centered Authentication Modal -->
+    <!-- Properly Centered Authentication Modal -->
     <div class="modal auth-modal" id="authModal">
         <div class="modal-backdrop"></div>
         <div class="modal-content glass-card auth-card">
-            <div class="modal-header">
-                <h2>Welcome to JEE 2026 Ultimate Tracker</h2>
-                <p class="auth-subtitle">Your comprehensive preparation companion</p>
-            </div>
-            <div class="modal-body">
-                <div class="auth-container">
-                    <div class="auth-methods">
-                        <div class="auth-method primary-auth" id="googleAuthMethod">
-                            <div class="auth-icon">🚀</div>
-                            <h4>Sign in with Google</h4>
-                            <p>Sync your data across all devices seamlessly</p>
-                            <button class="btn btn--primary btn--full-width" id="googleSignInBtn">
-                                <svg width="20" height="20" viewBox="0 0 24 24" style="margin-right: 12px;">
-                                    <path fill="currentColor" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
-                                    <path fill="currentColor" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
-                                    <path fill="currentColor" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
-                                    <path fill="currentColor" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
-                                </svg>
-                                Continue with Google
-                            </button>
-                            <div class="auth-error hidden" id="googleAuthError"></div>
-                        </div>
-                        
-                        <div class="auth-divider">
-                            <span>OR</span>
-                        </div>
-                        
-                        <div class="auth-method" id="emailAuthMethod">
-                            <div class="auth-icon">📧</div>
-                            <h4>Email & Password</h4>
-                            <div class="form-group">
-                                <input type="email" id="emailInput" class="form-control" placeholder="Enter your email" autocomplete="email">
+            <div class="auth-scroll-container">
+                <div class="modal-header">
+                    <h2>Welcome to JEE 2026 Ultimate Tracker</h2>
+                    <p class="auth-subtitle">Your comprehensive preparation companion</p>
+                </div>
+                <div class="modal-body">
+                    <div class="auth-container">
+                        <div class="auth-methods">
+                            <div class="auth-method primary-auth" id="googleAuthMethod">
+                                <div class="auth-icon">🚀</div>
+                                <h4>Sign in with Google</h4>
+                                <p>Sync your data across all devices seamlessly</p>
+                                <button class="btn btn--primary btn--full-width" id="googleSignInBtn">
+                                    <svg width="20" height="20" viewBox="0 0 24 24" style="margin-right: 12px;">
+                                        <path fill="currentColor" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+                                        <path fill="currentColor" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+                                        <path fill="currentColor" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
+                                        <path fill="currentColor" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+                                    </svg>
+                                    Continue with Google
+                                </button>
+                                <div class="auth-error hidden" id="googleAuthError"></div>
                             </div>
-                            <div class="form-group">
-                                <input type="password" id="passwordInput" class="form-control" placeholder="Enter your password" autocomplete="current-password">
+                            
+                            <div class="auth-divider">
+                                <span>OR</span>
                             </div>
-                            <div class="auth-buttons">
-                                <button class="btn btn--secondary" id="emailSignInBtn">Sign In</button>
-                                <button class="btn btn--outline" id="emailSignUpBtn">Sign Up</button>
+                            
+                            <div class="auth-method" id="emailAuthMethod">
+                                <div class="auth-icon">📧</div>
+                                <h4>Email & Password</h4>
+                                <div class="form-group">
+                                    <input type="email" id="emailInput" class="form-control" placeholder="Enter your email" autocomplete="email">
+                                </div>
+                                <div class="form-group">
+                                    <input type="password" id="passwordInput" class="form-control" placeholder="Enter your password" autocomplete="current-password">
+                                </div>
+                                <div class="auth-buttons">
+                                    <button class="btn btn--secondary" id="emailSignInBtn">Sign In</button>
+                                    <button class="btn btn--outline" id="emailSignUpBtn">Sign Up</button>
+                                </div>
+                                <div class="auth-error hidden" id="emailAuthError"></div>
                             </div>
-                            <div class="auth-error hidden" id="emailAuthError"></div>
+                            
+                            <div class="auth-divider">
+                                <span>OR</span>
+                            </div>
+                            
+                            <div class="auth-method demo-auth">
+                                <div class="auth-icon">🎯</div>
+                                <h4>Demo Mode</h4>
+                                <p>Explore all features without creating an account</p>
+                                <button class="btn btn--outline btn--full-width" id="demoModeBtn">
+                                    Try Demo Mode
+                                </button>
+                                <small class="demo-note">Note: Data won't sync across devices</small>
+                            </div>
                         </div>
                         
-                        <div class="auth-divider">
-                            <span>OR</span>
+                        <div class="troubleshooting hidden" id="troubleshooting">
+                            <h4>Connection Issues?</h4>
+                            <div class="troubleshooting-steps">
+                                <div class="step">✓ Check your internet connection</div>
+                                <div class="step">✓ Disable ad blockers for this site</div>
+                                <div class="step">✓ Try refreshing the page</div>
+                                <div class="step">✓ Use demo mode if issues persist</div>
+                            </div>
+                            <button class="btn btn--secondary btn--sm" id="showTroubleshootingBtn">Hide Troubleshooting</button>
                         </div>
-                        
-                        <div class="auth-method demo-auth">
-                            <div class="auth-icon">🎯</div>
-                            <h4>Demo Mode</h4>
-                            <p>Explore all features without creating an account</p>
-                            <button class="btn btn--outline btn--full-width" id="demoModeBtn">
-                                Try Demo Mode
-                            </button>
-                            <small class="demo-note">Note: Data won't sync across devices</small>
-                        </div>
-                    </div>
-                    
-                    <div class="troubleshooting hidden" id="troubleshooting">
-                        <h4>Connection Issues?</h4>
-                        <div class="troubleshooting-steps">
-                            <div class="step">✓ Check your internet connection</div>
-                            <div class="step">✓ Disable ad blockers for this site</div>
-                            <div class="step">✓ Try refreshing the page</div>
-                            <div class="step">✓ Use demo mode if issues persist</div>
-                        </div>
-                        <button class="btn btn--secondary btn--sm" id="showTroubleshootingBtn">Hide Troubleshooting</button>
                     </div>
                 </div>
             </div>
         </div>
     </div>
     
-    <!-- Enhanced Mobile-First Navigation -->
+    <!-- Mobile-First Navigation - Fixed Visibility -->
     <nav class="navbar" id="navbar">
         <div class="nav-container">
             <div class="nav-brand">
@@ -177,9 +182,9 @@
                         <span class="nav-icon">✓</span>
                         <span class="nav-text">Tasks</span>
                     </a>
-                    <a href="#planner" class="nav-link" data-section="planner">
-                        <span class="nav-icon">🗓️</span>
-                        <span class="nav-text">Planner</span>
+                    <a href="#tools" class="nav-link" data-section="tools">
+                        <span class="nav-icon">🛠️</span>
+                        <span class="nav-text">Study Tools</span>
                     </a>
                 </div>
                 
@@ -196,7 +201,7 @@
         </div>
     </nav>
 
-    <!-- Mobile Bottom Navigation -->
+    <!-- Mobile Bottom Navigation - Always Visible -->
     <nav class="bottom-nav" id="bottomNav">
         <a href="#dashboard" class="bottom-nav-item active" data-section="dashboard">
             <span class="bottom-nav-icon">📊</span>
@@ -214,9 +219,9 @@
             <span class="bottom-nav-icon">✓</span>
             <span class="bottom-nav-label">Tasks</span>
         </a>
-        <a href="#planner" class="bottom-nav-item" data-section="planner">
-            <span class="bottom-nav-icon">🗓️</span>
-            <span class="bottom-nav-label">Planner</span>
+        <a href="#tools" class="bottom-nav-item" data-section="tools">
+            <span class="bottom-nav-icon">🛠️</span>
+            <span class="bottom-nav-label">Tools</span>
         </a>
     </nav>
 
@@ -344,8 +349,15 @@
                             <div class="progress-circle-container">
                                 <svg class="progress-circle" width="100" height="100">
                                     <circle cx="50" cy="50" r="45" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="6"/>
-                                    <circle cx="50" cy="50" r="45" fill="none" stroke="linear-gradient(45deg, #FFA726, #FFB74D)" stroke-width="6" 
+                                    <circle cx="50" cy="50" r="45" fill="none" stroke="url(#orangeGradient)" stroke-width="6" 
                                             stroke-linecap="round" id="physicsProgressCircle"/>
+                                    <defs>
+                                        <linearGradient id="orangeGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                                            <stop offset="0%" stop-color="#FFA726"/>
+                                            <stop offset="50%" stop-color="#FFB74D"/>
+                                            <stop offset="100%" stop-color="#FFCC02"/>
+                                        </linearGradient>
+                                    </defs>
                                 </svg>
                                 <div class="progress-percentage" id="physicsPercentage">0%</div>
                             </div>
@@ -371,8 +383,15 @@
                             <div class="progress-circle-container">
                                 <svg class="progress-circle" width="100" height="100">
                                     <circle cx="50" cy="50" r="45" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="6"/>
-                                    <circle cx="50" cy="50" r="45" fill="none" stroke="linear-gradient(45deg, #FFB74D, #FFCC02)" stroke-width="6" 
+                                    <circle cx="50" cy="50" r="45" fill="none" stroke="url(#orangeGradient2)" stroke-width="6" 
                                             stroke-linecap="round" id="chemistryProgressCircle"/>
+                                    <defs>
+                                        <linearGradient id="orangeGradient2" x1="0%" y1="0%" x2="100%" y2="100%">
+                                            <stop offset="0%" stop-color="#FFB74D"/>
+                                            <stop offset="50%" stop-color="#FFCC02"/>
+                                            <stop offset="100%" stop-color="#FFF176"/>
+                                        </linearGradient>
+                                    </defs>
                                 </svg>
                                 <div class="progress-percentage" id="chemistryPercentage">0%</div>
                             </div>
@@ -398,8 +417,15 @@
                             <div class="progress-circle-container">
                                 <svg class="progress-circle" width="100" height="100">
                                     <circle cx="50" cy="50" r="45" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="6"/>
-                                    <circle cx="50" cy="50" r="45" fill="none" stroke="linear-gradient(45deg, #FF8A65, #FFB74D)" stroke-width="6" 
+                                    <circle cx="50" cy="50" r="45" fill="none" stroke="url(#orangeGradient3)" stroke-width="6" 
                                             stroke-linecap="round" id="mathematicsProgressCircle"/>
+                                    <defs>
+                                        <linearGradient id="orangeGradient3" x1="0%" y1="0%" x2="100%" y2="100%">
+                                            <stop offset="0%" stop-color="#FF8A65"/>
+                                            <stop offset="50%" stop-color="#FFB74D"/>
+                                            <stop offset="100%" stop-color="#FFCC02"/>
+                                        </linearGradient>
+                                    </defs>
                                 </svg>
                                 <div class="progress-percentage" id="mathematicsPercentage">0%</div>
                             </div>
@@ -446,7 +472,7 @@
                                 <label for="dailyTarget">Daily Target</label>
                                 <input type="number" id="dailyTarget" class="form-control" min="1" value="50">
                             </div>
-                            <button class="btn btn--primary btn--full-width" id="saveProgress">
+                            <button class="btn btn--primary btn--full-width smooth-btn" id="saveProgress">
                                 <span class="btn-text">Save Progress</span>
                                 <span class="btn-loading hidden">Saving...</span>
                             </button>
@@ -499,7 +525,7 @@
             </div>
         </section>
 
-        <!-- Enhanced Chapters Section with Class-wise Structure -->
+        <!-- Enhanced Chapters Section with Proper JEE Syllabus Structure -->
         <section id="chapters" class="section">
             <div class="container">
                 <div class="section-header">
@@ -508,23 +534,22 @@
                         <p class="section-subtitle">Organized by Class 11 & Class 12 curriculum</p>
                     </div>
                     <div class="chapter-controls">
-                        <button class="btn btn--secondary" id="exportChapterData">📤 Export</button>
-                        <input type="file" id="importChapterFile" accept=".json" style="display: none;">
-                        <button class="btn btn--secondary" id="importChapterData">📥 Import</button>
-                        <button class="btn btn--outline" id="resetProgress">🔄 Reset</button>
+                        <button class="btn btn--secondary smooth-btn" id="exportChapterData">📤 Export</button>
+                        <button class="btn btn--secondary smooth-btn" id="importChapterData">📥 Import</button>
+                        <button class="btn btn--outline smooth-btn" id="resetProgress">🔄 Reset</button>
                     </div>
                 </div>
                 
                 <!-- Class Selector -->
                 <div class="class-selector">
-                    <button class="class-tab active" data-class="11">Class 11</button>
-                    <button class="class-tab" data-class="12">Class 12</button>
-                    <button class="class-tab" data-class="all">View All</button>
+                    <button class="class-tab active smooth-btn" data-class="11">Class 11</button>
+                    <button class="class-tab smooth-btn" data-class="12">Class 12</button>
+                    <button class="class-tab smooth-btn" data-class="all">View All</button>
                 </div>
                 
                 <div class="subjects-container" id="subjectsContainer">
                     <!-- Physics Chapters -->
-                    <div class="subject-section" id="physicsSection">
+                    <div class="subject-section glass-card" id="physicsSection">
                         <div class="subject-header enhanced">
                             <div class="subject-title">
                                 <span class="subject-emoji">⚡</span>
@@ -546,7 +571,7 @@
                     </div>
                     
                     <!-- Chemistry Chapters -->
-                    <div class="subject-section" id="chemistrySection">
+                    <div class="subject-section glass-card" id="chemistrySection">
                         <div class="subject-header enhanced">
                             <div class="subject-title">
                                 <span class="subject-emoji">🧪</span>
@@ -568,7 +593,7 @@
                     </div>
                     
                     <!-- Mathematics Chapters -->
-                    <div class="subject-section" id="mathematicsSection">
+                    <div class="subject-section glass-card" id="mathematicsSection">
                         <div class="subject-header enhanced">
                             <div class="subject-title">
                                 <span class="subject-emoji">📐</span>
@@ -606,6 +631,43 @@
                         </select>
                     </div>
                 </div>
+                
+                <!-- Enhanced Analytics Stats Grid -->
+                <div class="analytics-stats-grid">
+                    <div class="stat-card glass-card">
+                        <div class="stat-icon">📊</div>
+                        <div class="stat-content">
+                            <h4 id="totalQuestions">0</h4>
+                            <p>Total Questions Solved</p>
+                            <div class="stat-trend positive">+12% this week</div>
+                        </div>
+                    </div>
+                    <div class="stat-card glass-card">
+                        <div class="stat-icon">🔥</div>
+                        <div class="stat-content">
+                            <h4 id="longestStreak">0</h4>
+                            <p>Longest Study Streak</p>
+                            <div class="stat-trend positive">Keep it up!</div>
+                        </div>
+                    </div>
+                    <div class="stat-card glass-card">
+                        <div class="stat-icon">🎯</div>
+                        <div class="stat-content">
+                            <h4 id="avgDaily">0</h4>
+                            <p>Average Daily Progress</p>
+                            <div class="stat-trend neutral">Steady growth</div>
+                        </div>
+                    </div>
+                    <div class="stat-card glass-card">
+                        <div class="stat-icon">📈</div>
+                        <div class="stat-content">
+                            <h4 id="completionRate">0%</h4>
+                            <p>Overall Completion</p>
+                            <div class="stat-trend positive">+5% this month</div>
+                        </div>
+                    </div>
+                </div>
+                
                 <div class="charts-grid">
                     <div class="chart-card glass-card">
                         <div class="chart-header">
@@ -631,51 +693,19 @@
                     
                     <div class="chart-card glass-card">
                         <div class="chart-header">
-                            <h3>Chapter Completion Heatmap</h3>
-                        </div>
-                        <div class="chart-container" style="position: relative; height: 300px;">
-                            <canvas id="heatmapChart"></canvas>
-                        </div>
-                    </div>
-                    
-                    <div class="chart-card glass-card">
-                        <div class="chart-header">
-                            <h3>Weekly Performance</h3>
+                            <h3>Weekly Performance Comparison</h3>
                         </div>
                         <div class="chart-container" style="position: relative; height: 300px;">
                             <canvas id="weeklyChart"></canvas>
                         </div>
                     </div>
-                </div>
-                
-                <!-- Analytics Stats -->
-                <div class="analytics-stats">
-                    <div class="stat-card glass-card">
-                        <div class="stat-icon">📊</div>
-                        <div class="stat-content">
-                            <h4 id="totalQuestions">0</h4>
-                            <p>Total Questions Solved</p>
+                    
+                    <div class="chart-card glass-card">
+                        <div class="chart-header">
+                            <h3>Chapter Completion Distribution</h3>
                         </div>
-                    </div>
-                    <div class="stat-card glass-card">
-                        <div class="stat-icon">🔥</div>
-                        <div class="stat-content">
-                            <h4 id="longestStreak">0</h4>
-                            <p>Longest Study Streak</p>
-                        </div>
-                    </div>
-                    <div class="stat-card glass-card">
-                        <div class="stat-icon">🎯</div>
-                        <div class="stat-content">
-                            <h4 id="avgDaily">0</h4>
-                            <p>Average Daily Progress</p>
-                        </div>
-                    </div>
-                    <div class="stat-card glass-card">
-                        <div class="stat-icon">📈</div>
-                        <div class="stat-content">
-                            <h4 id="completionRate">0%</h4>
-                            <p>Overall Completion</p>
+                        <div class="chart-container" style="position: relative; height: 300px;">
+                            <canvas id="distributionChart"></canvas>
                         </div>
                     </div>
                 </div>
@@ -688,15 +718,15 @@
                 <div class="section-header">
                     <h2>Study Calendar</h2>
                     <div class="calendar-controls">
-                        <button class="btn btn--secondary" id="todayBtn">Today</button>
-                        <button class="btn btn--outline" id="viewModeToggle">Month View</button>
+                        <button class="btn btn--secondary smooth-btn" id="todayBtn">Today</button>
+                        <button class="btn btn--outline smooth-btn" id="viewModeToggle">Month View</button>
                     </div>
                 </div>
                 <div class="calendar-container glass-card">
                     <div class="calendar-header">
-                        <button class="btn btn--secondary" id="prevMonth">‹</button>
+                        <button class="btn btn--secondary smooth-btn" id="prevMonth">‹</button>
                         <h3 id="currentMonth">August 2025</h3>
-                        <button class="btn btn--secondary" id="nextMonth">›</button>
+                        <button class="btn btn--secondary smooth-btn" id="nextMonth">›</button>
                     </div>
                     <div class="calendar-grid" id="calendarGrid">
                         <!-- Calendar will be generated dynamically -->
@@ -730,20 +760,20 @@
             </div>
         </section>
 
-        <!-- Redesigned Compact Todo Section -->
+        <!-- Redesigned Compact & Beautiful Todo Section -->
         <section id="todos" class="section">
             <div class="container">
                 <div class="section-header">
                     <h2>Task Management</h2>
-                    <button class="btn btn--primary" id="addTaskBtn">+ Add Task</button>
+                    <button class="btn btn--primary smooth-btn" id="addTaskBtn">+ Add Task</button>
                 </div>
                 
                 <div class="todo-main">
-                    <!-- Compact Todo Form -->
+                    <!-- Ultra Compact Todo Form -->
                     <div class="todo-form-compact glass-card" id="todoFormCompact">
                         <div class="form-header">
                             <h3>Quick Add Task</h3>
-                            <button class="close-btn" id="closeTodoForm">×</button>
+                            <button class="close-btn smooth-btn" id="closeTodoForm">×</button>
                         </div>
                         <div class="quick-form">
                             <input type="text" id="todoTask" class="form-control" placeholder="What needs to be done?">
@@ -761,18 +791,18 @@
                                 </select>
                                 <input type="date" id="todoDueDate" class="form-control">
                             </div>
-                            <button class="btn btn--primary btn--full-width" id="addTodo">Add Task</button>
+                            <button class="btn btn--primary btn--full-width smooth-btn" id="addTodo">Add Task</button>
                         </div>
                     </div>
                     
-                    <!-- Enhanced Todo List -->
+                    <!-- Enhanced Beautiful Todo List -->
                     <div class="todo-container">
-                        <div class="todo-filters">
+                        <div class="todo-filters glass-card">
                             <div class="filter-tabs">
-                                <button class="filter-tab active" data-filter="all">All Tasks</button>
-                                <button class="filter-tab" data-filter="pending">Pending</button>
-                                <button class="filter-tab" data-filter="completed">Completed</button>
-                                <button class="filter-tab" data-filter="high">High Priority</button>
+                                <button class="filter-tab active smooth-btn" data-filter="all">All Tasks</button>
+                                <button class="filter-tab smooth-btn" data-filter="pending">Pending</button>
+                                <button class="filter-tab smooth-btn" data-filter="completed">Completed</button>
+                                <button class="filter-tab smooth-btn" data-filter="high">High Priority</button>
                             </div>
                             <div class="todo-stats">
                                 <span class="stat" id="pendingCount">0 pending</span>
@@ -788,36 +818,138 @@
             </div>
         </section>
 
-        <!-- New Study Planner Section -->
-        <section id="planner" class="section">
+        <!-- New Study Tools Section -->
+        <section id="tools" class="section">
             <div class="container">
                 <div class="section-header">
-                    <h2>Study Planner</h2>
-                    <div class="planner-controls">
-                        <button class="btn btn--primary" id="addPlanBtn">+ Add Study Plan</button>
-                        <button class="btn btn--secondary" id="templateBtn">📋 Templates</button>
-                    </div>
+                    <h2>Study Tools & Resources</h2>
+                    <p class="section-subtitle">Essential tools for JEE preparation</p>
                 </div>
                 
-                <div class="planner-grid">
-                    <div class="planner-card glass-card">
-                        <h3>Weekly Schedule</h3>
-                        <div class="weekly-grid" id="weeklySchedule">
-                            <!-- Weekly schedule will be generated -->
+                <div class="tools-grid">
+                    <!-- Study Timer -->
+                    <div class="tool-card glass-card">
+                        <div class="tool-header">
+                            <div class="tool-icon">⏱️</div>
+                            <h3>Pomodoro Timer</h3>
+                        </div>
+                        <div class="timer-display">
+                            <div class="time-left" id="timerDisplay">25:00</div>
+                            <div class="timer-label" id="timerLabel">Focus Time</div>
+                        </div>
+                        <div class="timer-controls">
+                            <button class="btn btn--primary smooth-btn" id="startTimer">Start</button>
+                            <button class="btn btn--secondary smooth-btn" id="pauseTimer">Pause</button>
+                            <button class="btn btn--outline smooth-btn" id="resetTimer">Reset</button>
                         </div>
                     </div>
                     
-                    <div class="planner-card glass-card">
-                        <h3>Revision Tracker</h3>
-                        <div class="revision-list" id="revisionList">
-                            <!-- Revision items will be generated -->
+                    <!-- Formula Quick Reference -->
+                    <div class="tool-card glass-card">
+                        <div class="tool-header">
+                            <div class="tool-icon">🧮</div>
+                            <h3>Formula Quick Reference</h3>
+                        </div>
+                        <div class="formula-search">
+                            <input type="text" id="formulaSearch" class="form-control" placeholder="Search formulas...">
+                        </div>
+                        <div class="formula-categories">
+                            <button class="formula-cat-btn active smooth-btn" data-subject="physics">Physics</button>
+                            <button class="formula-cat-btn smooth-btn" data-subject="chemistry">Chemistry</button>
+                            <button class="formula-cat-btn smooth-btn" data-subject="mathematics">Mathematics</button>
+                        </div>
+                        <div class="formula-list" id="formulaList">
+                            <!-- Formulas will be populated -->
                         </div>
                     </div>
                     
-                    <div class="planner-card glass-card">
-                        <h3>Exam Readiness</h3>
-                        <div class="readiness-chart" id="readinessChart">
-                            <!-- Readiness visualization -->
+                    <!-- Study Planner -->
+                    <div class="tool-card glass-card">
+                        <div class="tool-header">
+                            <div class="tool-icon">📅</div>
+                            <h3>Study Planner</h3>
+                        </div>
+                        <div class="planner-content">
+                            <div class="weekly-overview" id="weeklyOverview">
+                                <!-- Weekly study plan -->
+                            </div>
+                            <button class="btn btn--primary smooth-btn" id="createStudyPlan">Create Study Plan</button>
+                        </div>
+                    </div>
+                    
+                    <!-- Progress Insights -->
+                    <div class="tool-card glass-card">
+                        <div class="tool-header">
+                            <div class="tool-icon">📊</div>
+                            <h3>AI Progress Insights</h3>
+                        </div>
+                        <div class="insights-content">
+                            <div class="insight-item">
+                                <div class="insight-icon">🎯</div>
+                                <div class="insight-text">
+                                    <strong>Recommendation:</strong> Focus more on Organic Chemistry - your weakest area
+                                </div>
+                            </div>
+                            <div class="insight-item">
+                                <div class="insight-icon">📈</div>
+                                <div class="insight-text">
+                                    <strong>Trend:</strong> Your Physics performance has improved 15% this month
+                                </div>
+                            </div>
+                            <div class="insight-item">
+                                <div class="insight-icon">⚡</div>
+                                <div class="insight-text">
+                                    <strong>Target:</strong> Complete 5 more chapters to reach 80% syllabus coverage
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Goal Tracker -->
+                    <div class="tool-card glass-card">
+                        <div class="tool-header">
+                            <div class="tool-icon">🏆</div>
+                            <h3>Goal Tracker</h3>
+                        </div>
+                        <div class="goals-content">
+                            <div class="goal-item">
+                                <div class="goal-info">
+                                    <span class="goal-title">Complete JEE Main 2024 Papers</span>
+                                    <div class="goal-progress">
+                                        <div class="goal-progress-bar">
+                                            <div class="goal-progress-fill" style="width: 65%"></div>
+                                        </div>
+                                        <span class="goal-progress-text">13/20</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="goal-item">
+                                <div class="goal-info">
+                                    <span class="goal-title">Master Integration Techniques</span>
+                                    <div class="goal-progress">
+                                        <div class="goal-progress-bar">
+                                            <div class="goal-progress-fill" style="width: 40%"></div>
+                                        </div>
+                                        <span class="goal-progress-text">4/10</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <button class="btn btn--outline smooth-btn" id="addGoalBtn">Add New Goal</button>
+                        </div>
+                    </div>
+                    
+                    <!-- Quick Notes -->
+                    <div class="tool-card glass-card">
+                        <div class="tool-header">
+                            <div class="tool-icon">📝</div>
+                            <h3>Quick Notes</h3>
+                        </div>
+                        <div class="notes-content">
+                            <textarea id="quickNotes" class="form-control" placeholder="Jot down important points, formulas, or reminders..." rows="6"></textarea>
+                            <div class="notes-actions">
+                                <button class="btn btn--secondary smooth-btn" id="saveNotes">Save</button>
+                                <button class="btn btn--outline smooth-btn" id="exportNotes">Export</button>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -831,7 +963,7 @@
         <div class="modal-content glass-card">
             <div class="modal-header">
                 <h3 id="modalDate">Date Details</h3>
-                <button class="modal-close" id="closeModal">&times;</button>
+                <button class="modal-close smooth-btn" id="closeModal">&times;</button>
             </div>
             <div class="modal-body">
                 <div class="form-group">
@@ -852,7 +984,7 @@
                         <input type="number" id="modalMath" class="form-control" min="0" placeholder="0">
                     </div>
                 </div>
-                <button class="btn btn--primary btn--full-width" id="saveModalProgress">Save Progress</button>
+                <button class="btn btn--primary btn--full-width smooth-btn" id="saveModalProgress">Save Progress</button>
             </div>
         </div>
     </div>
@@ -863,23 +995,23 @@
         <div class="modal-content glass-card">
             <div class="modal-header">
                 <h3>Export Your Data</h3>
-                <button class="modal-close" id="closeExportModal">&times;</button>
+                <button class="modal-close smooth-btn" id="closeExportModal">&times;</button>
             </div>
             <div class="modal-body">
                 <div class="export-options">
-                    <button class="btn btn--secondary btn--full-width" id="exportAllJSON">
+                    <button class="btn btn--secondary btn--full-width smooth-btn" id="exportAllJSON">
                         <span class="btn-icon">📄</span>
                         Export Complete Data (JSON)
                     </button>
-                    <button class="btn btn--secondary btn--full-width" id="exportProgressCSV">
+                    <button class="btn btn--secondary btn--full-width smooth-btn" id="exportProgressCSV">
                         <span class="btn-icon">📊</span>
                         Export Progress Data (CSV)
                     </button>
-                    <button class="btn btn--secondary btn--full-width" id="exportChaptersCSV">
+                    <button class="btn btn--secondary btn--full-width smooth-btn" id="exportChaptersCSV">
                         <span class="btn-icon">📚</span>
                         Export Chapter Data (CSV)
                     </button>
-                    <button class="btn btn--primary btn--full-width" id="backupData">
+                    <button class="btn btn--primary btn--full-width smooth-btn" id="backupData">
                         <span class="btn-icon">💾</span>
                         Create Local Backup
                     </button>
